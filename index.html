@@ -1,0 +1,1469 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Viaje Europa - Plan Maestro</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      crossorigin=""
+    />
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: "Space Grotesk", "Segoe UI", system-ui, -apple-system,
+          sans-serif;
+        line-height: 1.6;
+        --bg: #f0f4ff;
+        --bg-alt: #e8ecfb;
+        --card: #ffffff;
+        --accent: #4b6bfb;
+        --accent-alt: #ff8a3d;
+        --text: #141936;
+        --muted: #5f6b85;
+        --border: #d6dcf4;
+        --shadow: 0 20px 80px rgba(46, 74, 255, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: radial-gradient(circle at top right, #f7f8ff, #e5ebff);
+        color: var(--text);
+      }
+
+      header {
+        background: linear-gradient(120deg, #0f1a45, #3d5bff);
+        color: #fff;
+        padding: 3.5rem clamp(1rem, 5vw, 6rem) 4rem;
+        border-bottom-left-radius: 30px;
+        border-bottom-right-radius: 30px;
+        box-shadow: var(--shadow);
+      }
+
+      header h1 {
+        margin: 0 0 1rem;
+        font-size: clamp(2rem, 4vw, 3rem);
+      }
+
+      header p {
+        margin: 0;
+        max-width: 60ch;
+        font-size: 1.1rem;
+      }
+
+      nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.6rem;
+        margin-top: 2rem;
+      }
+
+      nav a {
+        text-decoration: none;
+        color: #fff;
+        border: 1px solid #ffffff66;
+        border-radius: 12px;
+        padding: 0.45rem 1.1rem;
+        font-size: 0.9rem;
+        backdrop-filter: blur(8px);
+        transition: background 0.2s ease, transform 0.2s ease;
+      }
+
+      nav a:hover {
+        background: #ffffff29;
+        transform: translateY(-1px);
+      }
+
+      main {
+        padding: clamp(1rem, 5vw, 5rem);
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+      }
+
+      section {
+        background: var(--card);
+        border-radius: 18px;
+        padding: clamp(1.5rem, 3vw, 2.5rem);
+        box-shadow: var(--shadow);
+        border: 1px solid var(--border);
+      }
+
+      h2 {
+        margin-top: 0;
+        font-size: 1.6rem;
+      }
+
+      .grid {
+        display: grid;
+        gap: 1rem;
+      }
+
+      @media (min-width: 900px) {
+        .grid.deux {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .grid.trois {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+
+      .card {
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 1rem;
+        background: #fefefe;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+      }
+
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        font-size: 0.85rem;
+        padding: 0.1rem 0.75rem;
+        border-radius: 999px;
+        background: #e9edff;
+        color: var(--accent);
+        margin-right: 0.3rem;
+      }
+
+      ul {
+        padding-left: 1.1rem;
+        margin: 0.6rem 0;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+        font-size: 0.95rem;
+      }
+
+      th,
+      td {
+        border: 1px solid var(--border);
+        padding: 0.6rem;
+        text-align: left;
+      }
+
+      th {
+        background: #eef2ff;
+      }
+
+      .timeline {
+        counter-reset: step;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .timeline-item {
+        display: flex;
+        gap: 1rem;
+      }
+
+      .timeline-item::before {
+        counter-increment: step;
+        content: counter(step);
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--accent);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        flex-shrink: 0;
+      }
+
+      .timeline-content {
+        background: #f6f8ff;
+        border-radius: 14px;
+        padding: 0.9rem 1.2rem;
+        flex: 1;
+        border: 1px solid #dee4ff;
+      }
+
+      .cost-range {
+        font-weight: 600;
+        color: var(--accent-alt);
+      }
+
+      .highlight {
+        background: #fff7ec;
+        border-left: 4px solid var(--accent-alt);
+        padding: 0.7rem 1rem;
+        border-radius: 12px;
+        margin: 0.8rem 0;
+      }
+
+      .accordion {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .accordion-item {
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        background: #fefefe;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        overflow: hidden;
+      }
+
+      .accordion-item[open] {
+        box-shadow: var(--shadow);
+      }
+
+      .accordion-item summary {
+        list-style: none;
+        cursor: pointer;
+        padding: 1.2rem 1.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+        font-weight: 600;
+      }
+
+      .accordion-item summary::-webkit-details-marker {
+        display: none;
+      }
+
+      .accordion-item summary::after {
+        content: "+";
+        margin-left: auto;
+        font-size: 1.3rem;
+        color: var(--accent);
+      }
+
+      .accordion-item[open] summary::after {
+        content: "−";
+      }
+
+      .summary-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        align-items: center;
+      }
+
+      .summary-meta strong {
+        font-size: 1rem;
+      }
+
+      .summary-note {
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      .accordion-body {
+        padding: 0 1.5rem 1.4rem;
+        border-top: 1px solid var(--border);
+      }
+
+      .accordion-body ul {
+        margin: 0.6rem 0 0;
+        padding-left: 1.1rem;
+        color: var(--text);
+      }
+
+      .day-checklist {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1rem;
+      }
+
+      .day-card {
+        position: relative;
+        border-radius: 18px;
+        padding: 1.1rem 1.2rem 1.2rem 3rem;
+        border: 1px solid var(--border);
+        background: linear-gradient(135deg, #ffffff, #f3f5ff);
+        box-shadow: 0 15px 40px rgba(31, 39, 58, 0.08);
+      }
+
+      .day-card input[type="checkbox"] {
+        position: absolute;
+        left: 1rem;
+        top: 1.25rem;
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+        accent-color: var(--accent);
+      }
+
+      .day-card input:checked + .day-content .day-title {
+        text-decoration: line-through;
+        opacity: 0.6;
+      }
+
+      .day-title {
+        font-weight: 600;
+        margin: 0;
+      }
+
+      .day-subtitle {
+        margin: 0.2rem 0 0;
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+
+      .reset-btn {
+        background: #141936;
+        color: #fff;
+        border: none;
+        border-radius: 14px;
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+        cursor: pointer;
+        margin-top: 1rem;
+        transition: opacity 0.2s ease;
+      }
+
+      .reset-btn:hover {
+        opacity: 0.85;
+      }
+
+      #travelMap {
+        width: 100%;
+        height: 480px;
+        border-radius: 18px;
+        border: 1px solid var(--border);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+        overflow: hidden;
+        margin-bottom: 1.5rem;
+      }
+
+      .timeline-slider-container {
+        margin-top: 1.5rem;
+        padding: 1.2rem 1rem;
+        background: #f6f8ff;
+        border-radius: 16px;
+        border: 1px solid var(--border);
+      }
+
+      .timeline-slider-wrapper {
+        position: relative;
+        margin-bottom: 0.8rem;
+        padding: 1rem;
+        background: #eef2ff;
+        border-radius: 12px;
+      }
+
+      .timeline-slider-track {
+        position: relative;
+        height: 8px;
+        background: #d6dcf4;
+        border-radius: 8px;
+        margin: 0.5rem 0;
+      }
+
+      .timeline-slider-progress {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        border-radius: 8px;
+        background: linear-gradient(90deg, #4b6bfb, #6b82ff);
+        transition: width 0.3s ease;
+        pointer-events: none;
+        z-index: 1;
+        width: 0%;
+      }
+
+      .timeline-slider {
+        width: 100%;
+        height: 8px;
+        border-radius: 8px;
+        background: transparent;
+        outline: none;
+        -webkit-appearance: none;
+        appearance: none;
+        cursor: pointer;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 2;
+      }
+
+      .timeline-slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: var(--accent);
+        border: 3px solid #fff;
+        box-shadow: 0 2px 8px rgba(75, 107, 251, 0.4);
+        cursor: grab;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .timeline-slider::-webkit-slider-thumb:hover {
+        transform: scale(1.15);
+        box-shadow: 0 4px 12px rgba(75, 107, 251, 0.6);
+      }
+
+      .timeline-slider::-webkit-slider-thumb:active {
+        cursor: grabbing;
+        transform: scale(1.1);
+      }
+
+      .timeline-slider::-moz-range-thumb {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: var(--accent);
+        border: 3px solid #fff;
+        box-shadow: 0 2px 8px rgba(75, 107, 251, 0.4);
+        cursor: grab;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .timeline-slider::-moz-range-thumb:hover {
+        transform: scale(1.15);
+        box-shadow: 0 4px 12px rgba(75, 107, 251, 0.6);
+      }
+
+      .timeline-slider::-moz-range-thumb:active {
+        cursor: grabbing;
+        transform: scale(1.1);
+      }
+
+      .timeline-labels {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.75rem;
+        color: var(--muted);
+        margin-top: 0.4rem;
+        padding: 0 0.5rem;
+      }
+
+      .timeline-label {
+        text-align: center;
+        flex: 1;
+      }
+
+      .timeline-current-day {
+        text-align: center;
+        margin-top: 0.6rem;
+        font-weight: 600;
+        color: var(--accent);
+        font-size: 0.95rem;
+      }
+
+      footer {
+        text-align: center;
+        padding: 2rem 1rem 3rem;
+        font-size: 0.9rem;
+        color: var(--muted);
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Plan Maestro · Europa Abril-Mayo</h1>
+      <p>
+        25 días explorando España, Francia e Italia. Todo lo esencial para tu
+        viaje: ruta optimizada, reservas prioritarias, presupuesto detallado,
+        logística de transporte, conectividad, y consejos prácticos.
+      </p>
+      <nav>
+        <a href="#info-rapida">Información rápida</a>
+        <a href="#ruta">Ruta</a>
+        <a href="#reservas">Reservas</a>
+        <a href="#costos">Costos</a>
+        <a href="#transporte">Transporte</a>
+        <a href="#alojamiento">Alojamiento</a>
+        <a href="#agenda">Agenda diaria</a>
+        <a href="#mapa">Mapa</a>
+        <a href="#disney">Disney</a>
+        <a href="#actividades">Actividades</a>
+        <a href="#comunicacion">Conectividad</a>
+        <a href="#comida">Comida</a>
+        <a href="#documentos">Documentos</a>
+        <a href="#tips">Tips</a>
+        <a href="#contactos">Contactos</a>
+      </nav>
+    </header>
+
+    <main>
+      <section id="info-rapida">
+        <h2>Información Rápida</h2>
+        <div class="grid trois">
+          <div class="card">
+            <div class="tag">Fechas</div>
+            <p>30 de abril → 25 de mayo (25 días)</p>
+          </div>
+          <div class="card">
+            <div class="tag">Destinos</div>
+            <p>
+              Madrid · Barcelona · París · Milán/Como · Venecia · Florencia ·
+              Toscana · Cinque Terre · Roma · Nápoles · Costa
+              Amalfitana
+            </p>
+          </div>
+          <div class="card">
+            <div class="tag">Presupuesto estimado</div>
+            <p class="cost-range">€3,024 - €5,164 por persona (sin vuelo internacional)</p>
+            <small>Incluye transporte, alojamiento, comida, actividades, datos y extras.</small>
+          </div>
+        </div>
+        <div class="highlight">
+          ✅ Vuelos de regreso confirmados: 25 de mayo, Madrid → Uruguay.
+        </div>
+      </section>
+
+      <section id="ruta">
+        <h2>Ruta Optimizada (con transporte sugerido)</h2>
+        <div class="accordion">
+          <details class="accordion-item" open>
+            <summary>
+              <div class="summary-meta">
+                <span class="tag">30 abr - 1 may</span>
+                <strong>Madrid · 2 días</strong>
+              </div>
+              <span class="summary-note">Tren AVE a Barcelona (2 may)</span>
+            </summary>
+            <div class="accordion-body">
+              <ul>
+                <li><strong>Transporte:</strong> AVE Madrid-Puerta de Atocha → Barcelona-Sants (2h30).</li>
+                <li><strong>Compra:</strong> <a href="https://www.renfe.com" target="_blank" rel="noreferrer">renfe.com</a> o app Renfe. Buscar tarifas Promo con 60-90 días de anticipación.</li>
+                <li><strong>Horario sugerido:</strong> 2 may · salida 09:00 · llegada 11:30 (permite check-in a las 14:00).</li>
+                <li><strong>Notas:</strong> Presentarse 30 min antes, billete QR y pasaporte.</li>
+              </ul>
+            </div>
+          </details>
+
+          <details class="accordion-item">
+            <summary>
+              <div class="summary-meta">
+                <span class="tag">2-3 may</span>
+                <strong>Barcelona · 2 días</strong>
+              </div>
+              <span class="summary-note">Vuelo BCN → París (4 may)</span>
+            </summary>
+            <div class="accordion-body">
+              <ul>
+                <li><strong>Transporte:</strong> Vuelo BCN → CDG/ORY (1h45) con Vueling, Air France o Ryanair.</li>
+                <li><strong>Compra:</strong> Webs oficiales o <a href="https://www.google.com/travel/flights" target="_blank" rel="noreferrer">Google Flights</a>/Skyscanner. Añadir equipaje facturado si es necesario.</li>
+                <li><strong>Horario sugerido:</strong> 4 may · check-in 07:00 · salida 09:30 · llegada 11:15.</li>
+                <li><strong>Notas:</strong> Desde CDG podés tomar TGV directo a Marne-la-Vallée o RER B + RER A para llegar a Disneyland.</li>
+              </ul>
+            </div>
+          </details>
+
+          <details class="accordion-item">
+            <summary>
+              <div class="summary-meta">
+                <span class="tag">4-6 may</span>
+                <strong>París · 3 días</strong>
+              </div>
+              <span class="summary-note">Vuelo París → Milán (7 may)</span>
+            </summary>
+            <div class="accordion-body">
+              <ul>
+                <li><strong>Transporte:</strong> Vuelo CDG/ORY → MXP (1h30).</li>
+                <li><strong>Compra:</strong> easyJet, Vueling, Air France o ITA Airways; reservar 2 meses antes para mejores tarifas.</li>
+                <li><strong>Horario sugerido:</strong> 7 may · salida 08:00 · llegada 09:30. Malpensa Express hasta Milano Centrale (50 min).</li>
+                <li><strong>Notas:</strong> Descargar tarjeta de embarque en el móvil; considerar equipaje cabina + mochila.</li>
+              </ul>
+            </div>
+          </details>
+
+          <details class="accordion-item">
+            <summary>
+              <div class="summary-meta">
+                <span class="tag">7 may</span>
+                <strong>Milán & Lago de Como · 1 día</strong>
+              </div>
+              <span class="summary-note">Tren Milán → Venecia (8 may)</span>
+            </summary>
+            <div class="accordion-body">
+              <ul>
+                <li><strong>Transporte:</strong> Frecciarossa o Italo · Milano Centrale → Venezia Santa Lucia (2h30).</li>
+                <li><strong>Compra:</strong> <a href="https://www.trenitalia.com" target="_blank" rel="noreferrer">trenitalia.com</a>, <a href="https://www.italotreno.it" target="_blank" rel="noreferrer">italotreno.it</a> o Trainline (30-45 días antes).</li>
+                <li><strong>Horario sugerido:</strong> 8 may · salida 09:45 · llegada 12:15.</li>
+                <li><strong>Notas:</strong> Asiento numerado incluido; llegar 15 min antes a la plataforma.</li>
+              </ul>
+            </div>
+          </details>
+
+          <details class="accordion-item">
+            <summary>
+              <div class="summary-meta">
+                <span class="tag">8-9 may</span>
+                <strong>Venecia · 2 días</strong>
+              </div>
+              <span class="summary-note">Tren Venecia → Florencia (10 may)</span>
+            </summary>
+            <div class="accordion-body">
+              <ul>
+                <li><strong>Transporte:</strong> Frecciarossa/Italo · Venezia SL → Firenze SMN (2h15).</li>
+                <li><strong>Compra:</strong> Trenitalia/Italo o <a href="https://www.thetrainline.com/es" target="_blank" rel="noreferrer">Trainline</a>; hay tarifas Super Economy desde €19.</li>
+                <li><strong>Horario sugerido:</strong> 10 may · salida 10:05 · llegada 12:20.</li>
+                <li><strong>Notas:</strong> Subir con código QR; guardar ticket para mostrar al revisor.</li>
+              </ul>
+            </div>
+          </details>
+
+          <details class="accordion-item">
+            <summary>
+              <div class="summary-meta">
+                <span class="tag">10-11 may</span>
+                <strong>Florencia · 2 días</strong>
+              </div>
+              <span class="summary-note">Base para excursión a Toscana</span>
+            </summary>
+            <div class="accordion-body">
+              <ul>
+                <li><strong>Transporte (excursión):</strong> Tour Siena + Pisa (Walkabout, Civitatis) o tren Firenze → Pisa (1h) + bus a Siena (1h15).</li>
+                <li><strong>Compra:</strong> Reservar tour con 1 mes de anticipación o adquirir billetes regionales en trenitalia.com (no requieren asiento).</li>
+                <li><strong>Horario sugerido:</strong> 12 may · tour 08:00-19:30 con salida desde Via Curtatone.</li>
+                <li><strong>Notas:</strong> Si lo hacen por cuenta, validar billete antes de subir al regional.</li>
+              </ul>
+            </div>
+          </details>
+
+          <details class="accordion-item">
+            <summary>
+              <div class="summary-meta">
+                <span class="tag">12 may</span>
+                <strong>Toscana · 1 día</strong>
+              </div>
+              <span class="summary-note">Tren Florencia → La Spezia (13 may)</span>
+            </summary>
+            <div class="accordion-body">
+              <ul>
+                <li><strong>Transporte:</strong> Regional rápido Firenze SMN → La Spezia Centrale (2h10) con parada en Pisa.</li>
+                <li><strong>Compra:</strong> Trenitalia (billete regional €20-30). No hay asientos numerados; validar antes de subir.</li>
+                <li><strong>Horario sugerido:</strong> 13 may · salida 08:10 · llegada 10:20 para aprovechar Cinque Terre.</li>
+                <li><strong>Notas:</strong> Desde La Spezia activar la Cinque Terre Card para los trenes locales.</li>
+              </ul>
+            </div>
+          </details>
+
+          <details class="accordion-item">
+            <summary>
+              <div class="summary-meta">
+                <span class="tag">13-14 may</span>
+                <strong>Cinque Terre · 2 días</strong>
+              </div>
+              <span class="summary-note">Tren La Spezia → Roma (15 may)</span>
+            </summary>
+            <div class="accordion-body">
+              <ul>
+                <li><strong>Transporte:</strong> Frecciargento/Intercity · La Spezia → Roma Termini (3h50, vía Pisa/Firenze).</li>
+                <li><strong>Compra:</strong> Trenitalia o Italo (buscar combinaciones) desde €35 comprando con 45 días.</li>
+                <li><strong>Horario sugerido:</strong> 15 may · salida 08:30 · llegada 12:20.</li>
+                <li><strong>Notas:</strong> Llevar snacks; no todos los trenes tienen coche bar.</li>
+              </ul>
+            </div>
+          </details>
+
+          <details class="accordion-item">
+            <summary>
+              <div class="summary-meta">
+                <span class="tag">15-17 may</span>
+                <strong>Roma · 3 días</strong>
+              </div>
+              <span class="summary-note">Tren Roma → Nápoles (18 may)</span>
+            </summary>
+            <div class="accordion-body">
+              <ul>
+                <li><strong>Transporte:</strong> Frecciarossa · Roma Termini → Napoli Centrale (1h10).</li>
+                <li><strong>Compra:</strong> Trenitalia/Italo (desde €15). Reservar con 30 días para asegurar horarios matutinos.</li>
+                <li><strong>Horario sugerido:</strong> 18 may · salida 09:20 · llegada 10:30.</li>
+                <li><strong>Notas:</strong> Aprovechar para comprar snacks napolitanos antes de tomar la Circumvesuviana.</li>
+              </ul>
+            </div>
+          </details>
+
+          <details class="accordion-item">
+            <summary>
+              <div class="summary-meta">
+                <span class="tag">18 may</span>
+                <strong>Nápoles · 1 día</strong>
+              </div>
+              <span class="summary-note">Traslado local a Costa Amalfitana (19 may)</span>
+            </summary>
+            <div class="accordion-body">
+              <ul>
+                <li><strong>Transporte:</strong> Tren Circumvesuviana Napoli → Sorrento (1h) + bus SITA/SITA Sud hacia Positano/Amalfi (60 min) o ferry Nápoles → Positano (1h45).</li>
+                <li><strong>Compra:</strong> Boletos Circumvesuviana en estación (efectivo) y tickets SITA en tabaquerías; ferries en <a href="https://www.travelmar.it" target="_blank" rel="noreferrer">Travelmar</a>.</li>
+                <li><strong>Horario sugerido:</strong> 19 may · tren 08:00 · llegada Sorrento 09:10 · bus 09:30 · llegada Positano 10:30.</li>
+                <li><strong>Notas:</strong> Llevar equipaje ligero para subir/bajar escaleras en Positano.</li>
+              </ul>
+            </div>
+          </details>
+
+          <details class="accordion-item">
+            <summary>
+              <div class="summary-meta">
+                <span class="tag">19-22 may</span>
+                <strong>Costa Amalfitana · 4 días</strong>
+              </div>
+              <span class="summary-note">Vuelo Nápoles → Madrid (22 may)</span>
+            </summary>
+            <div class="accordion-body">
+              <ul>
+                <li><strong>Transporte:</strong> Transfer Costa Amalfitana → Aeropuerto Nápoles (1h30) + vuelo NAP → MAD (2h20) con Vueling/Iberia/Ryanair.</li>
+                <li><strong>Compra:</strong> Reservar vuelo directo con 2-3 meses de anticipación. Transfers privados vía GetYourGuide o taxis compartidos.</li>
+                <li><strong>Horario sugerido:</strong> 22 may · pick-up 14:00 · vuelo 18:30 · llegada Madrid 21:00.</li>
+                <li><strong>Notas:</strong> Check-in online y elegir asientos contiguos; confirmar transfer el día anterior.</li>
+              </ul>
+            </div>
+          </details>
+
+          <details class="accordion-item">
+            <summary>
+              <div class="summary-meta">
+                <span class="tag">23-25 may</span>
+                <strong>Madrid final · 2 días + regreso</strong>
+              </div>
+              <span class="summary-note">Vuelo Madrid → Uruguay (25 may)</span>
+            </summary>
+            <div class="accordion-body">
+              <ul>
+                <li><strong>Transporte:</strong> Vuelo largo recorrido MAD → MVD (confirmado para 25 may).</li>
+                <li><strong>Compra:</strong> Ya emitido. Revisar localizador 48 h antes para confirmar asientos.</li>
+                <li><strong>Horario sugerido:</strong> Check-in 25 may 12:00 · embarque 14:30 · salida 15:30 (ajustar al ticket real).</li>
+                <li><strong>Notas:</strong> Usar los días 23-24 may para compras, tax free y packing; llegar al aeropuerto con 3 h de anticipación.</li>
+              </ul>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <section id="reservas">
+        <h2>Reservas Prioritarias (2-3 meses antes)</h2>
+        <div class="grid deux">
+          <div class="card">
+            <p><strong>Entradas clave</strong></p>
+            <ul>
+              <li>Sagrada Familia</li>
+              <li>Torre Eiffel</li>
+              <li>Disneyland Paris (alta prioridad)</li>
+              <li>Louvre</li>
+              <li>Coliseo</li>
+              <li>Vaticano</li>
+              <li>Uffizi</li>
+              <li>Duomo de Milán</li>
+              <li>Cinque Terre Card (2 días)</li>
+            </ul>
+          </div>
+          <div class="card">
+            <p><strong>Logística</strong></p>
+            <ul>
+              <li>Trenes de alta velocidad en Italia</li>
+              <li>Alojamiento en Cinque Terre</li>
+              <li>Alojamiento en Costa Amalfitana</li>
+              <li>Vuelos internos París ⇄ Italia y Italia ⇄ Madrid</li>
+              <li>Seguro de viaje con cobertura €30,000+</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="costos">
+        <h2>Costos Clave</h2>
+        <div class="grid deux">
+          <div class="card">
+            <p><strong>Transporte entre ciudades</strong></p>
+            <ul>
+              <li>Madrid → Barcelona (AVE): €60-100</li>
+              <li>Barcelona → París (vuelo): €50-120</li>
+              <li>París → Milán (vuelo): €40-100</li>
+              <li>Trenes Italia + Cinque Terre: €150-250</li>
+              <li>Italia → Madrid (vuelo): €50-150</li>
+            </ul>
+          </div>
+          <div class="card">
+            <p><strong>Presupuesto por categoría</strong></p>
+            <ul>
+              <li>Alojamiento (25 noches × €50-80): €1,250-2,000</li>
+              <li>Comida (25 × €30): €600-1,000</li>
+              <li>Actividades: €404-714</li>
+              <li>Internet/datos: €20-100</li>
+              <li>Extras y compras: €300-600</li>
+            </ul>
+          </div>
+        </div>
+        <div class="highlight">
+          Total estimado sin vuelo internacional: <strong>€3,024 - €5,164</strong> por
+          persona.
+        </div>
+      </section>
+
+      <section id="transporte">
+        <h2>Transporte Detallado</h2>
+        <div class="grid deux">
+          <div class="card">
+            <p><strong>Tramos principales</strong></p>
+            <ul>
+              <li>Madrid → Barcelona · AVE · 2h30 · €60-100 · Renfe</li>
+              <li>Barcelona → París · Vuelo 1h45 · €50-120 · Vueling/Ryanair/Air France</li>
+              <li>París → Italia · Vuelo 2h · €40-100 (Roma o Milán)</li>
+              <li>Italia → Madrid · Vuelo 2h-2h30 · €50-150</li>
+            </ul>
+          </div>
+          <div class="card">
+            <p><strong>Trenes en Italia</strong></p>
+            <ul>
+              <li>Operadores: Italo Treno, Trenitalia Frecciarossa</li>
+              <li>Milán → Venecia: 2h30 · €25-45</li>
+              <li>Venecia → Florencia: 2h15 · €25-45</li>
+              <li>Florencia → La Spezia (Cinque Terre): 2h-2h30 · €20-35</li>
+              <li>Cinque Terre → Roma: 3h-4h · €30-50</li>
+              <li>Roma → Nápoles: 1h10 · €15-30</li>
+            </ul>
+          </div>
+        </div>
+        <div class="grid deux">
+          <div class="card">
+            <p><strong>Autobuses & Ferries</strong></p>
+            <ul>
+              <li>FlixBus como opción económica (más lento)</li>
+              <li>Ferries en Lago de Como y Cinque Terre (€5-15)</li>
+              <li>Ferries Costa Amalfitana ↔ Capri (€15-30)</li>
+            </ul>
+          </div>
+          <div class="card">
+            <p><strong>Costa Amalfitana</strong></p>
+            <ul>
+              <li>Nápoles → Sorrento en tren: 1h15 · €5-10</li>
+              <li>Buses SITA entre pueblos: €2-5</li>
+              <li>Base recomendada: Positano, Amalfi o Sorrento</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="alojamiento">
+        <h2>Alojamiento Recomendado (€/noche, habitación doble)</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Ciudad</th>
+              <th>Económico</th>
+              <th>Medio</th>
+              <th>Lujo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Madrid</td><td>40-60</td><td>60-100</td><td>100+</td></tr>
+            <tr><td>Barcelona</td><td>50-70</td><td>70-120</td><td>120+</td></tr>
+            <tr><td>París</td><td>60-80</td><td>80-150</td><td>150+</td></tr>
+            <tr><td>Disneyland Paris</td><td>150-250</td><td>250-400</td><td>400-1,200+</td></tr>
+            <tr><td>Milán</td><td>50-70</td><td>70-120</td><td>120+</td></tr>
+            <tr><td>Venecia</td><td>60-90</td><td>90-150</td><td>150+</td></tr>
+            <tr><td>Florencia</td><td>50-70</td><td>70-120</td><td>120+</td></tr>
+            <tr><td>Cinque Terre</td><td>60-100</td><td>100-180</td><td>180+</td></tr>
+            <tr><td>Roma</td><td>50-70</td><td>70-120</td><td>120+</td></tr>
+            <tr><td>Nápoles</td><td>40-60</td><td>60-100</td><td>100+</td></tr>
+            <tr><td>Costa Amalfitana</td><td>80-120</td><td>120-200</td><td>200+</td></tr>
+          </tbody>
+        </table>
+        <div class="highlight">
+          Plataformas recomendadas: Booking, Airbnb, Hostelworld, Hotels.com. Reservar
+          Costa Amalfitana y Cinque Terre con mucha anticipación.
+        </div>
+      </section>
+
+      <section id="agenda">
+        <h2>Agenda Diaria con Checklist</h2>
+        <p>Marca cada día completado. Se guarda automáticamente en tu navegador.</p>
+        <div class="day-checklist" id="dayChecklist">
+          <label class="day-card">
+            <input type="checkbox" data-day="1" />
+            <div class="day-content">
+              <p class="day-title">Día 1 · 30 abr · Llegada a Madrid</p>
+              <p class="day-subtitle">Check-in, paseo por La Latina, tapas.</p>
+            </div>
+          </label>
+          <label class="day-card">
+            <input type="checkbox" data-day="2" />
+            <div class="day-content">
+              <p class="day-title">Día 2 · 1 may · Madrid</p>
+              <p class="day-subtitle">Museo Prado, Retiro, Mercado San Miguel.</p>
+            </div>
+          </label>
+          <label class="day-card">
+            <input type="checkbox" data-day="3" />
+            <div class="day-content">
+              <p class="day-title">Día 3 · 2 may · Barcelona</p>
+              <p class="day-subtitle">Sagrada Familia, paseo por El Born.</p>
+            </div>
+          </label>
+          <label class="day-card">
+            <input type="checkbox" data-day="4" />
+            <div class="day-content">
+              <p class="day-title">Día 4 · 3 may · Barcelona</p>
+              <p class="day-subtitle">Park Güell, Barceloneta, tren nocturno.</p>
+            </div>
+          </label>
+          <label class="day-card">
+            <input type="checkbox" data-day="5" />
+            <div class="day-content">
+              <p class="day-title">Día 5 · 4 may · París</p>
+              <p class="day-subtitle">Torre Eiffel, Sena, barrio Latino.</p>
+            </div>
+          </label>
+          <label class="day-card">
+            <input type="checkbox" data-day="6" />
+            <div class="day-content">
+              <p class="day-title">Día 6 · 5 may · París</p>
+              <p class="day-subtitle">Louvre, Tullerías, Montmartre.</p>
+            </div>
+          </label>
+          <label class="day-card">
+            <input type="checkbox" data-day="7" />
+            <div class="day-content">
+              <p class="day-title">Día 7 · 6 may · Disneyland Paris</p>
+              <p class="day-subtitle">Parque completo + compras.</p>
+            </div>
+          </label>
+          <label class="day-card">
+            <input type="checkbox" data-day="8" />
+            <div class="day-content">
+              <p class="day-title">Día 8 · 7 may · Milán & Lago de Como</p>
+              <p class="day-subtitle">Duomo, excursión en ferry.</p>
+            </div>
+          </label>
+          <label class="day-card">
+            <input type="checkbox" data-day="9" />
+            <div class="day-content">
+              <p class="day-title">Día 9 · 8 may · Venecia</p>
+              <p class="day-subtitle">Plaza San Marcos, paseo en vaporetto.</p>
+            </div>
+          </label>
+          <label class="day-card">
+            <input type="checkbox" data-day="10" />
+            <div class="day-content">
+              <p class="day-title">Día 10 · 9 may · Venecia</p>
+              <p class="day-subtitle">Murano/Burano, salida a Florencia.</p>
+            </div>
+          </label>
+          <label class="day-card">
+            <input type="checkbox" data-day="11" />
+            <div class="day-content">
+              <p class="day-title">Día 11 · 10 may · Florencia</p>
+              <p class="day-subtitle">Duomo, Ponte Vecchio, gelato.</p>
+            </div>
+          </label>
+          <label class="day-card">
+            <input type="checkbox" data-day="12" />
+            <div class="day-content">
+              <p class="day-title">Día 12 · 11 may · Florencia</p>
+              <p class="day-subtitle">Galería Uffizi, atardecer en Piazzale.</p>
+            </div>
+          </label>
+          <label class="day-card">
+            <input type="checkbox" data-day="13" />
+            <div class="day-content">
+              <p class="day-title">Día 13 · 12 may · Toscana</p>
+              <p class="day-subtitle">Siena + Pisa (tour o tren).</p>
+            </div>
+          </label>
+          <label class="day-card">
+            <input type="checkbox" data-day="14" />
+            <div class="day-content">
+              <p class="day-title">Día 14 · 13 may · Cinque Terre</p>
+              <p class="day-subtitle">Monterosso, Vernazza, senderos.</p>
+            </div>
+          </label>
+          <label class="day-card">
+            <input type="checkbox" data-day="15" />
+            <div class="day-content">
+              <p class="day-title">Día 15 · 14 may · Cinque Terre</p>
+              <p class="day-subtitle">Manarola, Riomaggiore, tren a Roma.</p>
+            </div>
+          </label>
+          <label class="day-card">
+            <input type="checkbox" data-day="16" />
+            <div class="day-content">
+              <p class="day-title">Día 16 · 15 may · Roma</p>
+              <p class="day-subtitle">Coliseo, Foro, Fontana di Trevi.</p>
+            </div>
+          </label>
+          <label class="day-card">
+            <input type="checkbox" data-day="17" />
+            <div class="day-content">
+              <p class="day-title">Día 17 · 16 may · Roma</p>
+              <p class="day-subtitle">Vaticano, Museos, Trastevere.</p>
+            </div>
+          </label>
+          <label class="day-card">
+            <input type="checkbox" data-day="18" />
+            <div class="day-content">
+              <p class="day-title">Día 18 · 17 may · Roma</p>
+              <p class="day-subtitle">Galería Borghese, compras, aperitivo.</p>
+            </div>
+          </label>
+          <label class="day-card">
+            <input type="checkbox" data-day="19" />
+            <div class="day-content">
+              <p class="day-title">Día 19 · 18 may · Nápoles</p>
+              <p class="day-subtitle">Centro histórico, pizza original.</p>
+            </div>
+          </label>
+          <label class="day-card">
+            <input type="checkbox" data-day="20" />
+            <div class="day-content">
+              <p class="day-title">Día 20 · 19 may · Costa Amalfitana</p>
+              <p class="day-subtitle">Traslado desde Nápoles, base en Positano/Amalfi.</p>
+            </div>
+          </label>
+          <label class="day-card">
+            <input type="checkbox" data-day="21" />
+            <div class="day-content">
+              <p class="day-title">Día 21 · 20 may · Costa Amalfitana</p>
+              <p class="day-subtitle">Explorar Positano y sus playas.</p>
+            </div>
+          </label>
+          <label class="day-card">
+            <input type="checkbox" data-day="22" />
+            <div class="day-content">
+              <p class="day-title">Día 22 · 21 may · Costa Amalfitana</p>
+              <p class="day-subtitle">Ravello, Villa Cimbrone, ferry a Amalfi.</p>
+            </div>
+          </label>
+          <label class="day-card">
+            <input type="checkbox" data-day="23" />
+            <div class="day-content">
+              <p class="day-title">Día 23 · 22 may · Costa Amalfitana</p>
+              <p class="day-subtitle">Excursión a Capri o día libre.</p>
+            </div>
+          </label>
+          <label class="day-card">
+            <input type="checkbox" data-day="24" />
+            <div class="day-content">
+              <p class="day-title">Día 24 · 23 may · Madrid</p>
+              <p class="day-subtitle">Compras en Gran Vía, descanso y preparación final (23-24 may).</p>
+            </div>
+          </label>
+          <label class="day-card">
+            <input type="checkbox" data-day="25" />
+            <div class="day-content">
+              <p class="day-title">Día 25 · 25 may · Vuelo a Uruguay</p>
+              <p class="day-subtitle">Check-out, traslado al aeropuerto y regreso a casa.</p>
+            </div>
+          </label>
+        </div>
+        <button class="reset-btn" id="resetChecklist">Reiniciar checklist</button>
+      </section>
+
+      <section id="mapa">
+        <h2>Mapa Interactivo del Recorrido</h2>
+        <p>
+          Seleccioná un día en la agenda o usa la barra de tiempo debajo del mapa para ver dónde estarán y cómo progresa el
+          recorrido completo por Europa.
+        </p>
+        <div id="travelMap"></div>
+        <div class="timeline-slider-container">
+          <div class="timeline-slider-wrapper">
+            <div class="timeline-slider-track">
+              <div class="timeline-slider-progress" id="timelineSliderProgress"></div>
+              <input
+                type="range"
+                min="1"
+                max="25"
+                value="1"
+                class="timeline-slider"
+                id="timelineSlider"
+              />
+            </div>
+            <div class="timeline-labels">
+              <span class="timeline-label">30 abr</span>
+              <span class="timeline-label">5 may</span>
+              <span class="timeline-label">10 may</span>
+              <span class="timeline-label">15 may</span>
+              <span class="timeline-label">20 may</span>
+              <span class="timeline-label">25 may</span>
+            </div>
+          </div>
+          <div class="timeline-current-day" id="timelineCurrentDay">
+            Día 1 · 30 abr · Madrid
+          </div>
+        </div>
+      </section>
+
+      <section id="disney">
+        <h2>Disneyland Paris · ¿Dónde alojarse?</h2>
+        <div class="grid deux">
+          <div class="card">
+            <p><strong>Hoteles Disney (mayo, temporada media-alta)</strong></p>
+            <ul>
+              <li>Value (Cheyenne/Santa Fe): €200-300/noche</li>
+              <li>Moderados (Sequoia/Newport): €300-450/noche</li>
+              <li>Deluxe (Disneyland Hotel, Art of Marvel): €600-1,200+/noche</li>
+            </ul>
+            <p><strong>Ventajas:</strong> Acceso anticipado, ambientación total, shuttle gratuito.</p>
+            <p><strong>Desventajas:</strong> Precio alto, lejos del centro de París.</p>
+          </div>
+          <div class="card">
+            <p><strong>Recomendación para este viaje</strong></p>
+            <ul>
+              <li><strong>Opción 1 (ideal):</strong> Hospedarse en París (€60-150) y tomar RER A (40 min, €7-10)</li>
+              <li>Opción 2: 1 noche en hotel Disney Value para experiencia completa</li>
+              <li>Opción 3: Hoteles cercanos (Marne-la-Vallée, Torcy) €80-120</li>
+            </ul>
+            <p>Salir 7:00-7:30 AM para llegar al parque antes de las 9:00 sin Extra Magic Time.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="actividades">
+        <h2>Entradas y Excursiones Clave</h2>
+        <div class="grid deux">
+          <div class="card">
+            <p><strong>Reservas obligatorias</strong></p>
+            <ul>
+              <li>Sagrada Familia · €26-30 · 2-3 meses antes</li>
+              <li>Louvre · €17 · 1-2 meses</li>
+              <li>Torre Eiffel · €10-26 · 2-3 meses</li>
+              <li>Disneyland Paris · €56-149 · 2-3 meses</li>
+              <li>Coliseo · €16-22 · 2-3 meses</li>
+              <li>Vaticano · €17-21 · 1-2 meses</li>
+              <li>Uffizi · €12-20 · 1-2 meses</li>
+              <li>Duomo Milán · €16 · 1 mes</li>
+              <li>Cinque Terre Card · €18-35 · al llegar</li>
+              <li>Ferry a Capri (opcional) · €15-30 · reservar en temporada alta</li>
+            </ul>
+          </div>
+          <div class="card">
+            <p><strong>Excursiones destacadas</strong></p>
+            <ul>
+              <li>Lago de Como desde Milán · Tren 1h · Ferry €5-15</li>
+              <li>Toscana (Siena + Pisa) · Tour €60-100 o transporte público</li>
+              <li>Cinque Terre · 5 pueblos · 2 días recomendados</li>
+              <li>Costa Amalfitana · Positano, Amalfi, Ravello, Capri</li>
+            </ul>
+            <p>Comprar con anticipación reduce costos hasta 70% en trenes y entradas.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="comunicacion">
+        <h2>Comunicación y Conectividad</h2>
+        <div class="grid trois">
+          <div class="card">
+            <p><strong>Mejor opción</strong></p>
+            <p>eSIM Holafly Europa · USD 47 (~€42) · 30 días · datos ilimitados.</p>
+            <ul>
+              <li>Activa antes del viaje</li>
+              <li>Funciona en todos los países</li>
+              <li>Mantienes la SIM de Antel para WhatsApp</li>
+            </ul>
+          </div>
+          <div class="card">
+            <p><strong>Alternativas</strong></p>
+            <ul>
+              <li>eSIM Airalo · USD 25-50 · 10-30 GB</li>
+              <li>Orange Holiday Europe · €39.99 (12 GB/14 días)</li>
+              <li>SIM física Orange/Vodafone en España · €20-30 · 10-20 GB</li>
+              <li>Roaming Antel (5 paquetes) · USD 110 · 25 GB</li>
+            </ul>
+          </div>
+          <div class="card">
+            <p><strong>Pasos clave</strong></p>
+            <ol>
+              <li>Verificar compatibilidad eSIM</li>
+              <li>Comprar eSIM y recibir QR</li>
+              <li>Activar al llegar a Europa</li>
+              <li>Configurar datos móviles en eSIM</li>
+            </ol>
+          </div>
+        </div>
+        <div class="highlight">
+          WiFi gratuito en la mayoría de hoteles, cafés y espacios públicos de las
+          principales ciudades. Usa cuando sea posible para ahorrar datos.
+        </div>
+      </section>
+
+      <section id="comida">
+        <h2>Comida y Presupuesto Diario</h2>
+        <div class="grid deux">
+          <div class="card">
+            <p><strong>Presupuesto por persona</strong></p>
+            <ul>
+              <li>Económico: €20-30 (supermercado + comida callejera)</li>
+              <li>Medio: €30-50 (restaurantes locales)</li>
+              <li>Alto: €50+ (restaurantes turísticos/gourmet)</li>
+            </ul>
+          </div>
+          <div class="card">
+            <p><strong>Imperdibles por ciudad</strong></p>
+            <ul>
+              <li>Madrid: Tapas en La Latina, churros San Ginés, Mercado San Miguel</li>
+              <li>Barcelona: Tapas El Born, paella Barceloneta, La Boquería</li>
+              <li>París: Crêpes Montmartre, croissants artesanales, bistrós</li>
+              <li>Italia: Pizza napolitana, pasta fresca, gelato, aperitivo en Milán</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="documentos">
+        <h2>Documentos & Requisitos</h2>
+        <div class="grid deux">
+          <div class="card">
+            <ul>
+              <li>Pasaporte válido 6 meses después del regreso</li>
+              <li>Seguro de viaje obligatorio (mínimo €30,000)</li>
+              <li>Reservas de vuelos, trenes y alojamiento</li>
+              <li>Tarjetas con chip y PIN</li>
+            </ul>
+          </div>
+          <div class="card">
+            <p><strong>Backups</strong></p>
+            <ul>
+              <li>Copias impresas y digitales de documentos</li>
+              <li>Guardar en la nube y en el correo</li>
+              <li>Registrar números de seguro y asistencia</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="tips">
+        <h2>Tips, Apps y Consejos Finales</h2>
+        <div class="grid trois">
+          <div class="card">
+            <p><strong>Tips esenciales</strong></p>
+            <ul>
+              <li>Comprar trenes/entradas con anticipación (hasta 70% menos)</li>
+              <li>Volar martes-miércoles para mejores tarifas</li>
+              <li>Evitar restaurantes ultra turísticos</li>
+              <li>Cuidado con carteristas en Barcelona, París, Roma</li>
+              <li>Revisar horarios (siesta y cierres tempranos)</li>
+            </ul>
+          </div>
+          <div class="card">
+            <p><strong>Apps recomendadas</strong></p>
+            <ul>
+              <li>Google Maps (offline) & Citymapper</li>
+              <li>Google Translate (idiomas)</li>
+              <li>Booking.com · Airbnb · Hostelworld</li>
+              <li>XE Currency & Rick Steves Audio Europe</li>
+            </ul>
+          </div>
+          <div class="card">
+            <p><strong>Clima y seguridad</strong></p>
+            <ul>
+              <li>Primavera: capas ligeras, capa impermeable</li>
+              <li>Propinas 5-10% cuando corresponda</li>
+              <li>Siempre llevar agua y calzado cómodo</li>
+              <li>Guardar documentos en hotel o riñonera oculta</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="contactos">
+        <h2>Contactos de Emergencia</h2>
+        <div class="grid deux">
+          <div class="card">
+            <ul>
+              <li>Emergencias generales (UE): 112</li>
+              <li>Seguro de viaje: añadir número correspondiente</li>
+            </ul>
+          </div>
+          <div class="card">
+            <ul>
+              <li>Embajada de Uruguay en Madrid: verificar contacto actualizado</li>
+              <li>Embajada de Uruguay en Roma: verificar contacto actualizado</li>
+              <li>Asistencia consular: coordinar con embajadas en cada país</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      Plan elaborado con toda la información del itinerario Abril-Mayo. Última
+      actualización: noviembre 2025.
+    </footer>
+
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      crossorigin=""
+    ></script>
+    <script>
+      const STORAGE_KEY = "viaje-checklist-v1";
+
+      const savedState = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+      document
+        .querySelectorAll('#dayChecklist input[type="checkbox"]')
+        .forEach((checkbox) => {
+          const day = checkbox.dataset.day;
+          checkbox.checked = Boolean(savedState[day]);
+          checkbox.addEventListener("change", () => {
+            savedState[day] = checkbox.checked;
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(savedState));
+          });
+        });
+
+      document
+        .getElementById("resetChecklist")
+        .addEventListener("click", () => {
+          document
+            .querySelectorAll('#dayChecklist input[type="checkbox"]')
+            .forEach((checkbox) => {
+              checkbox.checked = false;
+              const day = checkbox.dataset.day;
+              savedState[day] = false;
+            });
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(savedState));
+        });
+
+      const itineraryDays = [
+        { day: 1, title: "Día 1 · 30 abr · Madrid", cityKey: "madrid", coords: [40.4168, -3.7038], description: "Llegada y paseo por La Latina." },
+        { day: 2, title: "Día 2 · 1 may · Madrid", cityKey: "madrid", coords: [40.4168, -3.7038], description: "Museo del Prado y Parque del Retiro." },
+        { day: 3, title: "Día 3 · 2 may · Barcelona", cityKey: "barcelona", coords: [41.3874, 2.1686], description: "Sagrada Familia y El Born." },
+        { day: 4, title: "Día 4 · 3 may · Barcelona", cityKey: "barcelona", coords: [41.3874, 2.1686], description: "Park Güell y Barceloneta." },
+        { day: 5, title: "Día 5 · 4 may · París", cityKey: "paris", coords: [48.8566, 2.3522], description: "Torre Eiffel, Sena y Barrio Latino." },
+        { day: 6, title: "Día 6 · 5 may · París", cityKey: "paris", coords: [48.8566, 2.3522], description: "Louvre, Tullerías y Montmartre." },
+        { day: 7, title: "Día 7 · 6 may · Disneyland Paris", cityKey: "disney", coords: [48.8674, 2.7834], description: "Parques de Disney y compras." },
+        { day: 8, title: "Día 8 · 7 may · Milán & Lago de Como", cityKey: "milan", coords: [45.4642, 9.19], description: "Duomo y excursión a Como." },
+        { day: 9, title: "Día 9 · 8 may · Venecia", cityKey: "venecia", coords: [45.4408, 12.3155], description: "Plaza San Marcos y canales." },
+        { day: 10, title: "Día 10 · 9 may · Venecia", cityKey: "venecia", coords: [45.4408, 12.3155], description: "Islas de Murano y Burano." },
+        { day: 11, title: "Día 11 · 10 may · Florencia", cityKey: "florencia", coords: [43.7696, 11.2558], description: "Duomo y Ponte Vecchio." },
+        { day: 12, title: "Día 12 · 11 may · Florencia", cityKey: "florencia", coords: [43.7696, 11.2558], description: "Galería Uffizi y Piazzale." },
+        { day: 13, title: "Día 13 · 12 may · Toscana", cityKey: "toscana", coords: [43.3189, 11.3308], description: "Excursión Siena + Pisa." },
+        { day: 14, title: "Día 14 · 13 may · Cinque Terre", cityKey: "cinqueterre", coords: [44.146, 9.643], description: "Monterosso, Vernazza, senderos." },
+        { day: 15, title: "Día 15 · 14 may · Cinque Terre", cityKey: "cinqueterre", coords: [44.146, 9.643], description: "Manarola, Riomaggiore y tren a Roma." },
+        { day: 16, title: "Día 16 · 15 may · Roma", cityKey: "roma", coords: [41.9028, 12.4964], description: "Coliseo y Foro Romano." },
+        { day: 17, title: "Día 17 · 16 may · Roma", cityKey: "roma", coords: [41.9028, 12.4964], description: "Vaticano y Museos." },
+        { day: 18, title: "Día 18 · 17 may · Roma", cityKey: "roma", coords: [41.9028, 12.4964], description: "Fontana di Trevi y Trastevere." },
+        { day: 19, title: "Día 19 · 18 may · Nápoles", cityKey: "napoles", coords: [40.8518, 14.2681], description: "Centro histórico y pizza original." },
+        { day: 20, title: "Día 20 · 19 may · Costa Amalfitana", cityKey: "positano", coords: [40.6333, 14.602], description: "Traslado a Positano y playas." },
+        { day: 21, title: "Día 21 · 20 may · Costa Amalfitana", cityKey: "positano", coords: [40.6333, 14.602], description: "Explorar Positano y Amalfi." },
+        { day: 22, title: "Día 22 · 21 may · Costa Amalfitana", cityKey: "ravello", coords: [40.6493, 14.6121], description: "Ravello y Villa Cimbrone." },
+        { day: 23, title: "Día 23 · 22 may · Costa Amalfitana", cityKey: "capri", coords: [40.555, 14.2222], description: "Excursión a Capri o senderismo." },
+        { day: 24, title: "Día 24 · 23 may · Madrid", cityKey: "madrid", coords: [40.4168, -3.7038], description: "Compras, tax free y preparación final." },
+        { day: 25, title: "Día 25 · 25 may · Vuelo a Uruguay", cityKey: "madrid", coords: [40.4168, -3.7038], description: "Traslado al aeropuerto y vuelo de regreso." },
+      ];
+
+      const map = L.map("travelMap", { scrollWheelZoom: false }).setView(
+        [43.5, 7.5],
+        4
+      );
+
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "&copy; OpenStreetMap contributors",
+        maxZoom: 18,
+      }).addTo(map);
+
+      const dayMarkers = {};
+      const cityStops = [];
+      const seenCities = new Set();
+
+      itineraryDays.forEach((stop) => {
+        const marker = L.circleMarker(stop.coords, {
+          radius: 6,
+          color: "#4b6bfb",
+          fillColor: "#4b6bfb",
+          fillOpacity: 0.85,
+          weight: 2,
+        })
+          .addTo(map)
+          .bindPopup(`<strong>${stop.title}</strong><br />${stop.description}`);
+        dayMarkers[stop.day] = marker;
+
+        if (!seenCities.has(stop.cityKey)) {
+          seenCities.add(stop.cityKey);
+          cityStops.push({ day: stop.day, coords: stop.coords });
+        }
+      });
+
+      L.polyline(
+        cityStops.map((stop) => stop.coords),
+        { color: "#a7b3ff", weight: 2, dashArray: "6 8" }
+      ).addTo(map);
+
+      const progressLine = L.polyline([], {
+        color: "#4b6bfb",
+        weight: 4,
+        opacity: 0.85,
+      }).addTo(map);
+
+      const timelineSlider = document.getElementById("timelineSlider");
+      const timelineCurrentDay = document.getElementById("timelineCurrentDay");
+      const timelineSliderProgress = document.getElementById("timelineSliderProgress");
+
+      function updateProgressBar(day) {
+        const progressPercent = ((day - 1) / (itineraryDays.length - 1)) * 100;
+        timelineSliderProgress.style.width = `${progressPercent}%`;
+      }
+
+      function focusDay(day, updateSlider = true) {
+        const stop = itineraryDays.find((entry) => entry.day === day);
+        if (!stop) return;
+
+        const zoomLevel = stop.cityKey === "disney" ? 10 : stop.day <= 4 ? 6 : 7;
+        map.flyTo(stop.coords, zoomLevel, { duration: 0.6 });
+
+        Object.entries(dayMarkers).forEach(([key, marker]) => {
+          const isActive = Number(key) === day;
+          marker.setStyle({
+            radius: isActive ? 9 : 6,
+            color: isActive ? "#ff8a3d" : "#4b6bfb",
+            fillColor: isActive ? "#ff8a3d" : "#4b6bfb",
+          });
+          if (isActive) marker.openPopup();
+        });
+
+        const pathPoints = cityStops
+          .filter((point) => point.day <= day)
+          .map((point) => point.coords);
+        progressLine.setLatLngs(pathPoints);
+
+        if (updateSlider) {
+          timelineSlider.value = day;
+          timelineCurrentDay.textContent = stop.title;
+        }
+
+        updateProgressBar(day);
+      }
+
+      timelineSlider.addEventListener("input", (e) => {
+        const day = Number(e.target.value);
+        if (!Number.isNaN(day)) {
+          focusDay(day, false);
+          const stop = itineraryDays.find((entry) => entry.day === day);
+          if (stop) {
+            timelineCurrentDay.textContent = stop.title;
+          }
+        }
+      });
+
+      document.querySelectorAll(".day-card").forEach((card) => {
+        card.addEventListener("click", () => {
+          const checkbox = card.querySelector('input[type="checkbox"]');
+          const dayNumber = Number(checkbox.dataset.day);
+          if (!Number.isNaN(dayNumber)) {
+            focusDay(dayNumber);
+          }
+        });
+      });
+
+      focusDay(1);
+    </script>
+  </body>
+</html>
+
