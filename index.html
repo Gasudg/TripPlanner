@@ -1,2278 +1,2454 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Viaje Europa - Plan Maestro</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-      crossorigin=""
-    />
-    <style>
-      :root {
-        color-scheme: light;
-        font-family: "Cormorant Garamond", "Playfair Display", "Georgia", serif;
-        line-height: 1.8;
-        --bg: #faf9f7;
-        --bg-alt: #f5f3f0;
-        --card: #ffffff;
-        --accent: #8b6914;
-        --accent-alt: #c9a961;
-        --text: #2c2416;
-        --muted: #6b5d4f;
-        --border: #e8e5e0;
-        --shadow: 0 4px 20px rgba(44, 36, 22, 0.08);
-        --gold: #d4af37;
-        --gold-light: #f4e8c1;
-      }
-
-      * {
-        box-sizing: border-box;
-        scroll-behavior: smooth;
-      }
-
-      body {
-        margin: 0;
-        background: #faf9f7;
-        color: var(--text);
-        font-weight: 400;
-        font-size: 1.15rem;
-      }
-
-      p, li, td, th, small, span {
-        font-size: 1.15rem;
-        line-height: 1.8;
-      }
-
-      /* Sidebar Navigation */
-      .sidebar {
-        position: fixed;
-        left: 0;
-        top: 0;
-        width: 300px;
-        height: 100vh;
-        background: linear-gradient(180deg, #2c2416 0%, #1a1611 100%);
-        color: #faf9f7;
-        padding: 3rem 2rem;
-        overflow-y: auto;
-        z-index: 1000;
-        box-shadow: 2px 0 30px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease;
-        border-right: 1px solid rgba(212, 175, 55, 0.2);
-      }
-
-      .sidebar::-webkit-scrollbar {
-        width: 6px;
-      }
-
-      .sidebar::-webkit-scrollbar-track {
-        background: rgba(255, 255, 255, 0.1);
-      }
-
-      .sidebar::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.3);
-        border-radius: 3px;
-      }
-
-      .sidebar-header {
-        margin-bottom: 3rem;
-        padding-bottom: 2rem;
-        border-bottom: 1px solid rgba(212, 175, 55, 0.3);
-      }
-
-      .sidebar-header h1 {
-        margin: 0 0 0.5rem;
-        font-size: 1.8rem;
-        font-weight: 400;
-        line-height: 1.2;
-        font-family: "Playfair Display", serif;
-        color: var(--gold);
-        letter-spacing: 0.5px;
-      }
-
-      .sidebar-header p {
-        margin: 0;
-        font-size: 1rem;
-        opacity: 0.85;
-        line-height: 1.5;
-        font-style: italic;
-        color: #e8e5e0;
-      }
-
-      .sidebar-nav {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-      }
-
-      .sidebar-nav a {
-        text-decoration: none;
-        color: rgba(250, 249, 247, 0.8);
-        padding: 0.85rem 1.2rem;
-        border-radius: 0;
-        font-size: 1.05rem;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        position: relative;
-        font-weight: 300;
-        letter-spacing: 0.3px;
-        border-left: 2px solid transparent;
-      }
-
-      .sidebar-nav a::before {
-        content: '';
-        width: 2px;
-        height: 0;
-        background: var(--gold);
-        position: absolute;
-        left: 0;
-        top: 50%;
-        transform: translateY(-50%);
-        transition: height 0.3s ease;
-      }
-
-      .sidebar-nav a:hover {
-        background: rgba(212, 175, 55, 0.08);
-        color: var(--gold);
-        transform: translateX(6px);
-        border-left-color: var(--gold);
-      }
-
-      .sidebar-nav a:hover::before {
-        height: 50%;
-      }
-
-      .sidebar-nav a:active,
-      .sidebar-nav a.active {
-        background: rgba(212, 175, 55, 0.12);
-        color: var(--gold);
-        border-left-color: var(--gold);
-      }
-
-      .sidebar-nav a:active::before,
-      .sidebar-nav a.active::before {
-        height: 70%;
-      }
-
-      .menu-toggle {
-        display: none;
-        position: fixed;
-        top: 1.5rem;
-        left: 1.5rem;
-        z-index: 1001;
-        background: #2c2416;
-        color: var(--gold);
-        border: 1px solid rgba(212, 175, 55, 0.3);
-        border-radius: 0;
-        padding: 0.75rem 1rem;
-        cursor: pointer;
-        font-size: 1.3rem;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
-        font-family: "Playfair Display", serif;
-      }
-
-        @media (max-width: 1024px) {
-        .sidebar {
-          transform: translateX(-100%);
-          width: 280px;
-        }
-
-        .sidebar.open {
-          transform: translateX(0);
-        }
-
-        .menu-toggle {
-          display: block;
-        }
-
-        main {
-          margin-left: 0 !important;
-        }
-
-        header {
-          margin-left: 0;
-        }
-
-        footer {
-          margin-left: 0;
-        }
-      }
-
-      header {
-        background: linear-gradient(135deg, #2c2416 0%, #1a1611 100%);
-        color: #faf9f7;
-        padding: 5rem clamp(2rem, 6vw, 8rem) 5rem;
-        border-bottom: 3px solid var(--gold);
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        margin-left: 300px;
-        position: relative;
-        overflow: hidden;
-      }
-
-      header::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 40%;
-        height: 100%;
-        background: url('https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&q=80') center/cover;
-        opacity: 0.05;
-        z-index: 0;
-      }
-
-      header::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 1px;
-        background: linear-gradient(90deg, transparent, var(--gold), transparent);
-        opacity: 0.3;
-      }
-
-      header > * {
-        position: relative;
-        z-index: 1;
-      }
-
-      header h1 {
-        margin: 0 0 1.5rem;
-        font-size: clamp(2.5rem, 5vw, 4rem);
-        font-family: "Playfair Display", serif;
-        font-weight: 400;
-        letter-spacing: 1px;
-        color: var(--gold);
-        line-height: 1.2;
-      }
-
-      header p {
-        margin: 0;
-        max-width: 65ch;
-        font-size: 1.3rem;
-        line-height: 1.9;
-        color: rgba(250, 249, 247, 0.9);
-        font-weight: 300;
-      }
-
-      /* Countdown Timer */
-      .countdown-container {
-        margin-top: 3rem;
-        padding: 2.5rem;
-        background: rgba(44, 36, 22, 0.4);
-        backdrop-filter: blur(10px);
-        border-radius: 0;
-        border: 1px solid rgba(212, 175, 55, 0.3);
-        border-top: 2px solid var(--gold);
-      }
-
-      .countdown-title {
-        font-size: 0.95rem;
-        opacity: 0.9;
-        margin-bottom: 1.5rem;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        font-weight: 300;
-        color: rgba(250, 249, 247, 0.8);
-      }
-
-      .countdown-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 1.5rem;
-      }
-
-      .countdown-item {
-        text-align: center;
-        background: rgba(44, 36, 22, 0.3);
-        padding: 1.5rem 1rem;
-        border-radius: 0;
-        border: 1px solid rgba(212, 175, 55, 0.2);
-        transition: all 0.3s ease;
-      }
-
-      .countdown-item:hover {
-        border-color: var(--gold);
-        background: rgba(44, 36, 22, 0.5);
-      }
-
-      .countdown-value {
-        font-size: 2.5rem;
-        font-weight: 400;
-        display: block;
-        margin-bottom: 0.5rem;
-        color: var(--gold);
-        font-family: "Playfair Display", serif;
-        letter-spacing: 1px;
-      }
-
-      .countdown-label {
-        font-size: 0.8rem;
-        opacity: 0.85;
-        text-transform: uppercase;
-        letter-spacing: 1.5px;
-        font-weight: 300;
-        color: rgba(250, 249, 247, 0.9);
-      }
-
-      @media (max-width: 768px) {
-        .countdown-grid {
-          grid-template-columns: repeat(2, 1fr);
-        }
-
-        header {
-          margin-left: 0;
-        }
-      }
-
-      main {
-        padding: clamp(3rem, 6vw, 6rem);
-        display: flex;
-        flex-direction: column;
-        gap: 3rem;
-        margin-left: 300px;
-        background: var(--bg);
-      }
-
-      section {
-        background: var(--card);
-        border-radius: 0;
-        padding: clamp(2.5rem, 4vw, 4rem);
-        box-shadow: 0 2px 15px rgba(44, 36, 22, 0.06);
-        border: 1px solid var(--border);
-        border-top: 3px solid var(--gold);
-        transition: all 0.3s ease;
-        position: relative;
-      }
-
-      section::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 1px;
-        background: linear-gradient(90deg, transparent, var(--gold), transparent);
-        opacity: 0.2;
-      }
-
-      section:hover {
-        box-shadow: 0 4px 25px rgba(44, 36, 22, 0.1);
-        border-top-color: var(--accent);
-      }
-
-      /* Destination Images */
-      .destination-image {
-        width: 100%;
-        height: 200px;
-        object-fit: cover;
-        border-radius: 12px;
-        margin-bottom: 1rem;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-      }
-
-      .destination-card {
-        position: relative;
-        overflow: hidden;
-        border-radius: 16px;
-      }
-
-      .destination-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.2) 100%);
-        z-index: 1;
-        pointer-events: none;
-      }
-
-      .destination-card img {
-        transition: transform 0.4s ease;
-      }
-
-      .destination-card:hover img {
-        transform: scale(1.05);
-      }
-
-      h2 {
-        margin-top: 0;
-        margin-bottom: 2rem;
-        font-size: clamp(2rem, 3vw, 2.5rem);
-        font-family: "Playfair Display", serif;
-        font-weight: 400;
-        color: var(--text);
-        letter-spacing: 0.5px;
-        border-bottom: 2px solid var(--gold);
-        padding-bottom: 1rem;
-        display: inline-block;
-        width: 100%;
-      }
-
-      .grid {
-        display: grid;
-        gap: 1rem;
-      }
-
-      @media (min-width: 900px) {
-        .grid.deux {
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-
-        .grid.trois {
-          grid-template-columns: repeat(3, minmax(0, 1fr));
-        }
-      }
-
-      .card {
-        border: 1px solid var(--border);
-        border-radius: 0;
-        padding: 1.5rem;
-        background: var(--card);
-        box-shadow: 0 1px 5px rgba(44, 36, 22, 0.04);
-        transition: all 0.3s ease;
-        border-left: 3px solid transparent;
-      }
-
-      .card:hover {
-        border-left-color: var(--gold);
-        box-shadow: 0 2px 10px rgba(44, 36, 22, 0.08);
-      }
-
-      .tag {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.4rem;
-        font-size: 0.9rem;
-        padding: 0.3rem 1rem;
-        border-radius: 0;
-        background: var(--gold-light);
-        color: var(--accent);
-        margin-right: 0.5rem;
-        border: 1px solid rgba(212, 175, 55, 0.3);
-        font-weight: 300;
-        letter-spacing: 0.5px;
-        text-transform: uppercase;
-      }
-
-      ul {
-        padding-left: 1.1rem;
-        margin: 0.6rem 0;
-      }
-
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 1.5rem;
-        font-size: 1.15rem;
-        border: 1px solid var(--border);
-      }
-
-      th,
-      td {
-        border: 1px solid var(--border);
-        padding: 1rem;
-        text-align: left;
-      }
-
-      th {
-        background: rgba(212, 175, 55, 0.1);
-        font-weight: 400;
-        font-family: "Playfair Display", serif;
-        color: var(--text);
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        font-size: 1.05rem;
-        border-bottom: 2px solid var(--gold);
-      }
-
-      td {
-        font-weight: 300;
-      }
-
-      .timeline {
-        counter-reset: step;
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-      }
-
-      .timeline-item {
-        display: flex;
-        gap: 1rem;
-      }
-
-      .timeline-item::before {
-        counter-increment: step;
-        content: counter(step);
-        width: 40px;
-        height: 40px;
-        border-radius: 0;
-        background: var(--gold);
-        color: #2c2416;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 400;
-        flex-shrink: 0;
-        font-family: "Playfair Display", serif;
-        border: 2px solid #2c2416;
-      }
-
-      .timeline-content {
-        background: rgba(250, 249, 247, 0.6);
-        border-radius: 0;
-        padding: 1.2rem 1.5rem;
-        flex: 1;
-        border: 1px solid var(--border);
-        border-left: 2px solid var(--gold);
-      }
-
-      .cost-range {
-        font-weight: 400;
-        color: var(--accent);
-        font-family: "Playfair Display", serif;
-        font-size: 1.1rem;
-      }
-
-      .highlight {
-        background: var(--gold-light);
-        border-left: 3px solid var(--gold);
-        padding: 1.5rem 2rem;
-        border-radius: 0;
-        margin: 2rem 0;
-        border-top: 1px solid rgba(212, 175, 55, 0.2);
-        border-bottom: 1px solid rgba(212, 175, 55, 0.2);
-        font-style: italic;
-      }
-
-      /* Flight Cards */
-      .flights-container {
-        margin-top: 1.5rem;
-      }
-
-      .flights-title {
-        font-size: 1rem;
-        font-weight: 600;
-        margin-bottom: 1rem;
-        color: var(--text);
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-      }
-
-      .flights-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 1rem;
-      }
-
-      .flight-card {
-        background: var(--card);
-        border: 1px solid var(--border);
-        border-radius: 0;
-        padding: 2rem;
-        box-shadow: 0 1px 5px rgba(44, 36, 22, 0.04);
-        transition: all 0.3s ease;
-        border-left: 3px solid transparent;
-        border-top: 1px solid var(--gold);
-      }
-
-      .flight-card:hover {
-        border-left-color: var(--gold);
-        box-shadow: 0 2px 15px rgba(44, 36, 22, 0.08);
-      }
-
-      .flight-type {
-        display: inline-block;
-        font-size: 0.85rem;
-        font-weight: 300;
-        text-transform: uppercase;
-        letter-spacing: 1.5px;
-        padding: 0.4rem 1rem;
-        border-radius: 0;
-        margin-bottom: 1rem;
-        border: 1px solid;
-        font-family: "Cormorant Garamond", serif;
-      }
-
-      .flight-type.ida {
-        background: rgba(219, 234, 254, 0.3);
-        color: #1e40af;
-        border-color: rgba(30, 64, 175, 0.3);
-      }
-
-      .flight-type.regreso {
-        background: rgba(209, 250, 229, 0.3);
-        color: #065f46;
-        border-color: rgba(6, 95, 70, 0.3);
-      }
-
-      .flight-type.europeo {
-        background: rgba(224, 231, 255, 0.3);
-        color: #3730a3;
-        border-color: rgba(55, 48, 163, 0.3);
-      }
-
-      .flight-type.tren {
-        background: rgba(252, 231, 243, 0.3);
-        color: #831843;
-        border-color: rgba(131, 24, 67, 0.3);
-      }
-
-      .flight-route {
-        font-size: 0.9rem;
-        color: var(--muted);
-        margin-bottom: 0.5rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-      }
-
-      .flight-details {
-        margin-top: 0.75rem;
-        padding-top: 0.75rem;
-        border-top: 1px solid #e9d5ff;
-      }
-
-      .flight-detail-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 0.5rem;
-        font-size: 1.1rem;
-      }
-
-      .flight-detail-item:last-child {
-        margin-bottom: 0;
-      }
-
-      .flight-detail-label {
-        color: var(--muted);
-        font-weight: 500;
-      }
-
-      .flight-detail-value {
-        color: var(--text);
-        font-weight: 600;
-      }
-
-      .flight-confirmed {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.3rem;
-        color: #059669;
-        font-weight: 600;
-        font-size: 0.85rem;
-        margin-top: 0.5rem;
-      }
-
-      .flight-no-change {
-        display: inline-block;
-        background: #fef3c7;
-        color: #92400e;
-        padding: 0.2rem 0.6rem;
-        border-radius: 12px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        margin-top: 0.5rem;
-      }
-
-      .accordion {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-      }
-
-      .accordion-item {
-        border: 1px solid var(--border);
-        border-radius: 0;
-        background: var(--card);
-        box-shadow: 0 1px 5px rgba(44, 36, 22, 0.04);
-        overflow: hidden;
-        border-left: 3px solid transparent;
-        transition: all 0.3s ease;
-      }
-
-      .accordion-item:hover {
-        border-left-color: var(--gold);
-      }
-
-      .accordion-item[open] {
-        box-shadow: 0 2px 15px rgba(44, 36, 22, 0.08);
-        border-left-color: var(--gold);
-      }
-
-      .accordion-item summary {
-        list-style: none;
-        cursor: pointer;
-        padding: 1.5rem 2rem;
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-        font-weight: 400;
-        font-family: "Playfair Display", serif;
-        font-size: 1.3rem;
-        transition: all 0.3s ease;
-      }
-
-      .accordion-item summary:hover {
-        background: rgba(212, 175, 55, 0.05);
-      }
-
-      .accordion-item summary::-webkit-details-marker {
-        display: none;
-      }
-
-      .accordion-item summary::after {
-        content: "+";
-        margin-left: auto;
-        font-size: 1.5rem;
-        color: var(--gold);
-        font-weight: 300;
-        font-family: "Playfair Display", serif;
-      }
-
-      .accordion-item[open] summary::after {
-        content: "−";
-      }
-
-      .summary-meta {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.4rem;
-        align-items: center;
-      }
-
-      .summary-meta strong {
-        font-size: 1rem;
-      }
-
-      .summary-note {
-        color: var(--muted);
-        font-size: 0.9rem;
-      }
-
-      .accordion-body {
-        padding: 2rem;
-        border-top: 1px solid var(--border);
-        background: rgba(250, 249, 247, 0.5);
-      }
-
-      .accordion-body ul {
-        margin: 0.6rem 0 0;
-        padding-left: 1.1rem;
-        color: var(--text);
-      }
-
-      .day-checklist {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: 1rem;
-      }
-
-      .day-card {
-        position: relative;
-        border-radius: 0;
-        padding: 1.5rem 1.5rem 1.5rem 3.5rem;
-        border: 1px solid var(--border);
-        background: var(--card);
-        box-shadow: 0 1px 5px rgba(44, 36, 22, 0.04);
-        transition: all 0.3s ease;
-        border-left: 3px solid transparent;
-      }
-
-      .day-card:hover {
-        border-left-color: var(--gold);
-        box-shadow: 0 2px 10px rgba(44, 36, 22, 0.08);
-        background: rgba(250, 249, 247, 0.8);
-      }
-
-      .day-card input[type="checkbox"] {
-        position: absolute;
-        left: 1rem;
-        top: 1.25rem;
-        width: 18px;
-        height: 18px;
-        cursor: pointer;
-        accent-color: var(--accent);
-      }
-
-      .day-card input:checked + .day-content .day-title {
-        text-decoration: line-through;
-        opacity: 0.6;
-      }
-
-      .day-title {
-        font-weight: 400;
-        margin: 0;
-        font-family: "Playfair Display", serif;
-        font-size: 1.25rem;
-        color: var(--text);
-      }
-
-      .day-subtitle {
-        margin: 0.5rem 0 0;
-        color: var(--muted);
-        font-size: 1.1rem;
-        line-height: 1.7;
-        font-weight: 300;
-      }
-
-      .reset-btn {
-        background: #141936;
-        color: #fff;
-        border: none;
-        border-radius: 14px;
-        padding: 0.6rem 1rem;
-        font-size: 0.9rem;
-        cursor: pointer;
-        margin-top: 1rem;
-        transition: opacity 0.2s ease;
-      }
-
-      .reset-btn:hover {
-        opacity: 0.85;
-      }
-
-      #travelMap {
-        width: 100%;
-        height: 480px;
-        border-radius: 18px;
-        border: 1px solid var(--border);
-        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
-        overflow: hidden;
-        margin-bottom: 1.5rem;
-      }
-
-      .timeline-slider-container {
-        margin-top: 1.5rem;
-        padding: 1.2rem 1rem;
-        background: #f6f8ff;
-        border-radius: 16px;
-        border: 1px solid var(--border);
-      }
-
-      .timeline-slider-wrapper {
-        position: relative;
-        margin-bottom: 1rem;
-        padding: 1.5rem;
-        background: rgba(250, 249, 247, 0.5);
-        border-radius: 0;
-        border: 1px solid var(--border);
-      }
-
-      .timeline-slider-track {
-        position: relative;
-        height: 8px;
-        background: #d6dcf4;
-        border-radius: 8px;
-        margin: 0.5rem 0;
-      }
-
-      .timeline-slider-progress {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 100%;
-        border-radius: 0;
-        background: var(--gold);
-        transition: width 0.3s ease;
-        pointer-events: none;
-        z-index: 1;
-        width: 0%;
-      }
-
-      .timeline-slider {
-        width: 100%;
-        height: 8px;
-        border-radius: 8px;
-        background: transparent;
-        outline: none;
-        -webkit-appearance: none;
-        appearance: none;
-        cursor: pointer;
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: 2;
-      }
-
-      .timeline-slider::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 22px;
-        height: 22px;
-        border-radius: 0;
-        background: var(--gold);
-        border: 2px solid #2c2416;
-        box-shadow: 0 2px 8px rgba(44, 36, 22, 0.3);
-        cursor: grab;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-      }
-
-      .timeline-slider::-webkit-slider-thumb:hover {
-        transform: scale(1.1);
-        box-shadow: 0 4px 12px rgba(44, 36, 22, 0.4);
-      }
-
-      .timeline-slider::-webkit-slider-thumb:active {
-        cursor: grabbing;
-        transform: scale(1.1);
-      }
-
-      .timeline-slider::-moz-range-thumb {
-        width: 22px;
-        height: 22px;
-        border-radius: 0;
-        background: var(--gold);
-        border: 2px solid #2c2416;
-        box-shadow: 0 2px 8px rgba(44, 36, 22, 0.3);
-        cursor: grab;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-      }
-
-      .timeline-slider::-moz-range-thumb:hover {
-        transform: scale(1.1);
-        box-shadow: 0 4px 12px rgba(44, 36, 22, 0.4);
-      }
-
-      .timeline-slider::-moz-range-thumb:active {
-        cursor: grabbing;
-        transform: scale(1.1);
-      }
-
-      .timeline-labels {
-        display: flex;
-        justify-content: space-between;
-        font-size: 0.75rem;
-        color: var(--muted);
-        margin-top: 0.4rem;
-        padding: 0 0.5rem;
-      }
-
-      .timeline-label {
-        text-align: center;
-        flex: 1;
-      }
-
-      .timeline-current-day {
-        text-align: center;
-        margin-top: 1rem;
-        font-weight: 400;
-        color: var(--text);
-        font-size: 1.1rem;
-        font-family: "Playfair Display", serif;
-        font-style: italic;
-      }
-
-      footer {
-        text-align: center;
-        padding: 3rem 2rem 4rem;
-        font-size: 0.85rem;
-        color: var(--muted);
-        margin-left: 300px;
-        border-top: 1px solid var(--border);
-        background: var(--bg);
-        font-style: italic;
-        letter-spacing: 0.5px;
-      }
-
-      @media (max-width: 1024px) {
-        footer {
-          margin-left: 0;
-        }
-      }
-
-      /* Enhanced card hover effects */
-      .card {
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-      }
-
-      .card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 32px rgba(139, 92, 246, 0.12);
-      }
-    </style>
-  </head>
-  <body>
-    <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">☰</button>
-    
-    <aside class="sidebar" id="sidebar">
-      <div class="sidebar-header">
-        <h1>Plan Maestro<br />Europa</h1>
-        <p>Abril-Mayo 2026</p>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nos vamos a Europa ✈️</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✈️</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+
+  <style>
+    /* ═══════════════════════════════════════════════
+       TOKENS & RESET
+    ═══════════════════════════════════════════════ */
+    :root {
+      --bg:          #0a0c10;
+      --bg2:         #0f1218;
+      --surface:     #141720;
+      --surface2:    #1a1f2e;
+      --border:      rgba(255,255,255,0.07);
+      --border2:     rgba(255,255,255,0.12);
+
+      /* city palette */
+      --madrid:  #f0522e;
+      --barcelona: #f8b500;
+      --paris:   #7eb7ff;
+      --italy:   #4debb8;
+      --amalfi:  #ff6b9d;
+
+      --gold:    #e8c96f;
+      --sky:     #4ab8ff;
+      --white:   #f5f3ef;
+      --muted:   rgba(245,243,239,0.5);
+      --muted2:  rgba(245,243,239,0.25);
+
+      --font-display: 'Playfair Display', serif;
+      --font-body:    'DM Sans', sans-serif;
+
+      --sidebar-w: 280px;
+      --radius:    14px;
+      --radius-sm: 8px;
+
+      --glow-madrid:    0 0 40px rgba(240,82,46,0.2);
+      --glow-paris:     0 0 40px rgba(126,183,255,0.2);
+      --glow-italy:     0 0 40px rgba(77,235,184,0.2);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ═══════════════════════════════════════════════
+       STARS CANVAS (background layer)
+    ═══════════════════════════════════════════════ */
+    #stars-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.5;
+    }
+
+    /* ═══════════════════════════════════════════════
+       SIDEBAR
+    ═══════════════════════════════════════════════ */
+    .sidebar {
+      position: fixed;
+      left: 0; top: 0;
+      width: var(--sidebar-w);
+      height: 100vh;
+      background: rgba(10,12,16,0.96);
+      backdrop-filter: blur(20px);
+      border-right: 1px solid var(--border2);
+      padding: 2rem 1.5rem;
+      overflow-y: auto;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      transition: transform 0.35s cubic-bezier(.4,0,.2,1);
+    }
+
+    .sidebar::-webkit-scrollbar { width: 3px; }
+    .sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
+
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sidebar-logo .plane-icon {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--gold), #c9a84c);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      animation: pulse-glow 3s ease-in-out infinite;
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(232,201,111,0); }
+      50%       { box-shadow: 0 0 0 8px rgba(232,201,111,0.15); }
+    }
+
+    .sidebar-logo-text h2 {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--gold);
+      line-height: 1.2;
+    }
+    .sidebar-logo-text p {
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .sidebar-section-label {
+      font-size: 0.65rem;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--muted2);
+      padding: 1.25rem 0.5rem 0.5rem;
+      font-weight: 600;
+    }
+
+    .sidebar-nav a {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      text-decoration: none;
+      color: var(--muted);
+      padding: 0.55rem 0.75rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.875rem;
+      font-weight: 400;
+      transition: all 0.2s ease;
+      border-left: 2px solid transparent;
+    }
+
+    .sidebar-nav a:hover {
+      color: var(--white);
+      background: rgba(255,255,255,0.05);
+      border-left-color: var(--gold);
+    }
+
+    .sidebar-nav a.active {
+      color: var(--gold);
+      background: rgba(232,201,111,0.08);
+      border-left-color: var(--gold);
+    }
+
+    .sidebar-nav a .nav-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--muted2);
+      flex-shrink: 0;
+      transition: background 0.2s;
+    }
+    .sidebar-nav a:hover .nav-dot,
+    .sidebar-nav a.active .nav-dot { background: var(--gold); }
+
+    /* ═══════════════════════════════════════════════
+       MOBILE TOGGLE
+    ═══════════════════════════════════════════════ */
+    .menu-toggle {
+      display: none;
+      position: fixed;
+      top: 1rem; left: 1rem;
+      z-index: 1001;
+      background: rgba(10,12,16,0.9);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border2);
+      color: var(--gold);
+      border-radius: var(--radius-sm);
+      padding: 0.65rem 0.9rem;
+      cursor: pointer;
+      font-size: 1.1rem;
+    }
+
+    @media (max-width: 1024px) {
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .menu-toggle { display: block; }
+      main, header, footer { margin-left: 0 !important; }
+    }
+
+    /* ═══════════════════════════════════════════════
+       HERO HEADER
+    ═══════════════════════════════════════════════ */
+    header {
+      margin-left: var(--sidebar-w);
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 70% 30%, rgba(232,201,111,0.07) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at 20% 80%, rgba(74,184,255,0.05) 0%, transparent 50%),
+        linear-gradient(160deg, #030508 0%, #0d111a 40%, #111520 100%);
+    }
+
+    /* animated flight path line */
+    .flight-path-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+    }
+
+    .flight-path-line {
+      fill: none;
+      stroke: rgba(232,201,111,0.15);
+      stroke-width: 1.5;
+      stroke-dasharray: 8 6;
+      animation: dash-move 8s linear infinite;
+    }
+
+    @keyframes dash-move {
+      from { stroke-dashoffset: 0; }
+      to   { stroke-dashoffset: -140; }
+    }
+
+    /* the flying plane */
+    .flying-plane {
+      position: absolute;
+      font-size: 1.8rem;
+      animation: fly-across 14s linear infinite;
+      filter: drop-shadow(0 0 12px rgba(232,201,111,0.6));
+      transform-origin: center;
+      z-index: 2;
+    }
+
+    @keyframes fly-across {
+      0%   { left: -8%; top: 55%; opacity: 0; transform: scaleX(1) rotate(-8deg); }
+      5%   { opacity: 1; }
+      40%  { left: 50%; top: 30%; transform: scaleX(1) rotate(-8deg); }
+      60%  { left: 70%; top: 18%; transform: scaleX(1) rotate(-8deg); }
+      90%  { left: 105%; top: 10%; opacity: 1; }
+      100% { left: 115%; top: 8%; opacity: 0; transform: scaleX(1) rotate(-8deg); }
+    }
+
+    /* city destination pills */
+    .hero-destinations {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      margin-top: 1.5rem;
+      z-index: 3;
+    }
+
+    .dest-pill {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 100px;
+      padding: 0.4rem 0.9rem 0.4rem 0.4rem;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: rgba(245,243,239,0.85);
+      transition: all 0.3s ease;
+      animation: pill-in 0.6s ease both;
+    }
+
+    .dest-pill:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .dest-pill img {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    @keyframes pill-in {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .dest-pill:nth-child(1)  { animation-delay: 0.2s; }
+    .dest-pill:nth-child(2)  { animation-delay: 0.30s; }
+    .dest-pill:nth-child(3)  { animation-delay: 0.40s; }
+    .dest-pill:nth-child(4)  { animation-delay: 0.50s; }
+    .dest-pill:nth-child(5)  { animation-delay: 0.60s; }
+    .dest-pill:nth-child(6)  { animation-delay: 0.70s; }
+    .dest-pill:nth-child(7)  { animation-delay: 0.80s; }
+    .dest-pill:nth-child(8)  { animation-delay: 0.90s; }
+    .dest-pill:nth-child(9)  { animation-delay: 1.00s; }
+    .dest-pill:nth-child(10) { animation-delay: 1.10s; }
+    .dest-pill:nth-child(11) { animation-delay: 1.20s; }
+    .dest-pill:nth-child(12) { animation-delay: 1.30s; }
+
+    .hero-content {
+      position: relative;
+      z-index: 3;
+      padding: clamp(3rem, 6vw, 6rem) clamp(2rem, 8vw, 7rem);
+      padding-top: 0;
+    }
+
+    .hero-eyebrow {
+      font-size: 0.75rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 600;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .hero-eyebrow::before {
+      content: '';
+      width: 32px; height: 1px;
+      background: var(--gold);
+    }
+
+    header h1 {
+      font-family: var(--font-display);
+      font-size: clamp(3.5rem, 8vw, 7rem);
+      font-weight: 900;
+      line-height: 0.95;
+      color: var(--white);
+      margin-bottom: 1.5rem;
+      letter-spacing: -1px;
+    }
+
+    header h1 .highlight-text {
+      color: var(--gold);
+      font-style: italic;
+    }
+
+    header .hero-sub {
+      font-size: 1.1rem;
+      color: var(--muted);
+      max-width: 55ch;
+      line-height: 1.8;
+      margin-bottom: 3rem;
+      font-weight: 300;
+    }
+
+    /* countdown */
+    .countdown-bar {
+      display: inline-flex;
+      gap: 1px;
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius);
+      padding: 1.5rem 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .countdown-unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0 1.5rem;
+      position: relative;
+    }
+
+    .countdown-unit:not(:last-child)::after {
+      content: ':';
+      position: absolute;
+      right: -2px;
+      top: 50%;
+      transform: translateY(-60%);
+      font-size: 1.8rem;
+      color: var(--muted2);
+      font-weight: 300;
+    }
+
+    .countdown-unit .val {
+      font-family: var(--font-display);
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: var(--gold);
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .countdown-unit .lbl {
+      font-size: 0.6rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted2);
+    }
+
+    /* hero mountain wave */
+    .hero-wave {
+      position: relative;
+      z-index: 3;
+      margin-top: -1px;
+      line-height: 0;
+    }
+
+    /* ═══════════════════════════════════════════════
+       MAIN LAYOUT
+    ═══════════════════════════════════════════════ */
+    main {
+      margin-left: var(--sidebar-w);
+      position: relative;
+      z-index: 1;
+    }
+
+    section {
+      padding: clamp(3rem, 5vw, 5rem) clamp(2rem, 8vw, 7rem);
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+
+    /* ═══════════════════════════════════════════════
+       SECTION HEADERS
+    ═══════════════════════════════════════════════ */
+    .section-eyebrow {
+      font-size: 0.68rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .section-eyebrow::before {
+      content: '';
+      width: 20px; height: 1px;
+      background: var(--gold);
+    }
+
+    h2 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.15;
+      margin-bottom: 2rem;
+    }
+
+    p, li, td, th, small, span.body-text {
+      font-size: 0.975rem;
+      line-height: 1.8;
+    }
+
+    /* ═══════════════════════════════════════════════
+       MAP SECTION
+    ═══════════════════════════════════════════════ */
+    #travelMap {
+      width: 100%;
+      height: 500px;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border2);
+      box-shadow: 0 0 60px rgba(74,184,255,0.08);
+      margin-bottom: 1.5rem;
+    }
+
+    .timeline-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius);
+      padding: 1.75rem 2rem;
+    }
+
+    .timeline-track-outer {
+      position: relative;
+      height: 6px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 6px;
+      margin: 0.5rem 0 1rem;
+    }
+
+    .timeline-track-fill {
+      position: absolute;
+      left: 0; top: 0; height: 100%;
+      background: linear-gradient(90deg, var(--gold), var(--sky));
+      border-radius: 6px;
+      width: 0%;
+      transition: width 0.3s ease;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .timeline-slider {
+      width: 100%; height: 6px;
+      border-radius: 6px;
+      background: transparent;
+      outline: none;
+      -webkit-appearance: none;
+      appearance: none;
+      cursor: pointer;
+      position: absolute;
+      top: 0; left: 0;
+      z-index: 2;
+    }
+
+    .timeline-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: var(--gold);
+      border: 2px solid var(--bg);
+      box-shadow: 0 0 0 3px rgba(232,201,111,0.3);
+      cursor: grab;
+      transition: box-shadow 0.2s;
+    }
+
+    .timeline-slider::-webkit-slider-thumb:active {
+      cursor: grabbing;
+      box-shadow: 0 0 0 6px rgba(232,201,111,0.2);
+    }
+
+    .timeline-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.7rem;
+      color: var(--muted2);
+      letter-spacing: 0.5px;
+    }
+
+    .timeline-day-name {
+      text-align: center;
+      margin-top: 0.75rem;
+      font-style: italic;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    /* ═══════════════════════════════════════════════
+       DESTINATION ACCORDIONS
+    ═══════════════════════════════════════════════ */
+    .dest-accordion {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    details.dest-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      margin-bottom: 0.75rem;
+    }
+
+    details.dest-item:hover {
+      border-color: var(--border2);
+    }
+
+    details.dest-item[open] {
+      border-color: rgba(232,201,111,0.3);
+      box-shadow: 0 0 30px rgba(232,201,111,0.05);
+    }
+
+    details.dest-item > summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 1.5rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      transition: background 0.2s;
+    }
+
+    details.dest-item > summary:hover {
+      background: rgba(255,255,255,0.02);
+    }
+
+    details.dest-item > summary::-webkit-details-marker { display: none; }
+
+    .dest-city-badge {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+
+    .dest-summary-info { flex: 1; }
+
+    .dest-summary-info h3 {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.2;
+      margin-bottom: 0.25rem;
+    }
+
+    .dest-summary-info .dest-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .dest-note {
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .date-tag {
+      display: inline-block;
+      background: rgba(232,201,111,0.1);
+      color: var(--gold);
+      border: 1px solid rgba(232,201,111,0.25);
+      border-radius: 100px;
+      padding: 0.2rem 0.75rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .summary-chevron {
+      color: var(--muted2);
+      font-size: 1.2rem;
+      transition: transform 0.3s, color 0.2s;
+      flex-shrink: 0;
+    }
+
+    details.dest-item[open] .summary-chevron {
+      transform: rotate(90deg);
+      color: var(--gold);
+    }
+
+    .dest-body {
+      padding: 0 2rem 2rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .dest-image {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      border-radius: var(--radius-sm);
+      margin: 1.5rem 0 1.25rem;
+      display: block;
+    }
+
+    /* confirmed box */
+    .confirmed-box {
+      background: rgba(77,235,184,0.06);
+      border: 1px solid rgba(77,235,184,0.2);
+      border-radius: var(--radius-sm);
+      padding: 1rem 1.25rem;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+      color: rgba(245,243,239,0.85);
+      line-height: 1.7;
+    }
+
+    .confirmed-box strong { color: var(--italy); }
+
+    /* alert boxes */
+    .alert-flight {
+      background: rgba(248,181,0,0.06);
+      border: 1px solid rgba(248,181,0,0.25);
+      border-radius: var(--radius-sm);
+      padding: 1rem 1.25rem;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+      color: rgba(245,243,239,0.85);
+      line-height: 1.7;
+    }
+
+    .alert-flight strong { color: var(--barcelona); }
+
+    .alert-warning {
+      background: rgba(240,82,46,0.06);
+      border: 1px solid rgba(240,82,46,0.25);
+      border-radius: var(--radius-sm);
+      padding: 1rem 1.25rem;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+    }
+
+    /* day accordions inside destinations */
+    details.day-accordion {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      margin-bottom: 0.5rem;
+      background: var(--surface2);
+    }
+
+    details.day-accordion > summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 0.85rem 1.2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: rgba(245,243,239,0.7);
+      transition: all 0.2s;
+    }
+
+    details.day-accordion > summary:hover { color: var(--white); }
+    details.day-accordion[open] > summary { color: var(--gold); }
+    details.day-accordion > summary::-webkit-details-marker { display: none; }
+    details.day-accordion > summary::after {
+      content: '›';
+      font-size: 1.1rem;
+      opacity: 0.5;
+      transition: transform 0.2s;
+    }
+    details.day-accordion[open] > summary::after {
+      transform: rotate(90deg);
+      opacity: 1;
+    }
+
+    .day-accordion-body {
+      padding: 1rem 1.2rem 1.2rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .day-accordion-body ul { padding-left: 1.2rem; }
+    .day-accordion-body li { 
+      padding: 0.3rem 0; 
+      font-size: 0.875rem; 
+      color: rgba(245,243,239,0.8);
+    }
+    .day-accordion-body li strong { color: var(--white); }
+
+    /* mini maps inside day accordions */
+    .mini-map {
+      height: 240px;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      margin-top: 1rem;
+    }
+
+    /* ═══════════════════════════════════════════════
+       AGENDA / CHECKLIST
+    ═══════════════════════════════════════════════ */
+    .day-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .day-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 1.1rem 1.1rem 1.1rem 3.2rem;
+      position: relative;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: block;
+    }
+
+    .day-card:hover {
+      border-color: var(--border2);
+      background: var(--surface2);
+    }
+
+    .day-card input[type="checkbox"] {
+      position: absolute;
+      left: 1rem; top: 1.1rem;
+      width: 16px; height: 16px;
+      accent-color: var(--gold);
+      cursor: pointer;
+    }
+
+    .day-card:has(input:checked) {
+      opacity: 0.45;
+    }
+
+    .day-card:has(input:checked) .day-title {
+      text-decoration: line-through;
+      color: var(--muted2);
+    }
+
+    .day-title {
+      font-weight: 500;
+      font-size: 0.875rem;
+      color: var(--white);
+      margin-bottom: 0.3rem;
+    }
+
+    .day-subtitle {
+      font-size: 0.78rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .reset-btn {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border2);
+      color: var(--muted);
+      border-radius: var(--radius-sm);
+      padding: 0.6rem 1.25rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+      margin-top: 1rem;
+      font-family: var(--font-body);
+      transition: all 0.2s;
+    }
+
+    .reset-btn:hover {
+      background: rgba(255,255,255,0.1);
+      color: var(--white);
+    }
+
+    /* ═══════════════════════════════════════════════
+       OUTFITS
+    ═══════════════════════════════════════════════ */
+    .outfit-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .outfit-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .outfit-card:hover {
+      border-color: var(--border2);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    }
+
+    .outfit-visual {
+      position: relative;
+      height: 320px;
+      overflow: hidden;
+      background: var(--surface2);
+    }
+
+    .outfit-visual img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+
+    .outfit-card:hover .outfit-visual img { transform: scale(1.04); }
+
+    .outfit-label {
+      position: absolute;
+      top: 12px; left: 12px;
+      background: rgba(10,12,16,0.85);
+      color: var(--gold);
+      padding: 3px 10px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      border-radius: 4px;
+    }
+
+    .outfit-badge {
+      position: absolute;
+      top: 12px; right: 12px;
+      padding: 3px 10px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      border-radius: 100px;
+    }
+
+    .badge-day { background: rgba(77,235,184,0.15); color: var(--italy); }
+    .badge-night { background: rgba(74,184,255,0.15); color: var(--sky); }
+
+    .outfit-info { padding: 1.25rem; }
+    .outfit-info h3 {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      color: var(--white);
+      margin-bottom: 0.25rem;
+    }
+    .outfit-info .occasion {
+      font-size: 0.78rem;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 1rem;
+    }
+
+    .outfit-pieces-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .outfit-pieces-list li {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.3rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.82rem;
+      color: rgba(245,243,239,0.75);
+    }
+
+    .outfit-pieces-list li:last-child { border-bottom: none; }
+
+    .piece-thumb {
+      width: 30px; height: 30px;
+      object-fit: cover;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      flex-shrink: 0;
+    }
+
+    .outfit-tags {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+      margin-top: 0.75rem;
+    }
+
+    .outfit-tag {
+      background: rgba(255,255,255,0.05);
+      color: var(--muted);
+      font-size: 0.7rem;
+      padding: 2px 8px;
+      border-radius: 100px;
+      border: 1px solid var(--border);
+    }
+
+    /* missing items */
+    .missing-section {
+      margin-top: 2rem;
+      border: 1px dashed rgba(255,255,255,0.12);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      background: rgba(255,255,255,0.02);
+    }
+
+    .missing-section h3 {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      color: var(--white);
+      margin-bottom: 1rem;
+    }
+
+    .missing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .missing-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 0.9rem;
+      display: flex;
+      gap: 0.6rem;
+      align-items: flex-start;
+    }
+
+    .missing-icon { font-size: 1.3rem; flex-shrink: 0; }
+
+    .missing-text strong {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--white);
+      margin-bottom: 0.2rem;
+    }
+    .missing-text span {
+      font-size: 0.75rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .highlight {
+      background: rgba(255,255,255,0.03);
+      border-left: 2px solid var(--gold);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      padding: 1.25rem 1.5rem;
+      margin-top: 1.5rem;
+      font-size: 0.875rem;
+      color: rgba(245,243,239,0.8);
+      line-height: 1.8;
+    }
+
+    /* ═══════════════════════════════════════════════
+       TRANSFERS / FLIGHTS
+    ═══════════════════════════════════════════════ */
+    .flights-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+
+    .flight-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .flight-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+    }
+
+    .flight-card.ida::before    { background: linear-gradient(90deg, var(--madrid), transparent); }
+    .flight-card.regreso::before { background: linear-gradient(90deg, var(--italy), transparent); }
+    .flight-card.europeo::before { background: linear-gradient(90deg, var(--paris), transparent); }
+    .flight-card.tren::before    { background: linear-gradient(90deg, var(--amalfi), transparent); }
+
+    .flight-card:hover {
+      border-color: var(--border2);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+    }
+
+    .flight-type-badge {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+    }
+
+    .flight-type-badge.ida      { background: rgba(240,82,46,0.15);  color: var(--madrid); }
+    .flight-type-badge.regreso  { background: rgba(77,235,184,0.15); color: var(--italy); }
+    .flight-type-badge.europeo  { background: rgba(126,183,255,0.15); color: var(--paris); }
+    .flight-type-badge.tren     { background: rgba(255,107,157,0.15); color: var(--amalfi); }
+
+    .flight-route {
+      font-size: 1.2rem;
+      font-family: var(--font-display);
+      font-weight: 700;
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .flight-route .arrow {
+      font-size: 0.8rem;
+      color: var(--muted2);
+    }
+
+    .flight-details {
+      border-top: 1px solid var(--border);
+      padding-top: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .flight-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+    }
+
+    .flight-row .fl { color: var(--muted); }
+    .flight-row .fv { color: var(--white); font-weight: 500; }
+
+    .flight-confirmed-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      color: var(--italy);
+      font-size: 0.72rem;
+      font-weight: 600;
+      margin-top: 0.5rem;
+    }
+
+    /* ═══════════════════════════════════════════════
+       URGENCY CARDS (Reservas)
+    ═══════════════════════════════════════════════ */
+    .urgency-grid {
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    .urgency-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 1.1rem 1.25rem 1.1rem 1rem;
+      position: relative;
+      padding-left: 1rem;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      border-left: 3px solid;
+    }
+
+    .urgency-card.red    { border-left-color: var(--madrid); }
+    .urgency-card.orange { border-left-color: var(--barcelona); }
+    .urgency-card.green  { border-left-color: var(--italy); }
+
+    .urgency-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 0.1rem; }
+
+    .urgency-info strong {
+      display: block;
+      font-size: 0.9rem;
+      color: var(--white);
+      margin-bottom: 0.25rem;
+    }
+    .urgency-info p {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    /* ═══════════════════════════════════════════════
+       TABLES
+    ═══════════════════════════════════════════════ */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+
+    th, td {
+      border: 1px solid var(--border);
+      padding: 0.75rem 1rem;
+      text-align: left;
+    }
+
+    th {
+      background: var(--surface2);
+      color: var(--gold);
+      font-weight: 600;
+      font-size: 0.75rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    td { color: rgba(245,243,239,0.8); }
+    tr:hover td { background: rgba(255,255,255,0.02); }
+
+    /* ═══════════════════════════════════════════════
+       GENERIC CARDS & UTILS
+    ═══════════════════════════════════════════════ */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 1.25rem;
+      transition: border-color 0.2s;
+    }
+    .card:hover { border-color: var(--border2); }
+    .card p { font-size: 0.875rem; color: var(--white); font-weight: 500; margin-bottom: 0.5rem; }
+    .card ul { padding-left: 1.1rem; }
+    .card li { font-size: 0.82rem; color: var(--muted); padding: 0.2rem 0; }
+
+    .grid { display: grid; gap: 1rem; }
+    @media (min-width: 900px) {
+      .grid.deux  { grid-template-columns: repeat(2, 1fr); }
+      .grid.trois { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    ul { padding-left: 1.2rem; }
+    li { font-size: 0.9rem; color: rgba(245,243,239,0.8); padding: 0.2rem 0; }
+    li strong { color: var(--white); }
+
+    /* ═══════════════════════════════════════════════
+       SCROLL-IN ANIMATION
+    ═══════════════════════════════════════════════ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ═══════════════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════════════ */
+    footer {
+      margin-left: var(--sidebar-w);
+      text-align: center;
+      padding: 2.5rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.78rem;
+      color: var(--muted2);
+      letter-spacing: 1px;
+      position: relative;
+      z-index: 1;
+    }
+
+    footer .footer-plane {
+      font-size: 1.4rem;
+      display: block;
+      margin-bottom: 0.5rem;
+      animation: footer-float 3s ease-in-out infinite;
+    }
+
+    @keyframes footer-float {
+      0%, 100% { transform: translateY(0) rotate(-5deg); }
+      50%       { transform: translateY(-6px) rotate(-5deg); }
+    }
+
+    /* ═══════════════════════════════════════════════
+       RESERVAS SECTION accent colors
+    ═══════════════════════════════════════════════ */
+    .urgency-red    { border-left: 3px solid var(--madrid) !important; }
+    .urgency-orange { border-left: 3px solid var(--barcelona) !important; }
+    .urgency-green  { border-left: 3px solid var(--italy) !important; }
+
+  </style>
+</head>
+<body>
+
+<!-- Stars bg -->
+<canvas id="stars-canvas"></canvas>
+
+<!-- Mobile toggle -->
+<button class="menu-toggle" id="menuToggle" aria-label="Menú">☰</button>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="plane-icon">✈️</div>
+    <div class="sidebar-logo-text">
+      <h2>Nos vamos<br>a Europa</h2>
+      <p>Abr – May 2026</p>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav" id="sidebarNav">
+    <div class="sidebar-section-label">Itinerario</div>
+    <a href="#mapa"><span class="nav-dot"></span>🗺️ Mapa</a>
+    <a href="#dest-madrid"><span class="nav-dot"></span>Madrid · 1 may</a>
+    <a href="#dest-barcelona"><span class="nav-dot"></span>Barcelona · 2–6 may</a>
+    <a href="#dest-paris"><span class="nav-dot"></span>París & Disney · 6–11</a>
+    <a href="#dest-milan"><span class="nav-dot"></span>Milán & Como · 11–12</a>
+    <a href="#dest-venecia"><span class="nav-dot"></span>Venecia · 12–14</a>
+    <a href="#dest-florencia"><span class="nav-dot"></span>Florencia · 14–16</a>
+    <a href="#dest-roma"><span class="nav-dot"></span>Roma · 17–18</a>
+    <a href="#dest-amalfi"><span class="nav-dot"></span>Amalfi & Capri · 19–22</a>
+    <a href="#dest-madrid-final"><span class="nav-dot"></span>Madrid · 23–26</a>
+
+    <div class="sidebar-section-label">Estilo & Logística</div>
+    <a href="#outfits"><span class="nav-dot"></span>👔 Outfits</a>
+    <a href="#traslados"><span class="nav-dot"></span>🚀 Traslados</a>
+  </nav>
+</aside>
+
+<!-- HERO -->
+<header>
+  <div class="hero-bg"></div>
+
+  <!-- World map background -->
+  <div style="position:absolute;inset:0;pointer-events:none;overflow:hidden;opacity:0.35;">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.svg"
+         style="width:100%;height:100%;object-fit:cover;object-position:center;filter:grayscale(1) brightness(0.7);"
+         aria-hidden="true">
+  </div>
+
+  <!-- Animated flight path -->
+  <svg class="flight-path-svg" viewBox="0 0 1200 600" preserveAspectRatio="none" aria-hidden="true">
+    <path class="flight-path-line" d="M-50,500 Q200,400 400,280 Q600,160 800,120 Q1000,80 1250,50"/>
+    <path class="flight-path-line" style="stroke:rgba(74,184,255,0.08);animation-delay:-4s;"
+          d="M-50,550 Q300,450 500,320 Q700,190 950,140 Q1100,110 1250,90"/>
+  </svg>
+
+  <!-- Flying plane -->
+  <div class="flying-plane" aria-hidden="true">✈️</div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">30 abril → 26 mayo 2026 · 26 días</div>
+    <h1>Nos vamos<br>a <span class="highlight-text">Europa</span></h1>
+    <p class="hero-sub">España · Francia · Italia — Madrid, Barcelona, París, Disneyland, Milán, Lago de Como, Venecia, Florencia, Roma, Costa Amalfitana, Capri.</p>
+
+    <!-- Countdown -->
+    <div class="countdown-bar" id="countdown">
+      <div class="countdown-unit">
+        <span class="val" id="days">00</span>
+        <span class="lbl">días</span>
       </div>
-      <nav class="sidebar-nav">
-        <a href="#info-rapida">📋 Información rápida</a>
-        <a href="#ruta">🗺️ Ruta</a>
-        <a href="#reservas">🎫 Reservas</a>
-        <a href="#costos">💰 Costos</a>
-        <a href="#transporte">🚂 Transporte</a>
-        <a href="#alojamiento">🏨 Alojamiento</a>
-        <a href="#agenda">📅 Agenda diaria</a>
-        <a href="#mapa">🗺️ Mapa</a>
-        <a href="#capri">🏝️ Capri</a>
-        <a href="#disney">🎢 Disney</a>
-        <a href="#actividades">🎯 Actividades</a>
-        <a href="#barcelona">🏛️ Barcelona - Gaudí</a>
-      </nav>
-    </aside>
-
-    <header>
-      <h1>Plan Maestro · Europa Abril-Mayo</h1>
-      <p>
-        25 días explorando España, Francia e Italia. Todo lo esencial para tu
-        viaje: ruta optimizada, reservas prioritarias, presupuesto detallado,
-        logística de transporte, conectividad, y consejos prácticos.
-      </p>
-      <div class="countdown-container">
-        <div class="countdown-title">⏰ Cuenta Regresiva para la Partida</div>
-        <div class="countdown-grid" id="countdown">
-          <div class="countdown-item">
-            <span class="countdown-value" id="days">0</span>
-            <span class="countdown-label">Días</span>
-          </div>
-          <div class="countdown-item">
-            <span class="countdown-value" id="hours">0</span>
-            <span class="countdown-label">Horas</span>
-          </div>
-          <div class="countdown-item">
-            <span class="countdown-value" id="minutes">0</span>
-            <span class="countdown-label">Minutos</span>
-          </div>
-          <div class="countdown-item">
-            <span class="countdown-value" id="seconds">0</span>
-            <span class="countdown-label">Segundos</span>
-          </div>
-        </div>
+      <div class="countdown-unit">
+        <span class="val" id="hours">00</span>
+        <span class="lbl">horas</span>
       </div>
-    </header>
+      <div class="countdown-unit">
+        <span class="val" id="minutes">00</span>
+        <span class="lbl">min</span>
+      </div>
+      <div class="countdown-unit">
+        <span class="val" id="seconds">00</span>
+        <span class="lbl">seg</span>
+      </div>
+    </div>
 
-    <main>
-      <section id="info-rapida">
-        <h2>Información Rápida</h2>
-        <div class="grid trois">
-          <div class="card destination-card">
-            <img src="https://images.unsplash.com/photo-1539037116277-4db20889f2d4?w=600&q=80" alt="Madrid" class="destination-image">
-            <div class="tag">Fechas</div>
-            <p>30 de abril → 26 de mayo (26 días)</p>
-            <small>✅ Vuelo ida: 30 abr 21:45h MVD → 1 may 14:35h MAD (IB****, 12h 50m)<br />✅ Vuelo regreso: 26 may 11:50h MAD → 26 may 19:45h MVD (IB****, 11h 55m)</small>
-          </div>
-          <div class="card destination-card">
-            <img src="https://images.unsplash.com/photo-1515542622106-78bda8ba0e5b?w=600&q=80" alt="Destinos" class="destination-image">
-            <div class="tag">Destinos</div>
-            <p>
-              Madrid · Barcelona · París · Milán/Como · Venecia · Florencia ·
-              Toscana · Cinque Terre · Roma · Nápoles · Costa
-              Amalfitana
-            </p>
-          </div>
-          <div class="card destination-card">
-            <img src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=600&q=80" alt="Europa" class="destination-image">
-            <div class="tag">Presupuesto estimado</div>
-            <p class="cost-range">€3,104 - €5,282 por persona (sin vuelo internacional)</p>
-            <small>Incluye transporte, alojamiento, comida, actividades, datos y extras.</small>
-          </div>
-        </div>
-        <div class="flights-container">
-          <div class="flights-title">
-            <span>✅</span>
-            <span>Vuelos Confirmados</span>
-          </div>
-          <div class="flights-grid">
-            <div class="flight-card">
-              <span class="flight-type ida">Vuelo de Ida</span>
-              <div class="flight-route">
-                <span>✈️</span>
-                <span><strong>MVD</strong> → <strong>MAD</strong></span>
-              </div>
-              <div class="flight-details">
-                <div class="flight-detail-item">
-                  <span class="flight-detail-label">Fecha:</span>
-                  <span class="flight-detail-value">30 abr 2026</span>
-                </div>
-                <div class="flight-detail-item">
-                  <span class="flight-detail-label">Hora:</span>
-                  <span class="flight-detail-value">21:45h</span>
-                </div>
-                <div class="flight-detail-item">
-                  <span class="flight-detail-label">Vuelo:</span>
-                  <span class="flight-detail-value">IB****</span>
-                </div>
-                <div class="flight-detail-item">
-                  <span class="flight-detail-label">Duración:</span>
-                  <span class="flight-detail-value">12h 50m</span>
-                </div>
-                <div class="flight-detail-item">
-                  <span class="flight-detail-label">Llegada:</span>
-                  <span class="flight-detail-value">1 may 14:35h</span>
-                </div>
-                <div class="flight-confirmed">✅ Confirmado</div>
-              </div>
-            </div>
+    <!-- City pills -->
+    <div class="hero-destinations">
+      <div class="dest-pill">
+        <img src="https://images.unsplash.com/photo-1539037116277-4db20889f2d4?w=60&q=80" alt="Madrid">
+        <span>Madrid</span>
+      </div>
+      <div class="dest-pill">
+        <img src="https://images.pexels.com/photos/1388030/pexels-photo-1388030.jpeg?w=60&h=60&fit=crop" alt="Barcelona">
+        <span>Barcelona</span>
+      </div>
+      <div class="dest-pill">
+        <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=60&q=80" alt="París">
+        <span>París</span>
+      </div>
+      <div class="dest-pill">
+        <img src="https://images.unsplash.com/photo-1569880153113-76e33fc52d5f?w=60&q=80" alt="Disneyland">
+        <span>Disneyland</span>
+      </div>
+      <div class="dest-pill">
+        <img src="https://images.unsplash.com/photo-1513581166391-887a96ddeafd?w=60&q=80" alt="Milán">
+        <span>Milán</span>
+      </div>
+      <div class="dest-pill">
+        <img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=60&q=80" alt="Lago de Como">
+        <span>Lago de Como</span>
+      </div>
+      <div class="dest-pill">
+        <img src="https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?w=60&q=80" alt="Venecia">
+        <span>Venecia</span>
+      </div>
+      <div class="dest-pill">
+        <img src="https://images.unsplash.com/photo-1520175480921-4edfa2983e0f?w=60&q=80" alt="Florencia">
+        <span>Florencia</span>
+      </div>
+      <div class="dest-pill">
+        <img src="https://images.unsplash.com/photo-1529260830199-42c24126f198?w=60&q=80" alt="Roma">
+        <span>Roma</span>
+      </div>
+      <div class="dest-pill">
+        <img src="https://images.unsplash.com/photo-1515542622106-78bda8ba0e5b?w=60&q=80" alt="Amalfi">
+        <span>Costa Amalfitana</span>
+      </div>
+      <div class="dest-pill">
+        <img src="https://images.unsplash.com/photo-1533587851505-d119e13fa0d7?w=60&q=80" alt="Capri">
+        <span>Capri</span>
+      </div>
+    </div>
+  </div>
 
-            <div class="flight-card">
-              <span class="flight-type tren">Tren AVE</span>
-              <div class="flight-route">
-                <span>🚂</span>
-                <span><strong>MAD</strong> → <strong>BCN</strong></span>
-              </div>
-              <div class="flight-details">
-                <div class="flight-detail-item">
-                  <span class="flight-detail-label">Fecha:</span>
-                  <span class="flight-detail-value">2 may 2026</span>
-                </div>
-                <div class="flight-detail-item">
-                  <span class="flight-detail-label">Hora:</span>
-                  <span class="flight-detail-value">12:22h</span>
-                </div>
-                <div class="flight-detail-item">
-                  <span class="flight-detail-label">Tren:</span>
-                  <span class="flight-detail-value">06*** (AVE)</span>
-                </div>
-                <div class="flight-detail-item">
-                  <span class="flight-detail-label">Duración:</span>
-                  <span class="flight-detail-value">2h 52m</span>
-                </div>
-                <div class="flight-detail-item">
-                  <span class="flight-detail-label">Origen:</span>
-                  <span class="flight-detail-value">Atocha</span>
-                </div>
-                <div class="flight-detail-item">
-                  <span class="flight-detail-label">Llegada:</span>
-                  <span class="flight-detail-value">2 may 15:14h</span>
-                </div>
-                <div class="flight-detail-item">
-                  <span class="flight-detail-label">Destino:</span>
-                  <span class="flight-detail-value">Barcelona-Sants</span>
-                </div>
-                <div class="flight-confirmed">✅ Confirmado</div>
-              </div>
-            </div>
+  <!-- Wave transition -->
+  <div class="hero-wave">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 80" preserveAspectRatio="none" style="display:block;width:100%;height:80px;">
+      <path d="M0,40 Q180,80 360,40 Q540,0 720,40 Q900,80 1080,40 Q1260,0 1440,40 L1440,80 L0,80 Z" fill="var(--bg2)"/>
+    </svg>
+  </div>
+</header>
 
-            <div class="flight-card">
-              <span class="flight-type europeo">Vuelo Europa</span>
-              <div class="flight-route">
-                <span>✈️</span>
-                <span><strong>BCN</strong> → <strong>CDG</strong></span>
-              </div>
-              <div class="flight-details">
-                <div class="flight-detail-item">
-                  <span class="flight-detail-label">Fecha:</span>
-                  <span class="flight-detail-value">6 may 2026</span>
-                </div>
-                <div class="flight-detail-item">
-                  <span class="flight-detail-label">Hora:</span>
-                  <span class="flight-detail-value">06:10h</span>
-                </div>
-                <div class="flight-detail-item">
-                  <span class="flight-detail-label">Vuelo:</span>
-                  <span class="flight-detail-value">AF****</span>
-                </div>
-                <div class="flight-detail-item">
-                  <span class="flight-detail-label">Aerolínea:</span>
-                  <span class="flight-detail-value">Air France</span>
-                </div>
-                <div class="flight-detail-item">
-                  <span class="flight-detail-label">Duración:</span>
-                  <span class="flight-detail-value">1h 55m</span>
-                </div>
-                <div class="flight-detail-item">
-                  <span class="flight-detail-label">Llegada:</span>
-                  <span class="flight-detail-value">6 may 08:05h</span>
-                </div>
-                <div class="flight-confirmed">✅ Confirmado</div>
-              </div>
-            </div>
+<!-- MAIN -->
+<main>
 
-            <div class="flight-card">
-              <span class="flight-type europeo">Vuelo Europa</span>
-              <div class="flight-route">
-                <span>✈️</span>
-                <span><strong>NAP</strong> → <strong>MAD</strong></span>
-              </div>
-              <div class="flight-details">
-                <div class="flight-detail-item">
-                  <span class="flight-detail-label">Fecha:</span>
-                  <span class="flight-detail-value">23 may 2026</span>
-                </div>
-                <div class="flight-detail-item">
-                  <span class="flight-detail-label">Hora:</span>
-                  <span class="flight-detail-value">06:05h</span>
-                </div>
-                <div class="flight-detail-item">
-                  <span class="flight-detail-label">Vuelo:</span>
-                  <span class="flight-detail-value">I2****</span>
-                </div>
-                <div class="flight-detail-item">
-                  <span class="flight-detail-label">Aerolínea:</span>
-                  <span class="flight-detail-value">Iberia Express</span>
-                </div>
-                <div class="flight-detail-item">
-                  <span class="flight-detail-label">Llegada:</span>
-                  <span class="flight-detail-value">23 may 08:50h</span>
-                </div>
-                <div class="flight-detail-item">
-                  <span class="flight-detail-label">Precio:</span>
-                  <span class="flight-detail-value">€91.77</span>
-                </div>
-                <div class="flight-confirmed">✅ Confirmado</div>
-              </div>
-            </div>
 
-            <div class="flight-card">
-              <span class="flight-type regreso">Vuelo de Regreso</span>
-              <div class="flight-route">
-                <span>✈️</span>
-                <span><strong>MAD</strong> → <strong>MVD</strong></span>
-              </div>
-              <div class="flight-details">
-                <div class="flight-detail-item">
-                  <span class="flight-detail-label">Fecha:</span>
-                  <span class="flight-detail-value">26 may 2026</span>
-                </div>
-                <div class="flight-detail-item">
-                  <span class="flight-detail-label">Hora:</span>
-                  <span class="flight-detail-value">11:50h</span>
-                </div>
-                <div class="flight-detail-item">
-                  <span class="flight-detail-label">Vuelo:</span>
-                  <span class="flight-detail-value">IB****</span>
-                </div>
-                <div class="flight-detail-item">
-                  <span class="flight-detail-label">Duración:</span>
-                  <span class="flight-detail-value">11h 55m</span>
-                </div>
-                <div class="flight-detail-item">
-                  <span class="flight-detail-label">Terminal:</span>
-                  <span class="flight-detail-value">Terminal 4S</span>
-                </div>
-                <div class="flight-detail-item">
-                  <span class="flight-detail-label">Llegada:</span>
-                  <span class="flight-detail-value">26 may 19:45h</span>
-                </div>
-                <div class="flight-confirmed">✅ Confirmado</div>
-              </div>
+  <!-- MAPA -->
+  <section id="mapa">
+    <div class="section-eyebrow">🗺️ Recorrido</div>
+    <h2>Mapa Interactivo</h2>
+    <p style="color:var(--muted); margin-bottom:1.5rem; font-size:0.9rem;">Seleccioná un día con la barra para ver el progreso del recorrido por Europa.</p>
+    <div id="travelMap"></div>
+    <div class="timeline-wrap reveal">
+      <div class="timeline-track-outer">
+        <div class="timeline-track-fill" id="timelineSliderProgress"></div>
+        <input type="range" min="1" max="26" value="1" class="timeline-slider" id="timelineSlider" />
+      </div>
+      <div class="timeline-labels">
+        <span>1 may</span><span>6 may</span><span>11 may</span><span>16 may</span><span>21 may</span><span>26 may</span>
+      </div>
+      <div class="timeline-day-name" id="timelineCurrentDay">Día 1 · 1 may · Madrid</div>
+    </div>
+  </section>
+
+  <!-- ITINERARIO POR DESTINO -->
+  <section id="ruta">
+    <div class="section-eyebrow">📍 Itinerario</div>
+    <h2>Destino a Destino</h2>
+    <p style="color:var(--muted);margin-bottom:2rem;font-size:0.9rem;">Cada destino contiene toda la información: días, actividades, hoteles, transporte y precios.</p>
+
+    <div class="dest-accordion">
+
+      <!-- MADRID -->
+      <details class="dest-item reveal" id="dest-madrid" open>
+        <summary>
+          <div class="dest-city-badge" style="background:rgba(240,82,46,0.12);">🇪🇸</div>
+          <div class="dest-summary-info">
+            <h3>Madrid</h3>
+            <div class="dest-meta">
+              <span class="date-tag">1 may</span>
+              <span class="dest-note">Tren AVE confirmado a Barcelona (2 may, 12:22h)</span>
             </div>
           </div>
-        </div>
-      </section>
-
-      <section id="ruta">
-        <h2>Ruta Optimizada</h2>
-        <div class="accordion">
-          <details class="accordion-item" open>
-            <summary>
-              <div class="summary-meta">
-                <span class="tag">1 may</span>
-                <strong>Madrid · 1 día</strong>
-              </div>
-              <span class="summary-note">✅ Tren AVE confirmado a Barcelona (2 may, 12:22h)</span>
-            </summary>
-            <div class="accordion-body">
-              <img src="https://images.unsplash.com/photo-1539037116277-4db20889f2d4?w=800&q=80" alt="Madrid" class="destination-image" style="margin-bottom: 1rem;">
+          <span class="summary-chevron">›</span>
+        </summary>
+        <div class="dest-body">
+          <img src="https://images.unsplash.com/photo-1539037116277-4db20889f2d4?w=800&q=80" alt="Madrid" class="dest-image">
+          <div class="confirmed-box">
+            <strong>🏨 AC Hotel Atocha — CONFIRMADO</strong><br>
+            C/ Delicias, 42, Madrid 28045 · 1–2 may (1 noche) · Confirmación: 86397505 · Tel: +34 91 506 2221
+          </div>
+          <details class="day-accordion">
+            <summary>Día 1 · 1 may — Llegada & paseo por Madrid</summary>
+            <div class="day-accordion-body">
               <ul>
-                <li><strong>Llegada:</strong> 1 mayo, 14:35h (MAD, Terminal 4S)</li>
-                <li><strong>Traslado aeropuerto:</strong> Cercanías C1 Terminal 4 → Puerta de Atocha (25 min, €2.60) - RECOMENDADO</li>
-                <li><strong>✅ Tren confirmado:</strong> 2 mayo 2026, 12:22h (Atocha) → 15:14h (Barcelona-Sants), Tren 06*** (AVE, 2h 52min)</li>
-                <li><strong>Actividades:</strong> Llegada, check-in, descanso, paseo por centro (Día del Trabajador - festivo)</li>
+                <li><strong>Llegada:</strong> 14:35h (MAD, Terminal 4S) · Cercanías C1 T4 → Atocha (25 min, €2.60) · Check-in · Descanso</li>
+                <li><strong>Recorrido:</strong> Parque del Retiro · Puerta de Alcalá · Cibeles · Gran Vía hasta Edificio Metrópolis · Cena en Patio de Leones</li>
+                <li><strong>Tren confirmado:</strong> 2 mayo, 12:22h (Atocha) → 15:14h (Barcelona-Sants) · AVE 06121 · Coche 7 · Asientos 8C y 8D</li>
                 <li><strong>Notas:</strong> Presentarse 30 min antes del tren, billete QR y pasaporte.</li>
               </ul>
+              <div id="madrid-day-map" class="mini-map"></div>
+            </div>
+          </details>
+        </div>
+      </details>
+
+      <!-- BARCELONA -->
+      <details class="dest-item reveal" id="dest-barcelona">
+        <summary>
+          <div class="dest-city-badge" style="background:rgba(248,181,0,0.12);">🏙️</div>
+          <div class="dest-summary-info">
+            <h3>Barcelona</h3>
+            <div class="dest-meta">
+              <span class="date-tag">2–6 may</span>
+              <span class="dest-note">Vuelo confirmado BCN → CDG 06:10h (6 may, Air France AF1449)</span>
+            </div>
+          </div>
+          <span class="summary-chevron">›</span>
+        </summary>
+        <div class="dest-body">
+          <img src="https://images.pexels.com/photos/1388030/pexels-photo-1388030.jpeg?auto=compress&cs=tinysrgb&w=800&h=400&fit=crop" alt="Barcelona" class="dest-image">
+
+          <details class="day-accordion">
+            <summary>Día 2 · 2 may — Llegada & primer paseo</summary>
+            <div class="day-accordion-body">
+              <div class="confirmed-box" style="margin-bottom:0.8rem;">
+                <strong>🏨 Hotel H10 Marina — 2 al 5 mayo (3 noches)</strong><br>
+                Check-out: 5 mayo, 12:00h · Guardaequipaje disponible en el hotel
+              </div>
+              <ul>
+                <li><strong>Llegada:</strong> Tren AVE desde Madrid, Barcelona-Sants 15:14h · Check-in H10 Marina · Relax</li>
+                <li><strong>Recorrido:</strong> Playa Barceloneta · Parque de la Ciutadela · Arco de Triunfo · Cena cerca del hotel</li>
+              </ul>
+              <div id="bcn-map-day2" class="mini-map"></div>
             </div>
           </details>
 
-          <details class="accordion-item">
-            <summary>
-              <div class="summary-meta">
-                <span class="tag">2-6 may</span>
-                <strong>Barcelona · 4-5 días</strong>
+          <details class="day-accordion">
+            <summary>Día 3 · 3 may — Barrio Gótico · Picasso · Montjuïc</summary>
+            <div class="day-accordion-body">
+              <div class="confirmed-box" style="margin-bottom:0.8rem;">
+                <strong>🚶 Walking Tour Civitatis — CONFIRMADO</strong><br>
+                Reserva: A37752357 · 10:00h — Esquina Calle Bergara con Plaza Cataluña
               </div>
-              <span class="summary-note">✅ Vuelo confirmado BCN → París (6 may)</span>
-            </summary>
-            <div class="accordion-body">
-              <img src="https://images.pexels.com/photos/1388030/pexels-photo-1388030.jpeg?auto=compress&cs=tinysrgb&w=800&h=400&fit=crop" alt="Barcelona" class="destination-image" style="margin-bottom: 1rem;">
               <ul>
-                <li><strong>✅ Vuelo confirmado:</strong> 6 mayo 2026, 06:10h (BCN) → 08:05h (CDG), Air France AF****, 1h 55min</li>
-                <li><strong>Traslado CDG → Disney:</strong> TGV directo a Marne-la-Vallée o RER B + RER A (aprox. 1h-1h 30min)</li>
-                <li><strong>Notas:</strong> Llegada a CDG 08:05h, traslado a Disney Sequoia Lodge (check-in desde 15:00h), tiempo suficiente para llegar y disfrutar del día en parques.</li>
+                <li><strong>10:00h:</strong> Walking tour Barrio Gótico (Civitatis) · Plaza Cataluña → Fossar de les Moreres (~1.5-2h)</li>
+                <li><strong>~13:30h:</strong> Museo Picasso ⚠️ <em>sacar entrada online el 29/04</em></li>
+                <li><strong>~20:00h:</strong> Font Màgica de Montjuïc — espectáculo de luz y agua ⚠️ <em>shows jue-dom, verificar horario</em></li>
+              </ul>
+              <div id="bcn-map-day3" class="mini-map"></div>
+            </div>
+          </details>
+
+          <details class="day-accordion">
+            <summary>Día 4 · 4 may — Full Gaudí 🦎</summary>
+            <div class="day-accordion-body">
+              <ul>
+                <li><strong>10:15h:</strong> Sagrada Família — <strong>CONFIRMADO</strong> · Loc: 96353661 · 2 entradas generales · €52.00</li>
+                <li><strong>~12:30h:</strong> Hospital de Sant Pau — modernismo catalan · entrada gratuita exterior</li>
+                <li><strong>~13:30h:</strong> Almuerzo Eixample</li>
+                <li><strong>~15:00h:</strong> Hotel H10 Marina — relax · piscina</li>
+                <li><strong>17:00h:</strong> Casa Batlló — <strong>CONFIRMADO</strong> · Loc: 96352983 · Gold + Exposición «Beyond the Façade»</li>
+                <li><strong>22:40h:</strong> La Pedrera Night Experience — <strong>CONFIRMADO</strong> · Loc: 96342122 · €79.00</li>
+              </ul>
+              <div id="bcn-map-day4" class="mini-map"></div>
+            </div>
+          </details>
+
+          <details class="day-accordion">
+            <summary>Día 5 · 5 may — Ramblas & Eixample</summary>
+            <div class="day-accordion-body">
+              <ul>
+                <li><strong>12:00h:</strong> Checkout H10 Marina · dejar equipaje en consigna</li>
+                <li><strong>12:35h:</strong> Las Ramblas + Mercado de la Boqueria</li>
+                <li><strong>14:00h:</strong> Palau de la Música Catalana</li>
+                <li><strong>15:00h:</strong> El Born — tapas y cervezas · cena</li>
+                <li><strong>~21:00h:</strong> Hostel Airport · ⚠️ <em>Alarma 3:30h — vuelo 06:10h</em></li>
+              </ul>
+              <div class="confirmed-box" style="margin-top:0.8rem;">
+                <strong>🏨 Hostel Airport Barcelona — noche del 5 mayo</strong><br>
+                Noche previa al vuelo de las 06:10h
+              </div>
+              <div id="bcn-map-day5" class="mini-map"></div>
+            </div>
+          </details>
+
+          <details class="day-accordion">
+            <summary>Día 6 · 6 may — Vuelo a París ✈️</summary>
+            <div class="day-accordion-body">
+              <div class="alert-flight">
+                <strong>⚠️ VUELO 06:10h — Air France AF1449</strong><br>
+                BCN Terminal 1 · 06:10h → CDG Terminal 2F · 08:05h (1h 55min)<br>
+                Estar en terminal a las <strong>04:00-04:30h</strong>. Alarma a las <strong>03:30h</strong>.
+              </div>
+            </div>
+          </details>
+        </div>
+      </details>
+
+      <!-- PARIS -->
+      <details class="dest-item reveal" id="dest-paris">
+        <summary>
+          <div class="dest-city-badge" style="background:rgba(126,183,255,0.12);">🗼</div>
+          <div class="dest-summary-info">
+            <h3>París & Disneyland</h3>
+            <div class="dest-meta">
+              <span class="date-tag">6–11 may</span>
+              <span class="dest-note">Sequoia Lodge · Moxy Val d'Europe · Ibis Gare de Lyon · Frecciarossa 9281 → Milán</span>
+            </div>
+          </div>
+          <span class="summary-chevron">›</span>
+        </summary>
+        <div class="dest-body">
+          <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=800&q=80" alt="París" class="dest-image">
+
+          <details class="day-accordion">
+            <summary>Día 6 · 6 may — Llegada CDG + Disney 🎢</summary>
+            <div class="day-accordion-body">
+              <div class="alert-flight">
+                <strong>✈️ AF1449 · BCN T1 06:10h → CDG T2F 08:05h</strong><br>
+                Alarma 3:30h · Estar en terminal 04:00-04:30h
+              </div>
+              <ul>
+                <li><strong>~09:30h:</strong> CDG → Disneyland Paris · RER B + RER A (~50 min) o taxi/shuttle</li>
+                <li><strong>~11:00h:</strong> Check-in Disney Sequoia Lodge · 2 parques incluidos · Extra Magic Time 08:00h</li>
+                <li><strong>Tarde:</strong> Disneyland Park — atracciones principales</li>
+              </ul>
+              <div class="confirmed-box" style="margin-top:0.8rem;">
+                <strong>🏨 Disney Sequoia Lodge — CONFIRMADO · noche 6 may</strong><br>
+                2 parques incluidos · Extra Magic Time · Shuttle gratuito
+              </div>
+            </div>
+          </details>
+
+          <details class="day-accordion">
+            <summary>Día 7 · 7 may — Disneyland 🏰</summary>
+            <div class="day-accordion-body">
+              <ul>
+                <li><strong>08:00h:</strong> Extra Magic Time — parques antes que el público general</li>
+                <li><strong>Día completo:</strong> Disneyland Park + Walt Disney Studios</li>
+                <li><strong>~11:00h:</strong> Check-out Sequoia Lodge · equipaje en consigna del hotel</li>
+                <li><strong>Noche:</strong> Traslado a Moxy Val d'Europe (1 parada RER A)</li>
+              </ul>
+              <div class="confirmed-box" style="margin-top:0.8rem;">
+                <strong>🏨 Moxy Paris Val d'Europe — CONFIRMADO · noche 7 may</strong><br>
+                2 Avenue de L'Europe, 77144 Montévrain · Tel: +33 1 73 08 98 65
+              </div>
+            </div>
+          </details>
+
+          <details class="day-accordion">
+            <summary>Día 8 · 8 may — Torre Eiffel & Campos Elíseos 🗼</summary>
+            <div class="day-accordion-body">
+              <ul>
+                <li><strong>Mañana:</strong> RER A → Paris centro (~40 min) · Check-in Ibis Styles Gare de Lyon</li>
+                <li><strong>~10:00h:</strong> Trocadéro — mejor vista de la Torre Eiffel (gratis)</li>
+                <li><strong>~11:00h:</strong> Torre Eiffel — escaleras hasta 2° piso · €11.30</li>
+                <li><strong>~13:00h:</strong> Almuerzo Champ de Mars</li>
+                <li><strong>~14:30h:</strong> Campos Elíseos → Arco del Triunfo · €13</li>
+                <li><strong>~17:00h:</strong> Petit Palais (gratis)</li>
+                <li><strong>~21:00h:</strong> 🌙 Crucero por el Sena ~€15pp · Torre centelleando a medianoche</li>
+              </ul>
+              <div class="confirmed-box" style="margin-top:0.8rem;">
+                <strong>🏨 Ibis Styles Paris Gare de Lyon — CONFIRMADO · 8–11 may</strong><br>
+                52 Av. Ledru Rollin, 75012 · Desayuno buffet incluido · Metro Bastille 2 min
+              </div>
+            </div>
+          </details>
+
+          <details class="day-accordion">
+            <summary>Día 9 · 9 may — Louvre & Montmartre 🎨</summary>
+            <div class="day-accordion-body">
+              <ul>
+                <li><strong>~09:00h:</strong> Louvre · €22 · reservar online</li>
+                <li><strong>12:00h:</strong> 🚶 Free Tour GuruWalk · Metro Hôtel de Ville · Ref: PAR11406835</li>
+                <li><strong>~14:30h:</strong> Notre-Dame (exterior, en restauración) · Sainte-Chapelle · €11.50</li>
+                <li><strong>18:00h:</strong> 🚶 Tour Montmartre GuruWalk · Metro Blanche · Ref: PAR11406960</li>
+                <li><strong>Noche:</strong> Cena en Montmartre</li>
               </ul>
             </div>
           </details>
 
-          <details class="accordion-item">
-            <summary>
-              <div class="summary-meta">
-                <span class="tag">5-8 may</span>
-                <strong>París · 4 días</strong>
-              </div>
-              <span class="summary-note">✅ Disney Sequoia Lodge (6-7 may), luego París ciudad. Vuelo París → Milán (9 may)</span>
-            </summary>
-            <div class="accordion-body">
-              <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=800&q=80" alt="París" class="destination-image" style="margin-bottom: 1rem;">
+          <details class="day-accordion">
+            <summary>Día 10 · 10 may — Sacré-Cœur & Le Marais 🏘️</summary>
+            <div class="day-accordion-body">
               <ul>
-                <li><strong>Día 1 (5 may):</strong> Llegada a París desde Barcelona, check-in hotel París, descanso, paseo.</li>
-                <li><strong>Día 2-3 (6-7 may):</strong> ✅ <strong>Disneyland Paris</strong> - Hotel Sequoia Lodge confirmado (6 may noche), 2 días en parques, Extra Magic Time.</li>
-                <li><strong>Día 4 (8 may):</strong> Torre Eiffel, Campos Elíseos, Arco del Triunfo, Louvre, Notre-Dame, Montmartre.</li>
-                <li><strong>Transporte salida:</strong> Vuelo CDG/ORY → MXP (1h30).</li>
-                <li><strong>Compra:</strong> easyJet, Vueling, Air France o ITA Airways; reservar 2 meses antes para mejores tarifas.</li>
-                <li><strong>Horario sugerido:</strong> 9 may · salida 08:00 · llegada 09:30. Malpensa Express hasta Milano Centrale (50 min).</li>
-                <li><strong>Notas:</strong> Descargar tarjeta de embarque en el móvil; considerar equipaje cabina + mochila.</li>
+                <li><strong>Mañana:</strong> Sacré-Cœur (gratis) · Place du Tertre · vistas panorámicas</li>
+                <li><strong>Tarde:</strong> Le Marais — Musée Carnavalet (gratis) · Place des Vosges · Maison de Victor Hugo (gratis)</li>
+                <li><strong>Noche:</strong> Cena Le Marais · preparar maletas</li>
               </ul>
             </div>
           </details>
 
-          <details class="accordion-item">
-            <summary>
-              <div class="summary-meta">
-                <span class="tag">8 may</span>
-                <strong>Milán & Lago de Como · 1 día</strong>
-              </div>
-              <span class="summary-note">Tren Milán → Venecia (9 may)</span>
-            </summary>
-            <div class="accordion-body">
+          <details class="day-accordion">
+            <summary>Día 11 · 11 may — Salida a Milán 🚄</summary>
+            <div class="day-accordion-body">
               <ul>
-                <li><strong>Transporte:</strong> Frecciarossa o Italo · Milano Centrale → Venezia Santa Lucia (2h30).</li>
-                <li><strong>Compra:</strong> <a href="https://www.trenitalia.com" target="_blank" rel="noreferrer">trenitalia.com</a>, <a href="https://www.italotreno.it" target="_blank" rel="noreferrer">italotreno.it</a> o Trainline (30-45 días antes).</li>
-                <li><strong>Horario sugerido:</strong> 9 may · salida 09:45 · llegada 12:15.</li>
-                <li><strong>Notas:</strong> Asiento numerado incluido; llegar 15 min antes a la plataforma.</li>
+                <li><strong>05:30h:</strong> Check-out Ibis Styles</li>
+                <li><strong>05:38h:</strong> 🚶 8 min a pie → Gare de Lyon</li>
+              </ul>
+              <div class="confirmed-box" style="margin-top:0.8rem;">
+                <strong>🚄 Frecciarossa 9281 — CONFIRMADO</strong><br>
+                Paris Gare de Lyon 06:30h → Milano Centrale 13:50h<br>
+                Business Silenzio · Carrozza 2 · Asiento 17D
+              </div>
+            </div>
+          </details>
+
+        </div>
+      </details>
+
+      <!-- MILAN -->
+      <details class="dest-item reveal" id="dest-milan">
+        <summary>
+          <div class="dest-city-badge" style="background:rgba(255,107,157,0.12);">🏙️</div>
+          <div class="dest-summary-info">
+            <h3>Milán & Lago de Como</h3>
+            <div class="dest-meta">
+              <span class="date-tag">11–12 may</span>
+              <span class="dest-note">Varenna → Bellagio → tren CONFIRMADO 20:45h → Venecia (JU9RW5)</span>
+            </div>
+          </div>
+          <span class="summary-chevron">›</span>
+        </summary>
+        <div class="dest-body">
+          <img src="https://images.unsplash.com/photo-1513581166391-887a96ddeafd?w=800&q=80" alt="Milán" class="dest-image">
+
+          <details class="day-accordion">
+            <summary>Día 11 · 11 may — Llegada Milán 🏙️</summary>
+            <div class="day-accordion-body">
+              <ul>
+                <li><strong>13:50h:</strong> Llegada Milano Centrale (Frecciarossa 9281 desde París)</li>
+                <li><strong>~15:00h:</strong> Check-in hotel · dejar equipaje</li>
+                <li><strong>~16:00h:</strong> Duomo di Milano — exterior + terraza · €14</li>
+                <li><strong>~17:30h:</strong> Galleria Vittorio Emanuele II · paseo por centro</li>
+                <li><strong>~20:00h:</strong> Cena en Navigli — zona de canales</li>
               </ul>
             </div>
           </details>
 
-          <details class="accordion-item">
-            <summary>
-              <div class="summary-meta">
-                <span class="tag">9-10 may</span>
-                <strong>Venecia · 2 días</strong>
-              </div>
-              <span class="summary-note">Tren Venecia → Florencia (11 may)</span>
-            </summary>
-            <div class="accordion-body">
-              <img src="https://images.unsplash.com/photo-1514890547357-a9ee288728e0?w=800&q=80" alt="Venecia" class="destination-image" style="margin-bottom: 1rem;">
+          <details class="day-accordion">
+            <summary>Día 12 · 12 may — Lago de Como 🏔️</summary>
+            <div class="day-accordion-body">
               <ul>
-                <li><strong>Transporte:</strong> Frecciarossa/Italo · Venezia SL → Firenze SMN (2h15).</li>
-                <li><strong>Compra:</strong> Trenitalia/Italo o <a href="https://www.thetrainline.com/es" target="_blank" rel="noreferrer">Trainline</a>; hay tarifas Super Economy desde €19.</li>
-                <li><strong>Horario sugerido:</strong> 11 may · salida 10:05 · llegada 12:20.</li>
-                <li><strong>Notas:</strong> Subir con código QR; guardar ticket para mostrar al revisor.</li>
+                <li><strong>07:30h:</strong> 🚂 Trenord · Milano Centrale → Varenna-Esino · 1h · ~€7</li>
+                <li><strong>~08:30h:</strong> Varenna — Villa Monastero (€10) · Passeggiata degli Innamorati</li>
+                <li><strong>~10:15h:</strong> ⛴️ Ferry Varenna → Bellagio · 15 min · ~€5</li>
+                <li><strong>~10:30h:</strong> Bellagio — Villa Melzi (€10) · almuerzo con vista al lago</li>
+                <li><strong>~13:30h:</strong> ⛴️ Ferry Bellagio → Varenna · 🚂 → Milano Centrale</li>
+                <li><strong>~15:30h:</strong> Barrio Brera — galerías y ambiente local</li>
+                <li><strong>~17:30h:</strong> 🍹 Aperitivo milanés en Navigli — copa incluye buffet</li>
+                <li><strong>~19:30h:</strong> Cena ligera · recoger maletas en consigna</li>
+              </ul>
+              <div class="confirmed-box" style="margin-top:0.8rem;">
+                <strong>🚄 Frecciarossa 9763 — CONFIRMADO · JU9RW5</strong><br>
+                Milano Centrale 20:45h → Venezia Santa Lucia 23:17h
+              </div>
+            </div>
+          </details>
+
+        </div>
+      </details>
+
+      <!-- VENECIA -->
+      <details class="dest-item reveal" id="dest-venecia">
+        <summary>
+          <div class="dest-city-badge" style="background:rgba(77,235,184,0.12);">🚤</div>
+          <div class="dest-summary-info">
+            <h3>Venecia</h3>
+            <div class="dest-meta">
+              <span class="date-tag">12–14 may</span>
+              <span class="dest-note">Llegada 23:17 (JU9RW5). Tren confirmado 18:26 a Florencia (KEX3EN).</span>
+            </div>
+          </div>
+          <span class="summary-chevron">›</span>
+        </summary>
+        <div class="dest-body">
+          <img src="https://images.unsplash.com/photo-1514890547357-a9ee288728e0?w=800&q=80" alt="Venecia" class="dest-image">
+          <div class="confirmed-box" style="margin-bottom:1rem;">
+            <strong>🏨 Hotel Carlton On The Grand Canal — CONFIRMADO</strong><br>
+            Santa Croce 578 · 12–14 may · Conf: 6369502862 · Tel: +39 041 275 2000
+          </div>
+
+          <details class="day-accordion">
+            <summary>Día 12 · 12 may — Llegada Venecia 🚤</summary>
+            <div class="day-accordion-body">
+              <ul>
+                <li><strong>23:17h:</strong> Llegada Venezia Santa Lucia (tren JU9RW5)</li>
+                <li><strong>~00:00h:</strong> Check-in Hotel Carlton On The Grand Canal</li>
               </ul>
             </div>
           </details>
 
-          <details class="accordion-item">
-            <summary>
-              <div class="summary-meta">
-                <span class="tag">11-12 may</span>
-                <strong>Florencia · 2 días</strong>
-              </div>
-              <span class="summary-note">Base para excursión a Toscana</span>
-            </summary>
-            <div class="accordion-body">
-              <img src="https://images.unsplash.com/photo-1520175480921-4edfa2983e0f?w=800&q=80" alt="Florencia" class="destination-image" style="margin-bottom: 1rem;">
+          <details class="day-accordion">
+            <summary>Día 13 · 13 may — Venecia 🌊</summary>
+            <div class="day-accordion-body">
               <ul>
-                <li><strong>Transporte (excursión):</strong> Tour Siena + Pisa (Walkabout, Civitatis) o tren Firenze → Pisa (1h) + bus a Siena (1h15).</li>
-                <li><strong>Compra:</strong> Reservar tour con 1 mes de anticipación o adquirir billetes regionales en trenitalia.com (no requieren asiento).</li>
-                <li><strong>Horario sugerido:</strong> 13 may · tour 08:00-19:30 con salida desde Via Curtatone.</li>
-                <li><strong>Notas:</strong> Si lo hacen por cuenta, validar billete antes de subir al regional.</li>
+                <li><strong>Mañana:</strong> Mercado de Rialto · ambiente temprano</li>
+                <li><strong>~10:00h:</strong> Vaporetto línea 1 completo por el Gran Canal</li>
+                <li><strong>~11:30h:</strong> Dorsoduro — Punta della Dogana · Zattere</li>
+                <li><strong>~13:00h:</strong> Almuerzo en bacaro · cicchetti (tapas venecianas)</li>
+                <li><strong>~15:00h:</strong> Murano o Burano (ferry)</li>
+                <li><strong>~18:00h:</strong> San Marco al atardecer</li>
               </ul>
             </div>
           </details>
 
-          <details class="accordion-item">
-            <summary>
-              <div class="summary-meta">
-                <span class="tag">13 may</span>
-                <strong>Toscana · 1 día</strong>
-              </div>
-              <span class="summary-note">Tren Florencia → La Spezia (14 may)</span>
-            </summary>
-            <div class="accordion-body">
+          <details class="day-accordion">
+            <summary>Día 14 · 14 may — Venecia → Florencia 🚄</summary>
+            <div class="day-accordion-body">
               <ul>
-                <li><strong>Transporte:</strong> Regional rápido Firenze SMN → La Spezia Centrale (2h10) con parada en Pisa.</li>
-                <li><strong>Compra:</strong> Trenitalia (billete regional €20-30). No hay asientos numerados; validar antes de subir.</li>
-                <li><strong>Horario sugerido:</strong> 14 may · salida 08:10 · llegada 10:20 para aprovechar Cinque Terre.</li>
-                <li><strong>Notas:</strong> Desde La Spezia activar la Cinque Terre Card para los trenes locales.</li>
+                <li><strong>Mañana:</strong> Basílica San Marcos (gratis) · Campanile (€10) · sin multitudes</li>
+                <li><strong>~11:30h:</strong> Cannaregio — Ghetto Veneziano · almuerzo osteria local</li>
+                <li><strong>~16:00h:</strong> Regreso al hotel · checkout · equipaje</li>
+              </ul>
+              <div class="confirmed-box" style="margin-top:0.8rem;">
+                <strong>🚄 Frecciarossa 9435 — CONFIRMADO · KEX3EN</strong><br>
+                Venezia Santa Lucia 18:26h → Firenze Santa Maria Novella 20:39h
+              </div>
+            </div>
+          </details>
+
+        </div>
+      </details>
+
+      <!-- FLORENCIA -->
+      <details class="dest-item reveal" id="dest-florencia">
+        <summary>
+          <div class="dest-city-badge" style="background:rgba(77,235,184,0.1);">⚜️</div>
+          <div class="dest-summary-info">
+            <h3>Florencia</h3>
+            <div class="dest-meta">
+              <span class="date-tag">14–16 may</span>
+              <span class="dest-note">Llegan noche 14 may. 15 y 16 días completos. 17 may tren a Roma (~1h30).</span>
+            </div>
+          </div>
+          <span class="summary-chevron">›</span>
+        </summary>
+        <div class="dest-body">
+          <img src="https://images.unsplash.com/photo-1520175480921-4edfa2983e0f?w=800&q=80" alt="Florencia" class="dest-image">
+
+          <details class="day-accordion">
+            <summary>Día 14 · 14 may — Llegada Florencia ⚜️</summary>
+            <div class="day-accordion-body">
+              <ul>
+                <li><strong>20:39h:</strong> Llegada Firenze Santa Maria Novella</li>
+                <li><strong>~21:30h:</strong> Ponte Vecchio iluminado · Piazza della Repubblica</li>
+                <li><strong>~22:30h:</strong> Cena toscana — ribollita o pappardelle al cinghiale</li>
               </ul>
             </div>
           </details>
 
-          <details class="accordion-item">
-            <summary>
-              <div class="summary-meta">
-                <span class="tag">14-15 may</span>
-                <strong>Cinque Terre · 2 días</strong>
-              </div>
-              <span class="summary-note">Tren La Spezia → Roma (16 may)</span>
-            </summary>
-            <div class="accordion-body">
-              <img src="https://images.unsplash.com/photo-1515542622106-78bda8ba0e5b?w=800&q=80" alt="Cinque Terre" class="destination-image" style="margin-bottom: 1rem;">
+          <details class="day-accordion">
+            <summary>Día 15 · 15 may — Duomo & Uffizi 🎨</summary>
+            <div class="day-accordion-body">
               <ul>
-                <li><strong>Transporte:</strong> Frecciargento/Intercity · La Spezia → Roma Termini (3h50, vía Pisa/Firenze).</li>
-                <li><strong>Compra:</strong> Trenitalia o Italo (buscar combinaciones) desde €35 comprando con 45 días.</li>
-                <li><strong>Horario sugerido:</strong> 16 may · salida 08:30 · llegada 12:20.</li>
-                <li><strong>Notas:</strong> Llevar snacks; no todos los trenes tienen coche bar.</li>
+                <li><strong>Mañana:</strong> Duomo + cúpula Brunelleschi ⚠️ <em>reserva obligatoria online</em></li>
+                <li><strong>~11:30h:</strong> Uffizi · €20 · reservar online</li>
+                <li><strong>~14:00h:</strong> Almuerzo · Piazza della Signoria (gratis)</li>
+                <li><strong>~16:00h:</strong> Piazzale Michelangelo — vistas panorámicas de Florencia</li>
               </ul>
             </div>
           </details>
 
-          <details class="accordion-item">
-            <summary>
-              <div class="summary-meta">
-                <span class="tag">16-18 may</span>
-                <strong>Roma · 3 días</strong>
-              </div>
-              <span class="summary-note">Tren Roma → Costa Amalfitana (19 may)</span>
-            </summary>
-            <div class="accordion-body">
-              <img src="https://images.unsplash.com/photo-1529260830199-42c24126f198?w=800&q=80" alt="Roma" class="destination-image" style="margin-bottom: 1rem;">
+          <details class="day-accordion">
+            <summary>Día 16 · 16 may — Oltrarno & Boboli 🌿</summary>
+            <div class="day-accordion-body">
               <ul>
-                <li><strong>Transporte:</strong> Frecciarossa · Roma Termini → Napoli Centrale (1h10).</li>
-                <li><strong>Compra:</strong> Trenitalia/Italo (desde €15). Reservar con 30 días para asegurar horarios matutinos.</li>
-                <li><strong>Horario sugerido:</strong> 19 may · salida Roma 08:00 · llegada Nápoles 09:10 · tren a Sorrento 09:30 · bus a Positano 10:30 · llegada Positano 11:30.</li>
-                <li><strong>Alternativa:</strong> Transfer privado Nápoles → Positano (más rápido, ~€80-120, 1h 30min).</li>
-                <li><strong>Notas:</strong> Aprovechar para comprar snacks napolitanos antes de tomar la Circumvesuviana.</li>
+                <li><strong>Mañana:</strong> Palazzo Pitti · €16 · Jardines Boboli</li>
+                <li><strong>~13:00h:</strong> Oltrarno — barrio artesano · almuerzo local</li>
+                <li><strong>~16:00h:</strong> San Miniato al Monte (gratis) · vistas al atardecer</li>
+                <li><strong>Noche:</strong> Bistecca alla fiorentina · última cena toscana</li>
               </ul>
             </div>
           </details>
 
-          <details class="accordion-item">
-            <summary>
-              <div class="summary-meta">
-                <span class="tag">19-23 may</span>
-                <strong>Costa Amalfitana + Nápoles</strong>
-              </div>
-              <span class="summary-note">✅ Vuelo Nápoles → Madrid (24 may 06:05h I2**** - Iberia Express - CONFIRMADO, NO CAMBIA)</span>
-            </summary>
-            <div class="accordion-body">
-              <img src="https://images.unsplash.com/photo-1515542622106-78bda8ba0e5b?w=800&q=80" alt="Costa Amalfitana" class="destination-image" style="margin-bottom: 1rem;">
+        </div>
+      </details>
+
+      <!-- ROMA -->
+      <details class="dest-item reveal" id="dest-roma">
+        <summary>
+          <div class="dest-city-badge" style="background:rgba(240,82,46,0.1);">🏛️</div>
+          <div class="dest-summary-info">
+            <h3>Roma</h3>
+            <div class="dest-meta">
+              <span class="date-tag">17–18 may</span>
+              <span class="dest-note">Tren Roma → Nápoles → Costa Amalfitana (19 may)</span>
+            </div>
+          </div>
+          <span class="summary-chevron">›</span>
+        </summary>
+        <div class="dest-body">
+          <img src="https://images.unsplash.com/photo-1529260830199-42c24126f198?w=800&q=80" alt="Roma" class="dest-image">
+
+          <details class="day-accordion">
+            <summary>Día 17 · 17 may — Roma Clásica 🏛️</summary>
+            <div class="day-accordion-body">
               <ul>
-                <li><strong>19 mayo:</strong> Traslado desde Roma (tren a Nápoles + bus a Positano), llegada a Positano, playa y paseo panorámico</li>
-                <li><strong>20 mayo:</strong> Positano, exploración completa</li>
-                <li><strong>21 mayo:</strong> Amalfi, Ravello y Villa Cimbrone + Traslado a Sorrento</li>
-                <li><strong>22 mayo:</strong> Sorrento + ✅ Excursión a Capri (ferry desde Sorrento, 20-30 min)</li>
-                <li><strong>22 mayo noche:</strong> Traslado Sorrento → Nápoles (tren Circumvesuviana 1h, ~€5-10) y dormir en Nápoles</li>
-                <li><strong>24 mayo:</strong> ✅ Vuelo I2**** 06:05h NAP → 08:50h MAD (Iberia Express, directo, 2h 45min, €91.77 - NO CAMBIA)</li>
-                <li><strong>Transporte 18 mayo:</strong> Tren Roma → Nápoles (1h 10min) + Tren Circumvesuviana Nápoles → Sorrento (1h 15min) + Bus SITA Sorrento → Positano (1h) o transfer privado (más rápido, ~€80-120)</li>
-                <li><strong>Alojamiento:</strong> Positano (18-19 may), Amalfi (20 may), Sorrento (21 may), Nápoles (22-23 may, cerca del aeropuerto)</li>
-                <li><strong>Notas:</strong> Llegar al aeropuerto de Nápoles con 2 horas de anticipación (04:00-04:30h). Transfer desde hotel al aeropuerto (30-45 min, ~€30-50).</li>
+                <li><strong>08:30h:</strong> Coliseo + Foro Romano + Palatino ⚠️ <em>skip-the-line URGENTE · €16-22</em></li>
+                <li><strong>~11:30h:</strong> Panteón · €5 · llegar temprano</li>
+                <li><strong>~13:00h:</strong> Almuerzo cerca del centro histórico</li>
+                <li><strong>~15:00h:</strong> Fontana di Trevi</li>
+                <li><strong>~16:30h:</strong> Piazza Navona</li>
               </ul>
             </div>
           </details>
 
-          <details class="accordion-item">
-            <summary>
-              <div class="summary-meta">
-                <span class="tag">23-26 may</span>
-                <strong>Madrid final · 3 días + regreso</strong>
-              </div>
-              <span class="summary-note">✅ Llegada 24 may 08:50h, vuelo Madrid → Uruguay (26 may)</span>
-            </summary>
-            <div class="accordion-body">
+          <details class="day-accordion">
+            <summary>Día 18 · 18 may — Vaticano & Trastevere ✝️</summary>
+            <div class="day-accordion-body">
               <ul>
-                <li><strong>24 mayo:</strong> Llegada temprano a Madrid (08:50h) desde Nápoles. Día libre para descansar y comenzar compras.</li>
-                <li><strong>24 mayo:</strong> Compras en Gran Vía, El Corte Inglés, Zara, Mango.</li>
-                <li><strong>25 mayo:</strong> Packing, última preparación, tax free.</li>
-                <li><strong>26 mayo:</strong> ✅ Vuelo largo recorrido MAD → MVD (11:50h salida, confirmado).</li>
-                <li><strong>Compra:</strong> Ya emitido. Revisar localizador 48 h antes para confirmar asientos.</li>
-                <li><strong>Horario sugerido:</strong> Check-in 26 may 08:50h · embarque 11:20h · salida 11:50h (IB****).</li>
-                <li><strong>Notas:</strong> Llegar al aeropuerto con 3 h de anticipación. Usar los días 23-25 may para compras, tax free y packing.</li>
+                <li><strong>08:00h:</strong> Museos Vaticanos + Capilla Sixtina ⚠️ <em>reserva URGENTE · €17-21</em></li>
+                <li><strong>~11:30h:</strong> Basílica San Pedro (gratis) · cúpula €8</li>
+                <li><strong>~14:00h:</strong> Almuerzo Trastevere</li>
+                <li><strong>~15:30h:</strong> Trastevere — barrio más auténtico de Roma · paseo</li>
               </ul>
             </div>
           </details>
+
+          <details class="day-accordion">
+            <summary>Día 19 · 19 may — Salida a Costa Amalfitana 🌊</summary>
+            <div class="day-accordion-body">
+              <ul>
+                <li><strong>Mañana:</strong> 🚄 Roma Termini → Napoli Centrale · 1h 10min</li>
+                <li><strong>~13:00h:</strong> ⛴️ Ferry Nápoles → Positano · ~€30 · 1h</li>
+                <li><strong>~14:00h:</strong> Llegada Positano · check-in</li>
+              </ul>
+            </div>
+          </details>
+
         </div>
-      </section>
+      </details>
 
-      <section id="reservas">
-        <h2>Reservas Prioritarias (2-3 meses antes)</h2>
-        <div class="grid deux">
-          <div class="card">
-            <p><strong>Entradas clave</strong></p>
-            <ul>
-              <li>Sagrada Familia</li>
-              <li>Torre Eiffel</li>
-              <li>Disneyland Paris (alta prioridad)</li>
-              <li>Louvre</li>
-              <li>Coliseo</li>
-              <li>Vaticano</li>
-              <li>Uffizi</li>
-              <li>Duomo de Milán</li>
-              <li>Cinque Terre Card (2 días)</li>
-            </ul>
+      <!-- AMALFI -->
+      <details class="dest-item reveal" id="dest-amalfi">
+        <summary>
+          <div class="dest-city-badge" style="background:rgba(255,107,157,0.1);">🌊</div>
+          <div class="dest-summary-info">
+            <h3>Costa Amalfitana & Capri</h3>
+            <div class="dest-meta">
+              <span class="date-tag">19–22 may</span>
+              <span class="dest-note">Positano → Amalfi → Capri → Sorrento → Nápoles. Vuelo 24 may 06:05h</span>
+            </div>
           </div>
-          <div class="card">
-            <p><strong>Logística</strong></p>
-            <ul>
-              <li>Trenes de alta velocidad en Italia</li>
-              <li>Alojamiento en Cinque Terre</li>
-              <li>Alojamiento en Costa Amalfitana</li>
-              <li>Vuelos internos París ⇄ Italia y Italia ⇄ Madrid</li>
-              <li>Seguro de viaje con cobertura €30,000+</li>
-            </ul>
-          </div>
+          <span class="summary-chevron">›</span>
+        </summary>
+        <div class="dest-body">
+          <img src="https://images.unsplash.com/photo-1515542622106-78bda8ba0e5b?w=800&q=80" alt="Costa Amalfitana" class="dest-image">
+
+          <details class="day-accordion">
+            <summary>Día 19 · 19 may — Positano 🌅</summary>
+            <div class="day-accordion-body">
+              <ul>
+                <li><strong>~14:00h:</strong> Llegada Positano · check-in</li>
+                <li><strong>Tarde:</strong> Playa Spiaggia Grande · paseo panorámico por el pueblo</li>
+                <li><strong>Noche:</strong> Cena con vista al mar</li>
+              </ul>
+            </div>
+          </details>
+
+          <details class="day-accordion">
+            <summary>Día 20 · 20 may — Amalfi & Ravello 🏘️</summary>
+            <div class="day-accordion-body">
+              <ul>
+                <li><strong>Mañana:</strong> Bus SITA → Amalfi · €2 · Catedral</li>
+                <li><strong>~12:00h:</strong> Bus → Ravello</li>
+                <li><strong>~13:00h:</strong> Villa Cimbrone — mirador infinito · Villa Rufolo</li>
+                <li><strong>Tarde:</strong> Regreso a Positano</li>
+              </ul>
+            </div>
+          </details>
+
+          <details class="day-accordion">
+            <summary>Día 21 · 21 may — Capri 🏝️</summary>
+            <div class="day-accordion-body">
+              <ul>
+                <li><strong>Mañana:</strong> ⛴️ Ferry → Capri · ~€20-25</li>
+                <li><strong>~10:00h:</strong> Gruta Azul · €18 ⚠️ <em>depende del clima y marea</em></li>
+                <li><strong>~12:00h:</strong> Anacapri · Monte Solaro (teleférico €12)</li>
+                <li><strong>~15:00h:</strong> ⛴️ Ferry → Sorrento</li>
+              </ul>
+            </div>
+          </details>
+
+          <details class="day-accordion">
+            <summary>Día 22 · 22 may — Nápoles 🍕</summary>
+            <div class="day-accordion-body">
+              <ul>
+                <li><strong>Mañana:</strong> Circumvesuviana Sorrento → Nápoles</li>
+                <li><strong>~10:30h:</strong> Spaccanapoli · San Gregorio Armeno (callejón de los belenes)</li>
+                <li><strong>~13:00h:</strong> 🍕 Pizza en Da Michele o Sorbillo — las mejores de Nápoles</li>
+                <li><strong>Tarde:</strong> Paseo por el centro histórico</li>
+              </ul>
+            </div>
+          </details>
+
+          <details class="day-accordion">
+            <summary>Día 23 · 23 may — Nápoles & Vuelo 🛫</summary>
+            <div class="day-accordion-body">
+              <ul>
+                <li><strong>Mañana:</strong> Museo Arqueológico Nacional · €18 · colección de Pompeya</li>
+                <li><strong>~13:00h:</strong> Castel dell'Ovo · vistas al golfo</li>
+                <li><strong>Tarde:</strong> Check-in hotel cerca del aeropuerto</li>
+              </ul>
+              <div class="alert-flight" style="margin-top:0.8rem;">
+                <strong>⚠️ VUELO 06:05h del 24 may — alarma 04:00h</strong>
+              </div>
+            </div>
+          </details>
+
         </div>
-      </section>
+      </details>
 
-      <section id="agenda">
-        <h2>Agenda Diaria con Checklist</h2>
-        <p>Marca cada día completado. Se guarda automáticamente en tu navegador.</p>
-        <div class="day-checklist" id="dayChecklist">
-          <label class="day-card">
-            <input type="checkbox" data-day="1" />
-            <div class="day-content">
-              <p class="day-title">Día 1 · 1 may · Llegada a Madrid (solo 1 día)</p>
-              <p class="day-subtitle">✅ Llegada 14:35h (MAD Terminal 4S), Cercanías C1 a Atocha, check-in, descanso, paseo.</p>
+      <!-- MADRID FINAL -->
+      <details class="dest-item reveal" id="dest-madrid-final">
+        <summary>
+          <div class="dest-city-badge" style="background:rgba(240,82,46,0.1);">🏠</div>
+          <div class="dest-summary-info">
+            <h3>Madrid Final</h3>
+            <div class="dest-meta">
+              <span class="date-tag">24–26 may</span>
+              <span class="dest-note">Llegada 08:50h · Vuelo MAD → MVD (26 may)</span>
             </div>
-          </label>
-          <label class="day-card">
-            <input type="checkbox" data-day="2" />
-            <div class="day-content">
-              <p class="day-title">Día 2 · 2 may · Traslado a Barcelona (✅ Tren AVE 12:22h)</p>
-              <p class="day-subtitle">✅ Tren AVE 12:22h (Atocha) → 15:14h (Barcelona-Sants), Tren 06***, check-in Barcelona.</p>
+          </div>
+          <span class="summary-chevron">›</span>
+        </summary>
+        <div class="dest-body">
+
+          <details class="day-accordion">
+            <summary>Día 24 · 24 may — Llegada Madrid 🏠</summary>
+            <div class="day-accordion-body">
+              <ul>
+                <li><strong>08:50h:</strong> Llegada MAD (vuelo I21836)</li>
+                <li><strong>~10:30h:</strong> Check-in hotel · descanso</li>
+                <li><strong>Tarde:</strong> Gran Vía · cena tranquila</li>
+              </ul>
             </div>
-          </label>
-          <label class="day-card">
-            <input type="checkbox" data-day="3" />
-            <div class="day-content">
-              <p class="day-title">Día 2-3 · 2-3 may · Barcelona</p>
-              <p class="day-subtitle">Sagrada Familia, Park Güell, Barrio Gótico.</p>
+          </details>
+
+          <details class="day-accordion">
+            <summary>Día 25 · 25 may — Compras & Museos 🛍️</summary>
+            <div class="day-accordion-body">
+              <ul>
+                <li><strong>Mañana:</strong> Compras — Gran Vía · El Corte Inglés · Zara · Mango ⚠️ <em>guardar tickets para tax free</em></li>
+                <li><strong>Tarde:</strong> Museo del Prado o Reina Sofía (gratis desde 18:00h)</li>
+                <li><strong>Noche:</strong> Última cena española</li>
+              </ul>
             </div>
-          </label>
-          <label class="day-card">
-            <input type="checkbox" data-day="4" />
-            <div class="day-content">
-              <p class="day-title">Día 4 · 4 may · Barcelona</p>
-              <p class="day-subtitle">Park Güell, Barceloneta, tren nocturno.</p>
+          </details>
+
+          <details class="day-accordion">
+            <summary>Día 26 · 26 may — Vuelo a casa ✈️</summary>
+            <div class="day-accordion-body">
+              <ul>
+                <li><strong>Mañana:</strong> Packing · traslado aeropuerto</li>
+                <li><strong>11:20h:</strong> Embarque</li>
+              </ul>
+              <div class="alert-flight" style="margin-top:0.8rem;">
+                <strong>✈️ IB0169 MAD → MVD · 11:50h</strong><br>
+                ⚠️ Reclamar tax free en el aeropuerto antes de embarcar
+              </div>
             </div>
-          </label>
-          <label class="day-card">
-            <input type="checkbox" data-day="5" />
-            <div class="day-content">
-              <p class="day-title">Día 5 · 5 may · París (llegada)</p>
-              <p class="day-subtitle">Llegada desde Barcelona, check-in, descanso, paseo.</p>
-            </div>
-          </label>
-          <label class="day-card">
-            <input type="checkbox" data-day="6" />
-            <div class="day-content">
-              <p class="day-title">Día 6 · 6 may · ✅ Disney Sequoia Lodge (check-in)</p>
-              <p class="day-subtitle">Disneyland Paris - Día 1 en parques, Extra Magic Time.</p>
-            </div>
-          </label>
-          <label class="day-card">
-            <input type="checkbox" data-day="7" />
-            <div class="day-content">
-              <p class="day-title">Día 7 · 7 may · ✅ Disney Sequoia Lodge (check-out tarde)</p>
-              <p class="day-subtitle">Disneyland Paris - Día 2 en parques, Extra Magic Time, traslado a París.</p>
-            </div>
-          </label>
-          <label class="day-card">
-            <input type="checkbox" data-day="8" />
-            <div class="day-content">
-              <p class="day-title">Día 8 · 8 may · París</p>
-              <p class="day-subtitle">Torre Eiffel, Campos Elíseos, Arco del Triunfo, Louvre, Notre-Dame, Montmartre.</p>
-            </div>
-          </label>
-          <label class="day-card">
-            <input type="checkbox" data-day="9" />
-            <div class="day-content">
-              <p class="day-title">Día 9 · 9 may · Milán & Lago de Como</p>
-              <p class="day-subtitle">Duomo, excursión en ferry.</p>
-            </div>
-          </label>
-          <label class="day-card">
-            <input type="checkbox" data-day="9" />
-            <div class="day-content">
-              <p class="day-title">Día 9 · 9 may · Venecia</p>
-              <p class="day-subtitle">Plaza San Marcos, paseo en vaporetto.</p>
-            </div>
-          </label>
-          <label class="day-card">
-            <input type="checkbox" data-day="10" />
-            <div class="day-content">
-              <p class="day-title">Día 10 · 10 may · Venecia</p>
-              <p class="day-subtitle">Murano/Burano, salida a Florencia.</p>
-            </div>
-          </label>
-          <label class="day-card">
-            <input type="checkbox" data-day="11" />
-            <div class="day-content">
-              <p class="day-title">Día 11 · 11 may · Florencia</p>
-              <p class="day-subtitle">Duomo, Ponte Vecchio, gelato.</p>
-            </div>
-          </label>
-          <label class="day-card">
-            <input type="checkbox" data-day="12" />
-            <div class="day-content">
-              <p class="day-title">Día 12 · 12 may · Florencia</p>
-              <p class="day-subtitle">Galería Uffizi, atardecer en Piazzale.</p>
-            </div>
-          </label>
-          <label class="day-card">
-            <input type="checkbox" data-day="13" />
-            <div class="day-content">
-              <p class="day-title">Día 13 · 13 may · Toscana</p>
-              <p class="day-subtitle">Siena + Pisa (tour o tren).</p>
-            </div>
-          </label>
-          <label class="day-card">
-            <input type="checkbox" data-day="14" />
-            <div class="day-content">
-              <p class="day-title">Día 14 · 14 may · Cinque Terre</p>
-              <p class="day-subtitle">Monterosso, Vernazza, senderos.</p>
-            </div>
-          </label>
-          <label class="day-card">
-            <input type="checkbox" data-day="15" />
-            <div class="day-content">
-              <p class="day-title">Día 15 · 15 may · Cinque Terre</p>
-              <p class="day-subtitle">Manarola, Riomaggiore, tren a Roma.</p>
-            </div>
-          </label>
-          <label class="day-card">
-            <input type="checkbox" data-day="16" />
-            <div class="day-content">
-              <p class="day-title">Día 16 · 16 may · Roma</p>
-              <p class="day-subtitle">Coliseo, Foro, Fontana di Trevi.</p>
-            </div>
-          </label>
-          <label class="day-card">
-            <input type="checkbox" data-day="17" />
-            <div class="day-content">
-              <p class="day-title">Día 17 · 17 may · Roma</p>
-              <p class="day-subtitle">Vaticano, Museos, Trastevere.</p>
-            </div>
-          </label>
-          <label class="day-card">
-            <input type="checkbox" data-day="18" />
-            <div class="day-content">
-              <p class="day-title">Día 18 · 18 may · Roma</p>
-              <p class="day-subtitle">Galería Borghese, compras, aperitivo.</p>
-            </div>
-          </label>
-          <label class="day-card">
-            <input type="checkbox" data-day="19" />
-            <div class="day-content">
-              <p class="day-title">Día 19 · 19 may · Costa Amalfitana</p>
-              <p class="day-subtitle">Traslado desde Roma, llegada a Positano, playas y paseo panorámico.</p>
-            </div>
-          </label>
-          <label class="day-card">
-            <input type="checkbox" data-day="20" />
-            <div class="day-content">
-              <p class="day-title">Día 20 · 20 may · Costa Amalfitana</p>
-              <p class="day-subtitle">Positano, exploración completa.</p>
-            </div>
-          </label>
-          <label class="day-card">
-            <input type="checkbox" data-day="21" />
-            <div class="day-content">
-              <p class="day-title">Día 21 · 21 may · Costa Amalfitana</p>
-              <p class="day-subtitle">Amalfi, Ravello y Villa Cimbrone.</p>
-            </div>
-          </label>
-          <label class="day-card">
-            <input type="checkbox" data-day="22" />
-            <div class="day-content">
-              <p class="day-title">Día 22 · 22 may · Sorrento/Capri</p>
-              <p class="day-subtitle">Sorrento + ✅ Excursión a Capri (ferry desde Sorrento, 20-30 min).</p>
-            </div>
-          </label>
-            <label class="day-card">
-            <input type="checkbox" data-day="23" />
-            <div class="day-content">
-              <p class="day-title">Noche 22 may · Nápoles</p>
-              <p class="day-subtitle">Traslado Sorrento → Nápoles, dormir cerca del aeropuerto.</p>
-            </div>
-          </label>
-          <label class="day-card">
-            <input type="checkbox" data-day="24" />
-            <div class="day-content">
-              <p class="day-title">Día 23 · 23 may · Nápoles/Madrid</p>
-              <p class="day-subtitle">✅ Vuelo I2**** 06:05h NAP → 08:50h MAD (Iberia Express, directo, 2h 45min, €91.77 - NO CAMBIA).</p>
-            </div>
-          </label>
-          <label class="day-card">
-            <input type="checkbox" data-day="25" />
-            <div class="day-content">
-              <p class="day-title">Día 24 · 23 may tarde-24 may · Madrid</p>
-              <p class="day-subtitle">Compras en Gran Vía, El Corte Inglés, Zara, Mango.</p>
-            </div>
-          </label>
-          <label class="day-card">
-            <input type="checkbox" data-day="25" />
-            <div class="day-content">
-              <p class="day-title">Día 25 · 25 may · Madrid</p>
-              <p class="day-subtitle">Packing, última preparación, tax free.</p>
-            </div>
-          </label>
-          <label class="day-card">
-            <input type="checkbox" data-day="26" />
-            <div class="day-content">
-              <p class="day-title">Día 26 · 26 may · Vuelo a Uruguay</p>
-              <p class="day-subtitle">Check-out, traslado al aeropuerto y regreso a casa.</p>
-            </div>
-          </label>
+          </details>
+
         </div>
-        <button class="reset-btn" id="resetChecklist">Reiniciar checklist</button>
-      </section>
+      </details>
 
-      <section id="mapa">
-        <h2>Mapa Interactivo del Recorrido</h2>
-        <p>
-          Seleccioná un día en la agenda o usa la barra de tiempo debajo del mapa para ver dónde estarán y cómo progresa el
-          recorrido completo por Europa.
-        </p>
-        <div id="travelMap"></div>
-        <div class="timeline-slider-container">
-          <div class="timeline-slider-wrapper">
-            <div class="timeline-slider-track">
-              <div class="timeline-slider-progress" id="timelineSliderProgress"></div>
-              <input
-                type="range"
-                min="1"
-                max="26"
-                value="1"
-                class="timeline-slider"
-                id="timelineSlider"
-              />
-            </div>
-            <div class="timeline-labels">
-              <span class="timeline-label">1 may</span>
-              <span class="timeline-label">6 may</span>
-              <span class="timeline-label">11 may</span>
-              <span class="timeline-label">16 may</span>
-              <span class="timeline-label">21 may</span>
-              <span class="timeline-label">26 may</span>
-            </div>
-          </div>
-          <div class="timeline-current-day" id="timelineCurrentDay">
-            Día 1 · 1 may · Madrid (solo 1 día)
-          </div>
+    </div>
+  </section>
+
+
+  <!-- TRASLADOS -->
+  <section id="traslados">
+    <div class="section-eyebrow">🚀 Logística</div>
+    <h2>Traslados Confirmados</h2>
+    <div class="flights-grid">
+      <div class="flight-card ida reveal">
+        <span class="flight-type-badge ida">✈️ Vuelo de Ida</span>
+        <div class="flight-route"><span>MVD</span><span class="arrow">→</span><span>MAD</span></div>
+        <div class="flight-details">
+          <div class="flight-row"><span class="fl">Fecha</span><span class="fv">30 abr 2026</span></div>
+          <div class="flight-row"><span class="fl">Vuelo</span><span class="fv">IB0170</span></div>
+          <div class="flight-row"><span class="fl">Salida</span><span class="fv">21:45h MVD</span></div>
+          <div class="flight-row"><span class="fl">Llegada</span><span class="fv">1 may 14:35h MAD T4S</span></div>
+          <div class="flight-row"><span class="fl">Duración</span><span class="fv">12h 50m</span></div>
+          <div class="flight-confirmed-badge">✅ Confirmado</div>
         </div>
-      </section>
+      </div>
 
-      <section id="capri">
-        <h2>✅ Capri - Excursión Confirmada (21 de mayo)</h2>
-        <div class="grid deux">
-          <div class="card">
-            <p><strong>Ferries a Capri</strong></p>
-            <ul>
-              <li><strong>Desde Positano:</strong> 30-40 min · €20-30 ida y vuelta · Salidas desde 8:00 AM</li>
-              <li><strong>Desde Amalfi:</strong> 50-60 min · €18-28 ida y vuelta · Salidas desde 8:30 AM</li>
-              <li><strong>Desde Sorrento:</strong> 20-30 min · €20-35 ida y vuelta · Más rápido</li>
-              <li><strong>Operadores:</strong> Travelmar, NLG, Alilauro, Caremar</li>
-            </ul>
-            <p><strong>Recomendación:</strong> Salir temprano (8:00-9:00 AM) desde Sorrento (estarás allí el 21 mayo). Regresar antes de las 18:00-19:00 para trasladarse a Nápoles. Reservar con 1-2 semanas de anticipación.</p>
-          </div>
-          <div class="card">
-            <p><strong>Qué hacer en Capri</strong></p>
-            <ul>
-              <li>Grotta Azzurra (Gruta Azul) · €14-18 + propina</li>
-              <li>Monte Solaro (teleférico) · €12 ida y vuelta · Vistas 360°</li>
-              <li>Piazzetta y calles comerciales</li>
-              <li>Villa San Michele (Anacapri)</li>
-              <li>Jardines de Augusto · Faraglioni</li>
-              <li>Playa Marina Piccola</li>
-            </ul>
-            <p><strong>Presupuesto:</strong> €80-118 por persona (ferry + transporte + actividades + comida)</p>
-          </div>
+      <div class="flight-card tren reveal">
+        <span class="flight-type-badge tren">🚂 Tren AVE</span>
+        <div class="flight-route"><span>MAD</span><span class="arrow">→</span><span>BCN</span></div>
+        <div class="flight-details">
+          <div class="flight-row"><span class="fl">Fecha</span><span class="fv">2 may 2026</span></div>
+          <div class="flight-row"><span class="fl">Tren</span><span class="fv">AVE 06121</span></div>
+          <div class="flight-row"><span class="fl">Salida</span><span class="fv">12:22h Atocha</span></div>
+          <div class="flight-row"><span class="fl">Llegada</span><span class="fv">15:14h Sants</span></div>
+          <div class="flight-row"><span class="fl">Asientos</span><span class="fv">Coche 7 · 8C y 8D</span></div>
+          <div class="flight-confirmed-badge">✅ Confirmado</div>
         </div>
-        <div class="highlight">
-          <strong>Webs para reservar:</strong> travelmar.it, navlib.it, alilauro.it, caremar.it · 
-          <strong>Consejo:</strong> Comprar ida y vuelta juntas es más económico. Llegar temprano para evitar multitudes en la Grotta Azzurra.
+      </div>
+
+      <div class="flight-card europeo reveal">
+        <span class="flight-type-badge europeo">✈️ Vuelo Europa</span>
+        <div class="flight-route"><span>BCN</span><span class="arrow">→</span><span>CDG</span></div>
+        <div class="flight-details">
+          <div class="flight-row"><span class="fl">Fecha</span><span class="fv">6 may 2026</span></div>
+          <div class="flight-row"><span class="fl">Vuelo</span><span class="fv">AF1449 Air France</span></div>
+          <div class="flight-row"><span class="fl">Salida</span><span class="fv">06:10h BCN T1</span></div>
+          <div class="flight-row"><span class="fl">Llegada</span><span class="fv">08:05h CDG T2F</span></div>
+          <div class="flight-row"><span class="fl">Duración</span><span class="fv">1h 55m</span></div>
+          <div class="flight-confirmed-badge">✅ Confirmado</div>
         </div>
-      </section>
+      </div>
 
-      <section id="disney">
-        <h2>✅ Disneyland Paris - Reserva Confirmada</h2>
-        <div class="highlight" style="margin-bottom: 1.5rem;">
-          <strong>🏨 Hotel Disney Sequoia Lodge - CONFIRMADO</strong><br />
-          <strong>Fechas:</strong> Miércoles 6 de mayo 2026 → Jueves 7 de mayo 2026<br />
-          <strong>Huéspedes:</strong> 2 Adultos<br />
-          <strong>Duración:</strong> 2 días / 1 noche<br />
-          <strong>Parques:</strong> 2 parques (Disneyland Park + Walt Disney Studios Park)<br />
-          <strong>Ventajas:</strong> ✅ Acceso anticipado (Extra Magic Time), ambientación total Disney, shuttle gratuito a parques
+      <div class="flight-card tren reveal">
+        <span class="flight-type-badge tren">🚄 Frecciarossa</span>
+        <div class="flight-route"><span>PAR</span><span class="arrow">→</span><span>MIL</span></div>
+        <div class="flight-details">
+          <div class="flight-row"><span class="fl">Fecha</span><span class="fv">11 may 2026</span></div>
+          <div class="flight-row"><span class="fl">Tren</span><span class="fv">Frecciarossa 9281</span></div>
+          <div class="flight-row"><span class="fl">Salida</span><span class="fv">06:30h Gare de Lyon</span></div>
+          <div class="flight-row"><span class="fl">Llegada</span><span class="fv">13:50h Milano Centrale</span></div>
+          <div class="flight-row"><span class="fl">Asiento</span><span class="fv">Carrozza 2 · 17D</span></div>
+          <div class="flight-confirmed-badge">✅ Confirmado</div>
         </div>
-        <div class="grid deux">
-          <div class="card">
-            <p><strong>Información del Hotel</strong></p>
-            <ul>
-              <li><strong>Hotel:</strong> Disney Sequoia Lodge ⭐⭐⭐⭐ (Moderado)</li>
-              <li><strong>Check-in:</strong> 6 de mayo 2026 (desde 15:00h)</li>
-              <li><strong>Check-out:</strong> 7 de mayo 2026 (hasta 11:00h)</li>
-              <li><strong>Ubicación:</strong> Dentro del complejo Disneyland Paris</li>
-              <li><strong>Transporte:</strong> Shuttle gratuito a parques o caminando (10-15 min)</li>
-              <li><strong>Extra Magic Time:</strong> ✅ Acceso 1 hora antes (8:00 AM vs 9:00 AM)</li>
-            </ul>
-          </div>
-          <div class="card">
-            <p><strong>Plan de Visita</strong></p>
-            <ul>
-              <li><strong>Día 1 (6 may):</strong> Llegada desde Barcelona/París, check-in, día completo en parques</li>
-              <li><strong>Día 2 (7 may):</strong> Extra Magic Time (8:00 AM), día completo en parques, check-out tarde</li>
-              <li><strong>Traslado a París:</strong> RER A desde Marne-la-Vallée (40 min, €7-10) o shuttle del hotel</li>
-              <li><strong>Consejo:</strong> Aprovechar Extra Magic Time para atracciones populares sin colas</li>
-            </ul>
-          </div>
+      </div>
+
+      <div class="flight-card tren reveal">
+        <span class="flight-type-badge tren">🚄 Frecciarossa</span>
+        <div class="flight-route"><span>MIL</span><span class="arrow">→</span><span>VCE</span></div>
+        <div class="flight-details">
+          <div class="flight-row"><span class="fl">Fecha</span><span class="fv">12 may 2026</span></div>
+          <div class="flight-row"><span class="fl">Tren</span><span class="fv">Frecciarossa 9763</span></div>
+          <div class="flight-row"><span class="fl">Código</span><span class="fv">JU9RW5</span></div>
+          <div class="flight-row"><span class="fl">Salida</span><span class="fv">20:45h Milano</span></div>
+          <div class="flight-row"><span class="fl">Llegada</span><span class="fv">23:17h Venezia</span></div>
+          <div class="flight-confirmed-badge">✅ Confirmado</div>
         </div>
-      </section>
+      </div>
 
-      <section id="actividades">
-        <h2>Entradas y Excursiones Clave</h2>
-        <div class="grid deux">
-          <div class="card">
-            <p><strong>Reservas obligatorias</strong></p>
-            <ul>
-              <li>Sagrada Familia · €26-30 · 2-3 meses antes</li>
-              <li>Louvre · €17 · 1-2 meses</li>
-              <li>Torre Eiffel · €10-26 · 2-3 meses</li>
-              <li>Disneyland Paris · €56-149 · 2-3 meses</li>
-              <li>Coliseo · €16-22 · 2-3 meses</li>
-              <li>Vaticano · €17-21 · 1-2 meses</li>
-              <li>Uffizi · €12-20 · 1-2 meses</li>
-              <li>Duomo Milán · €16 · 1 mes</li>
-              <li>Cinque Terre Card · €18-35 · al llegar</li>
-              <li>✅ Ferry a Capri (21 may - CONFIRMADO) · €20-30 · reservar 1-2 semanas antes</li>
-            </ul>
-          </div>
-          <div class="card">
-            <p><strong>Excursiones destacadas</strong></p>
-            <ul>
-              <li>Lago de Como desde Milán · Tren 1h · Ferry €5-15</li>
-              <li>Toscana (Siena + Pisa) · Tour €60-100 o transporte público</li>
-              <li>Cinque Terre · 5 pueblos · 2 días recomendados</li>
-              <li>Costa Amalfitana · Positano (19 may), Amalfi/Ravello (20 may), Sorrento + ✅ Capri (21 may confirmado)</li>
-            </ul>
-            <p>Comprar con anticipación reduce costos hasta 70% en trenes y entradas.</p>
-          </div>
+      <div class="flight-card tren reveal">
+        <span class="flight-type-badge tren">🚄 Frecciarossa</span>
+        <div class="flight-route"><span>VCE</span><span class="arrow">→</span><span>FLR</span></div>
+        <div class="flight-details">
+          <div class="flight-row"><span class="fl">Fecha</span><span class="fv">14 may 2026</span></div>
+          <div class="flight-row"><span class="fl">Tren</span><span class="fv">Frecciarossa 9435</span></div>
+          <div class="flight-row"><span class="fl">Código</span><span class="fv">KEX3EN</span></div>
+          <div class="flight-row"><span class="fl">Salida</span><span class="fv">18:26h Venezia</span></div>
+          <div class="flight-row"><span class="fl">Llegada</span><span class="fv">20:39h Firenze SMN</span></div>
+          <div class="flight-confirmed-badge">✅ Confirmado</div>
         </div>
-      </section>
+      </div>
 
-      <section id="barcelona">
-        <h2>Barcelona - Itinerario Gaudí: Casa Batlló, La Pedrera (Noche) y Park Güell</h2>
-        <p style="margin-bottom: 1.5rem; color: var(--muted);">Itinerario optimizado para visitar las tres atracciones en un día (2-3 de mayo).</p>
-        
-        <div class="grid deux">
-          <div class="card">
-            <p><strong>🌅 MAÑANA: Casa Batlló (9:00-11:00)</strong></p>
-            <ul>
-              <li><strong>Dirección:</strong> Passeig de Gràcia, 43</li>
-              <li><strong>Horario:</strong> 9:00-21:00h (última entrada 20:00h)</li>
-              <li><strong>Duración:</strong> ~1h 15min</li>
-              <li><strong>Precio entrada Blue:</strong> €35/persona</li>
-              <li><strong>Precio entrada Silver:</strong> €43/persona (audioguía incluida)</li>
-              <li><strong>Precio entrada Gold:</strong> €45/persona (audioguía + realidad virtual)</li>
-              <li><strong>Descuentos:</strong> Estudiantes, 13-17 años, +65 años: -€6</li>
-              <li><strong>Menores 12 años:</strong> Gratis</li>
-              <li><strong>Metro:</strong> L3 o L4, estación Passeig de Gràcia</li>
-            </ul>
-            <p><strong>💡 Recomendación:</strong> Entrada Blue (€35) es suficiente. Reservar con 1-2 meses de anticipación.</p>
-          </div>
-          <div class="card">
-            <p><strong>🌆 TARDE: Park Güell (14:00-16:30)</strong></p>
-            <ul>
-              <li><strong>Dirección:</strong> Carrer d'Olot, 1-13</li>
-              <li><strong>Horario:</strong> 9:30-19:30h (mayo) · Última entrada 18:30h</li>
-              <li><strong>Duración:</strong> ~1h 30min</li>
-              <li><strong>Precio entrada general:</strong> €18/persona</li>
-              <li><strong>Niños 7-12 años y +65 años:</strong> €13.50</li>
-              <li><strong>Menores 6 años:</strong> Gratis</li>
-              <li><strong>Metro:</strong> L3, estaciones Lesseps o Vallcarca (15-20 min caminando cuesta arriba)</li>
-              <li><strong>Bus:</strong> Líneas 24, 92 o Bus Güell (incluido con entrada) desde Alfons X</li>
-            </ul>
-            <p><strong>💡 Recomendación:</strong> Reservar entrada con horario específico. El Bus Güell es más cómodo que caminar.</p>
-          </div>
+      <div class="flight-card europeo reveal">
+        <span class="flight-type-badge europeo">✈️ Vuelo Europa</span>
+        <div class="flight-route"><span>NAP</span><span class="arrow">→</span><span>MAD</span></div>
+        <div class="flight-details">
+          <div class="flight-row"><span class="fl">Fecha</span><span class="fv">24 may 2026</span></div>
+          <div class="flight-row"><span class="fl">Vuelo</span><span class="fv">I21836 Iberia Express</span></div>
+          <div class="flight-row"><span class="fl">Salida</span><span class="fv">06:05h NAP</span></div>
+          <div class="flight-row"><span class="fl">Llegada</span><span class="fv">08:50h MAD</span></div>
+          <div class="flight-row"><span class="fl">Duración</span><span class="fv">2h 45m</span></div>
+          <div class="flight-confirmed-badge">✅ Confirmado</div>
         </div>
+      </div>
 
-        <div class="grid deux" style="margin-top: 1.5rem;">
-          <div class="card">
-            <p><strong>🌙 NOCHE: La Pedrera - Espectáculo de Luces (20:30-23:00)</strong></p>
-            <ul>
-              <li><strong>Dirección:</strong> Provença, 261-265 (muy cerca de Casa Batlló)</li>
-              <li><strong>Horario espectáculo:</strong> 20:30-23:00h</li>
-              <li><strong>Duración:</strong> ~1h 30min</li>
-              <li><strong>Precio "La Pedrera Night Experience":</strong> €39/persona</li>
-              <li><strong>Niños 12-17 años:</strong> €19</li>
-              <li><strong>Menores 7 años:</strong> Gratis</li>
-              <li><strong>Incluye:</strong> Visita guiada nocturna + proyecciones audiovisuales en la azotea</li>
-              <li><strong>Metro:</strong> L3 o L5, estación Diagonal (misma zona que Casa Batlló)</li>
-            </ul>
-            <p><strong>💡 Recomendación:</strong> Reservar con mucha anticipación (1-2 meses). El espectáculo tiene aforo limitado y es muy popular.</p>
-          </div>
-          <div class="card">
-            <p><strong>📋 Resumen de Costos (por persona)</strong></p>
-            <ul>
-              <li><strong>Casa Batlló (Blue):</strong> €35</li>
-              <li><strong>Park Güell:</strong> €18</li>
-              <li><strong>La Pedrera Night Experience:</strong> €39</li>
-              <li><strong>TOTAL:</strong> <strong>€92/persona</strong></li>
-            </ul>
-            <p><strong>💰 Ahorro con entradas combinadas:</strong></p>
-            <ul>
-              <li><strong>Casa Batlló + Park Güell:</strong> ~€49.73 (ahorro ~6% vs individual: €35+€18=€53)</li>
-              <li><strong>"3 Casas de Gaudí":</strong> Casa Batlló + La Pedrera (día) + Casa Vicens: €86</li>
-              <li><strong>"La Barcelona de Gaudí al Completo":</strong> Sagrada Familia + Park Güell + Casa Batlló + La Pedrera (día)</li>
-              <li><strong>Barcelona City Pass:</strong> Sagrada Familia + Park Güell + opción añadir Casa Batlló o La Pedrera + 10% descuento en otras atracciones</li>
-              <li><strong>⚠️ Nota:</strong> El espectáculo nocturno de La Pedrera (Night Experience) generalmente NO está incluido en paquetes - comprar por separado</li>
-            </ul>
-            <p><strong>⏰ Orden recomendado del día:</strong></p>
-            <ol>
-              <li>9:00 - Casa Batlló (1h 15min)</li>
-              <li>11:00 - Almuerzo y descanso</li>
-              <li>14:00 - Park Güell (1h 30min)</li>
-              <li>16:30 - Tarde libre / descanso</li>
-              <li>20:30 - La Pedrera Night Experience (1h 30min)</li>
-            </ol>
-          </div>
+      <div class="flight-card regreso reveal">
+        <span class="flight-type-badge regreso">✈️ Vuelo de Regreso</span>
+        <div class="flight-route"><span>MAD</span><span class="arrow">→</span><span>MVD</span></div>
+        <div class="flight-details">
+          <div class="flight-row"><span class="fl">Fecha</span><span class="fv">26 may 2026</span></div>
+          <div class="flight-row"><span class="fl">Vuelo</span><span class="fv">IB0169</span></div>
+          <div class="flight-row"><span class="fl">Salida</span><span class="fv">11:50h MAD T4S</span></div>
+          <div class="flight-row"><span class="fl">Llegada</span><span class="fv">26 may 19:45h MVD</span></div>
+          <div class="flight-row"><span class="fl">Duración</span><span class="fv">11h 55m</span></div>
+          <div class="flight-confirmed-badge">✅ Confirmado</div>
         </div>
+      </div>
+    </div>
+  </section>
 
-        <div class="grid deux" style="margin-top: 1.5rem;">
-          <div class="card">
-            <p><strong>🎫 Dónde Comprar Entradas</strong></p>
-            <ul>
-              <li><strong>Casa Batlló:</strong> <a href="https://www.casabatllo.es" target="_blank" rel="noreferrer">casabatllo.es</a> (web oficial)</li>
-              <li><strong>Park Güell:</strong> <a href="https://parkguell.barcelona" target="_blank" rel="noreferrer">parkguell.barcelona</a> (web oficial)</li>
-              <li><strong>La Pedrera:</strong> <a href="https://www.lapedrera.com" target="_blank" rel="noreferrer">lapedrera.com</a> (web oficial)</li>
-              <li><strong>Alternativas:</strong> GetYourGuide, Tiqets, Hellotickets (comparar precios)</li>
-            </ul>
-            <p><strong>⚠️ Importante:</strong> Comprar en webs oficiales suele ser más barato y garantiza entrada válida.</p>
-          </div>
-          <div class="card">
-            <p><strong>🚇 Transporte entre Atracciones</strong></p>
-            <ul>
-              <li><strong>Casa Batlló → Park Güell:</strong> Metro L3 (Passeig de Gràcia → Lesseps/Vallcarca) ~20 min + caminata 15-20 min, o Bus 24/92</li>
-              <li><strong>Park Güell → La Pedrera:</strong> Metro L3 (Lesseps/Vallcarca → Diagonal) ~15 min</li>
-              <li><strong>Casa Batlló ↔ La Pedrera:</strong> 5 min caminando (misma calle Passeig de Gràcia)</li>
-            </ul>
-            <p><strong>🎫 Tarjeta de transporte:</strong> Considerar T-10 (10 viajes) o Hola Barcelona Card si planeas usar mucho transporte público.</p>
-          </div>
-        </div>
+</main>
 
-        <div class="grid deux" style="margin-top: 1.5rem;">
-          <div class="card">
-            <p><strong>💸 Opciones de Ahorro Detalladas</strong></p>
-            <p><strong>Opción 1: Casa Batlló + Park Güell (Combo)</strong></p>
-            <ul>
-              <li><strong>Precio:</strong> ~€49.73/persona</li>
-              <li><strong>Individual:</strong> €35 + €18 = €53</li>
-              <li><strong>Ahorro:</strong> ~€3.27 (6%)</li>
-              <li><strong>Dónde:</strong> <a href="https://www.tiqets.com" target="_blank" rel="noreferrer">Tiqets.com</a></li>
-            </ul>
-            <p><strong>Opción 2: "3 Casas de Gaudí"</strong></p>
-            <ul>
-              <li><strong>Incluye:</strong> Casa Batlló + La Pedrera (día) + Casa Vicens</li>
-              <li><strong>Precio:</strong> €86/persona</li>
-              <li><strong>Individual:</strong> €35 + €28 + €18 = €81</li>
-              <li><strong>Nota:</strong> NO incluye La Pedrera Night Experience</li>
-              <li><strong>Dónde:</strong> <a href="https://www.barcelona-attractions.com" target="_blank" rel="noreferrer">barcelona-attractions.com</a></li>
-            </ul>
-          </div>
-          <div class="card">
-            <p><strong>💸 Más Opciones de Ahorro</strong></p>
-            <p><strong>Opción 3: Barcelona City Pass</strong></p>
-            <ul>
-              <li><strong>Incluye:</strong> Sagrada Familia + Park Güell + opción añadir Casa Batlló o La Pedrera</li>
-              <li><strong>Beneficio extra:</strong> 10% descuento en otras atracciones</li>
-              <li><strong>Dónde:</strong> <a href="https://www.barcelona.com" target="_blank" rel="noreferrer">barcelona.com</a></li>
-            </ul>
-            <p><strong>Opción 4: "La Barcelona de Gaudí al Completo"</strong></p>
-            <ul>
-              <li><strong>Incluye:</strong> Sagrada Familia + Park Güell + Casa Batlló + La Pedrera (día)</li>
-              <li><strong>Nota:</strong> NO incluye La Pedrera Night Experience</li>
-              <li><strong>Dónde:</strong> <a href="https://parkguell-entradas.org" target="_blank" rel="noreferrer">parkguell-entradas.org</a></li>
-            </ul>
-            <p><strong>⚠️ IMPORTANTE:</strong></p>
-            <ul>
-              <li>El espectáculo nocturno de La Pedrera (Night Experience) generalmente NO está incluido en paquetes</li>
-              <li>Comprar La Pedrera Night Experience por separado: €39</li>
-              <li>Mejor estrategia: Combo Casa Batlló + Park Güell (€49.73) + La Pedrera Night Experience (€39) = €88.73 (ahorro de €3.27 vs individual)</li>
-            </ul>
-          </div>
-        </div>
+<footer>
+  <span class="footer-plane">✈️</span>
+  Nos vamos a Europa · 30 Abril – 26 Mayo 2026 · Última actualización: marzo 2026
+</footer>
 
-        <div class="highlight" style="margin-top: 1.5rem;">
-          <strong>✅ Estrategia Recomendada para Máximo Ahorro:</strong><br />
-          • <strong>Combo Casa Batlló + Park Güell:</strong> €49.73 (ahorro €3.27) en <a href="https://www.tiqets.com/es/casa-batllo-parque-guell-entrada-audioguia-b9442/" target="_blank" rel="noreferrer">Tiqets</a><br />
-          • <strong>La Pedrera Night Experience:</strong> €39 (comprar por separado en <a href="https://www.lapedrera.com" target="_blank" rel="noreferrer">lapedrera.com</a>)<br />
-          • <strong>Total optimizado:</strong> €88.73/persona (ahorro de €3.27 vs comprar todo individual: €92)<br />
-          • <strong>Reservar con 1-2 meses de anticipación</strong> para asegurar disponibilidad, especialmente La Pedrera Night Experience<br />
-          • <strong>Mejor día:</strong> 2 de mayo (sábado) - más tiempo para disfrutar sin apuros
-        </div>
-      </section>
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 
-    </main>
+<script>
+/* ──────────────────────────────────────────────
+   STARS CANVAS
+──────────────────────────────────────────────── */
+(function() {
+  const canvas = document.getElementById('stars-canvas');
+  const ctx = canvas.getContext('2d');
+  let stars = [];
 
-    <footer>
-      Plan elaborado con toda la información del itinerario Abril-Mayo. Última
-      actualización: noviembre 2025.
-    </footer>
+  function resize() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
 
-    <script
-      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-      crossorigin=""
-    ></script>
-    <script>
-      const STORAGE_KEY = "viaje-checklist-v1";
-
-      const savedState = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-      document
-        .querySelectorAll('#dayChecklist input[type="checkbox"]')
-        .forEach((checkbox) => {
-          const day = checkbox.dataset.day;
-          checkbox.checked = Boolean(savedState[day]);
-          checkbox.addEventListener("change", () => {
-            savedState[day] = checkbox.checked;
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(savedState));
-          });
-        });
-
-      document
-        .getElementById("resetChecklist")
-        .addEventListener("click", () => {
-          document
-            .querySelectorAll('#dayChecklist input[type="checkbox"]')
-            .forEach((checkbox) => {
-              checkbox.checked = false;
-              const day = checkbox.dataset.day;
-              savedState[day] = false;
-            });
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(savedState));
-        });
-
-      const itineraryDays = [
-        { day: 1, title: "Día 1 · 1 may · Madrid", cityKey: "madrid", coords: [40.4168, -3.7038], description: "✅ Llegada 14:35h (MAD Terminal 4S), Cercanías C1 a Atocha, check-in, descanso, paseo." },
-        { day: 2, title: "Día 2 · 2 may · Traslado a Barcelona", cityKey: "barcelona", coords: [41.3874, 2.1686], description: "✅ Tren AVE 12:22h (Atocha) → 15:14h (Barcelona-Sants), Tren 06***, check-in Barcelona." },
-        { day: 3, title: "Día 2-3 · 2-3 may · Barcelona", cityKey: "barcelona", coords: [41.3874, 2.1686], description: "Sagrada Familia, Park Güell, Barrio Gótico." },
-        { day: 4, title: "Día 4 · 4 may · Barcelona", cityKey: "barcelona", coords: [41.3874, 2.1686], description: "Park Güell y Barceloneta." },
-        { day: 5, title: "Día 5 · 5 may · París (llegada)", cityKey: "paris", coords: [48.8566, 2.3522], description: "Llegada desde Barcelona, check-in, descanso, paseo." },
-        { day: 6, title: "Día 6 · 6 may · ✅ Disney Sequoia Lodge", cityKey: "disney", coords: [48.8674, 2.7834], description: "Disneyland Paris - Día 1 en parques, Extra Magic Time, check-in Sequoia Lodge." },
-        { day: 7, title: "Día 7 · 7 may · ✅ Disney Sequoia Lodge", cityKey: "disney", coords: [48.8674, 2.7834], description: "Disneyland Paris - Día 2 en parques, Extra Magic Time, check-out tarde, traslado a París." },
-        { day: 8, title: "Día 8 · 8 may · París", cityKey: "paris", coords: [48.8566, 2.3522], description: "Torre Eiffel, Campos Elíseos, Arco del Triunfo, Louvre, Notre-Dame, Montmartre." },
-        { day: 9, title: "Día 9 · 9 may · Milán & Lago de Como", cityKey: "milan", coords: [45.4642, 9.19], description: "Duomo y excursión a Como." },
-        { day: 10, title: "Día 10 · 10 may · Venecia", cityKey: "venecia", coords: [45.4408, 12.3155], description: "Plaza San Marcos y canales." },
-        { day: 11, title: "Día 11 · 11 may · Venecia", cityKey: "venecia", coords: [45.4408, 12.3155], description: "Islas de Murano y Burano." },
-        { day: 12, title: "Día 12 · 12 may · Florencia", cityKey: "florencia", coords: [43.7696, 11.2558], description: "Duomo y Ponte Vecchio." },
-        { day: 13, title: "Día 13 · 13 may · Florencia", cityKey: "florencia", coords: [43.7696, 11.2558], description: "Galería Uffizi y Piazzale." },
-        { day: 14, title: "Día 14 · 14 may · Toscana", cityKey: "toscana", coords: [43.3189, 11.3308], description: "Excursión Siena + Pisa." },
-        { day: 14, title: "Día 14 · 14 may · Cinque Terre", cityKey: "cinqueterre", coords: [44.146, 9.643], description: "Monterosso, Vernazza, senderos." },
-        { day: 15, title: "Día 15 · 15 may · Cinque Terre", cityKey: "cinqueterre", coords: [44.146, 9.643], description: "Manarola, Riomaggiore y tren a Roma." },
-        { day: 17, title: "Día 17 · 17 may · Roma", cityKey: "roma", coords: [41.9028, 12.4964], description: "Coliseo y Foro Romano." },
-        { day: 18, title: "Día 18 · 18 may · Roma", cityKey: "roma", coords: [41.9028, 12.4964], description: "Vaticano y Museos." },
-        { day: 19, title: "Día 19 · 19 may · Roma", cityKey: "roma", coords: [41.9028, 12.4964], description: "Fontana di Trevi y Trastevere." },
-        { day: 19, title: "Día 19 · 19 may · Costa Amalfitana", cityKey: "positano", coords: [40.6333, 14.602], description: "Traslado desde Roma, llegada a Positano, playas y paseo panorámico." },
-        { day: 20, title: "Día 20 · 20 may · Costa Amalfitana", cityKey: "positano", coords: [40.6333, 14.602], description: "Positano, exploración completa." },
-        { day: 21, title: "Día 21 · 21 may · Costa Amalfitana", cityKey: "amalfi", coords: [40.6344, 14.6026], description: "Amalfi, Ravello y Villa Cimbrone." },
-        { day: 22, title: "Día 22 · 22 may · Sorrento/Capri", cityKey: "sorrento", coords: [40.6263, 14.3754], description: "Sorrento + ✅ Excursión a Capri (ferry desde Sorrento, 20-30 min)." },
-        { day: 23, title: "Día 23 · 23 may · Nápoles/Madrid", cityKey: "madrid", coords: [40.4168, -3.7038], description: "✅ Vuelo I2**** 06:05h NAP → 08:50h MAD (Iberia Express, directo, 2h 45min, €91.77 - NO CAMBIA), llegada Madrid." },
-        { day: 24, title: "Día 24 · 23 may tarde-24 may · Madrid", cityKey: "madrid", coords: [40.4168, -3.7038], description: "Compras en Gran Vía, El Corte Inglés, Zara, Mango." },
-        { day: 25, title: "Día 25 · 25 may · Madrid", cityKey: "madrid", coords: [40.4168, -3.7038], description: "Packing, última preparación, tax free." },
-        { day: 26, title: "Día 26 · 26 may · Vuelo a Uruguay", cityKey: "madrid", coords: [40.4168, -3.7038], description: "Traslado al aeropuerto y vuelo de regreso." },
-      ];
-
-      const map = L.map("travelMap", { scrollWheelZoom: false }).setView(
-        [43.5, 7.5],
-        4
-      );
-
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: "&copy; OpenStreetMap contributors",
-        maxZoom: 18,
-      }).addTo(map);
-
-      const dayMarkers = {};
-      const cityStops = [];
-      const seenCities = new Set();
-
-      itineraryDays.forEach((stop) => {
-        const marker = L.circleMarker(stop.coords, {
-          radius: 6,
-          color: "#4b6bfb",
-          fillColor: "#4b6bfb",
-          fillOpacity: 0.85,
-          weight: 2,
-        })
-          .addTo(map)
-          .bindPopup(`<strong>${stop.title}</strong><br />${stop.description}`);
-        dayMarkers[stop.day] = marker;
-
-        if (!seenCities.has(stop.cityKey)) {
-          seenCities.add(stop.cityKey);
-          cityStops.push({ day: stop.day, coords: stop.coords });
-        }
+  function init() {
+    resize();
+    stars = [];
+    for (let i = 0; i < 140; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 1.2 + 0.2,
+        a: Math.random(),
+        speed: Math.random() * 0.003 + 0.001,
+        phase: Math.random() * Math.PI * 2,
       });
+    }
+  }
 
-      L.polyline(
-        cityStops.map((stop) => stop.coords),
-        { color: "#a7b3ff", weight: 2, dashArray: "6 8" }
-      ).addTo(map);
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const t = Date.now() / 1000;
+    stars.forEach(s => {
+      const alpha = s.a * (0.5 + 0.5 * Math.sin(t * s.speed * 60 + s.phase));
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
 
-      const progressLine = L.polyline([], {
-        color: "#4b6bfb",
-        weight: 4,
-        opacity: 0.85,
-      }).addTo(map);
+  window.addEventListener('resize', init);
+  init();
+  draw();
+})();
 
-      const timelineSlider = document.getElementById("timelineSlider");
-      const timelineCurrentDay = document.getElementById("timelineCurrentDay");
-      const timelineSliderProgress = document.getElementById("timelineSliderProgress");
+/* ──────────────────────────────────────────────
+   COUNTDOWN
+──────────────────────────────────────────────── */
+function updateCountdown() {
+  const target = new Date('2026-04-30T21:45:00').getTime();
+  const now    = Date.now();
+  const diff   = target - now;
+  if (diff <= 0) return;
+  const d = Math.floor(diff / 86400000);
+  const h = Math.floor((diff % 86400000) / 3600000);
+  const m = Math.floor((diff % 3600000) / 60000);
+  const s = Math.floor((diff % 60000) / 1000);
+  document.getElementById('days').textContent    = String(d).padStart(2, '0');
+  document.getElementById('hours').textContent   = String(h).padStart(2, '0');
+  document.getElementById('minutes').textContent = String(m).padStart(2, '0');
+  document.getElementById('seconds').textContent = String(s).padStart(2, '0');
+}
+updateCountdown();
+setInterval(updateCountdown, 1000);
 
-      function updateProgressBar(day) {
-        const progressPercent = ((day - 1) / (itineraryDays.length - 1)) * 100;
-        timelineSliderProgress.style.width = `${progressPercent}%`;
-      }
+/* ──────────────────────────────────────────────
+   SIDEBAR + MOBILE
+──────────────────────────────────────────────── */
+const menuToggle = document.getElementById('menuToggle');
+const sidebar    = document.getElementById('sidebar');
 
-      function focusDay(day, updateSlider = true) {
-        const stop = itineraryDays.find((entry) => entry.day === day);
-        if (!stop) return;
+menuToggle.addEventListener('click', () => sidebar.classList.toggle('open'));
 
-        const zoomLevel = stop.cityKey === "disney" ? 10 : stop.day <= 4 ? 6 : 7;
-        map.flyTo(stop.coords, zoomLevel, { duration: 0.6 });
+document.addEventListener('click', e => {
+  if (window.innerWidth <= 1024 && !sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
+    sidebar.classList.remove('open');
+  }
+});
 
-        Object.entries(dayMarkers).forEach(([key, marker]) => {
-          const isActive = Number(key) === day;
-          marker.setStyle({
-            radius: isActive ? 9 : 6,
-            color: isActive ? "#ff8a3d" : "#4b6bfb",
-            fillColor: isActive ? "#ff8a3d" : "#4b6bfb",
-          });
-          if (isActive) marker.openPopup();
-        });
+// Active nav
+const sections = document.querySelectorAll('section[id], details[id]');
+const navLinks  = document.querySelectorAll('.sidebar-nav a');
 
-        const pathPoints = cityStops
-          .filter((point) => point.day <= day)
-          .map((point) => point.coords);
-        progressLine.setLatLngs(pathPoints);
+function updateNav() {
+  let current = '';
+  sections.forEach(s => {
+    if (window.pageYOffset >= s.offsetTop - 250) current = s.id;
+  });
+  navLinks.forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === `#${current}`);
+  });
+}
+window.addEventListener('scroll', updateNav, { passive: true });
+updateNav();
 
-        if (updateSlider) {
-          timelineSlider.value = day;
-          timelineCurrentDay.textContent = stop.title;
-        }
+navLinks.forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(link.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (window.innerWidth <= 1024) sidebar.classList.remove('open');
+    }
+  });
+});
 
-        updateProgressBar(day);
-      }
+/* ──────────────────────────────────────────────
+   SCROLL REVEAL
+──────────────────────────────────────────────── */
+const revealEls = document.querySelectorAll('.reveal');
+const observer  = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+revealEls.forEach(el => observer.observe(el));
 
-      timelineSlider.addEventListener("input", (e) => {
-        const day = Number(e.target.value);
-        if (!Number.isNaN(day)) {
-          focusDay(day, false);
-          const stop = itineraryDays.find((entry) => entry.day === day);
-          if (stop) {
-            timelineCurrentDay.textContent = stop.title;
-          }
-        }
-      });
+/* ──────────────────────────────────────────────
+   CHECKLIST (localStorage)
+──────────────────────────────────────────────── */
+const STORAGE_KEY = 'viaje-checklist-v1';
+const savedState  = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
 
-      document.querySelectorAll(".day-card").forEach((card) => {
-        card.addEventListener("click", () => {
-          const checkbox = card.querySelector('input[type="checkbox"]');
-          const dayNumber = Number(checkbox.dataset.day);
-          if (!Number.isNaN(dayNumber)) {
-            focusDay(dayNumber);
-          }
-        });
-      });
+document.querySelectorAll('#dayChecklist input[type="checkbox"]').forEach(cb => {
+  cb.checked = Boolean(savedState[cb.dataset.day]);
+  cb.addEventListener('change', () => {
+    savedState[cb.dataset.day] = cb.checked;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(savedState));
+  });
+});
 
-      focusDay(1);
+const resetBtn = document.getElementById('resetChecklist');
+if (resetBtn) resetBtn.addEventListener('click', () => {
+  document.querySelectorAll('#dayChecklist input[type="checkbox"]').forEach(cb => {
+    cb.checked = false;
+    savedState[cb.dataset.day] = false;
+  });
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(savedState));
+});
 
-      // Countdown Timer
-      function updateCountdown() {
-        const departureDate = new Date('2026-04-30T21:45:00').getTime();
-        const now = new Date().getTime();
-        const distance = departureDate - now;
+/* ──────────────────────────────────────────────
+   LEAFLET MAIN MAP
+──────────────────────────────────────────────── */
+const itineraryDays = [
+  { day:1,  title:"Día 1 · 1 may · Madrid",            cityKey:"madrid",    coords:[40.4168,-3.7038] },
+  { day:2,  title:"Día 2 · 2 may · Tren → Barcelona",  cityKey:"barcelona", coords:[41.3874,2.1686] },
+  { day:3,  title:"Día 3 · 3 may · Barcelona",          cityKey:"barcelona", coords:[41.3874,2.1686] },
+  { day:4,  title:"Día 4 · 4 may · Full Gaudí",         cityKey:"barcelona", coords:[41.3874,2.1686] },
+  { day:5,  title:"Día 5 · 5 may · Ramblas",            cityKey:"barcelona", coords:[41.3874,2.1686] },
+  { day:6,  title:"Día 6 · 6 may · Disney (llegada)",   cityKey:"disney",    coords:[48.8674,2.7834] },
+  { day:7,  title:"Día 7 · 7 may · Disney + Moxy",      cityKey:"disney",    coords:[48.8674,2.7834] },
+  { day:8,  title:"Día 8 · 8 may · París — Torre Eiffel", cityKey:"paris",  coords:[48.8566,2.3522] },
+  { day:9,  title:"Día 9 · 9 may · Louvre & Montmartre", cityKey:"paris",   coords:[48.8566,2.3522] },
+  { day:10, title:"Día 10 · 10 may · Le Marais",         cityKey:"paris",   coords:[48.8566,2.3522] },
+  { day:11, title:"Día 11 · 11 may · Milán",             cityKey:"milan",   coords:[45.4642,9.19] },
+  { day:12, title:"Día 12 · 12 may · Lago de Como",      cityKey:"venecia", coords:[45.4408,12.3155] },
+  { day:13, title:"Día 13 · 13 may · Venecia",           cityKey:"venecia", coords:[45.4408,12.3155] },
+  { day:14, title:"Día 14 · 14 may · Venecia → Florencia", cityKey:"florencia", coords:[43.7696,11.2558] },
+  { day:15, title:"Día 15 · 15 may · Florencia",         cityKey:"florencia", coords:[43.7696,11.2558] },
+  { day:16, title:"Día 16 · 16 may · Florencia (2°)",    cityKey:"florencia", coords:[43.7696,11.2558] },
+  { day:17, title:"Día 17 · 17 may · Roma Clásica",      cityKey:"roma",    coords:[41.9028,12.4964] },
+  { day:18, title:"Día 18 · 18 may · Vaticano",          cityKey:"roma",    coords:[41.9028,12.4964] },
+  { day:19, title:"Día 19 · 19 may · Costa Amalfitana",  cityKey:"positano",coords:[40.6333,14.602] },
+  { day:20, title:"Día 20 · 20 may · Amalfi & Ravello",  cityKey:"positano",coords:[40.6333,14.602] },
+  { day:21, title:"Día 21 · 21 may · Capri",             cityKey:"positano",coords:[40.5531,14.2222] },
+  { day:22, title:"Día 22 · 22 may · Sorrento → Nápoles", cityKey:"roma",   coords:[40.8518,14.2681] },
+  { day:23, title:"Día 23 · 23 may · Nápoles",            cityKey:"roma",   coords:[40.8518,14.2681] },
+  { day:24, title:"Día 24 · 24 may · Vuelo → Madrid",    cityKey:"madrid",  coords:[40.4168,-3.7038] },
+  { day:25, title:"Día 25 · 25 may · Madrid compras",    cityKey:"madrid",  coords:[40.4168,-3.7038] },
+  { day:26, title:"Día 26 · 26 may · Vuelo → Uruguay",   cityKey:"madrid",  coords:[40.4168,-3.7038] },
+];
 
-        if (distance < 0) {
-          document.getElementById('days').textContent = '0';
-          document.getElementById('hours').textContent = '0';
-          document.getElementById('minutes').textContent = '0';
-          document.getElementById('seconds').textContent = '0';
-          return;
-        }
+const map = L.map('travelMap', { scrollWheelZoom: false }).setView([44,8], 4);
 
-        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+  attribution: '&copy; OpenStreetMap · &copy; CARTO',
+  subdomains: 'abcd',
+  maxZoom: 19,
+}).addTo(map);
 
-        document.getElementById('days').textContent = days.toString().padStart(2, '0');
-        document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
-        document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
-        document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
-      }
+const cityColors = {
+  madrid:'#f0522e', barcelona:'#f8b500', disney:'#7eb7ff', paris:'#7eb7ff',
+  milan:'#ff6b9d', venecia:'#4debb8', florencia:'#4debb8', roma:'#f0522e',
+  positano:'#ff6b9d'
+};
 
-      updateCountdown();
-      setInterval(updateCountdown, 1000);
+const dayMarkers = {};
+const cityStops  = [];
+const seenCities = new Set();
 
-      // Mobile menu toggle
-      const menuToggle = document.getElementById('menuToggle');
-      const sidebar = document.getElementById('sidebar');
+itineraryDays.forEach(stop => {
+  const color = cityColors[stop.cityKey] || '#e8c96f';
+  const marker = L.circleMarker(stop.coords, {
+    radius: 6, color, fillColor: color, fillOpacity: 0.85, weight: 2,
+  }).addTo(map).bindPopup(`<strong>${stop.title}</strong>`);
+  dayMarkers[stop.day] = marker;
 
-      menuToggle.addEventListener('click', () => {
-        sidebar.classList.toggle('open');
-      });
+  if (!seenCities.has(stop.cityKey)) {
+    seenCities.add(stop.cityKey);
+    cityStops.push({ day: stop.day, coords: stop.coords, color });
+  }
+});
 
-      // Close sidebar when clicking outside on mobile
-      document.addEventListener('click', (e) => {
-        if (window.innerWidth <= 1024) {
-          if (!sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
-            sidebar.classList.remove('open');
-          }
-        }
-      });
+L.polyline(cityStops.map(s => s.coords), {
+  color: 'rgba(232,201,111,0.2)', weight: 1.5, dashArray: '6 8'
+}).addTo(map);
 
-      // Active menu item on scroll
-      const sections = document.querySelectorAll('section[id]');
-      const navLinks = document.querySelectorAll('.sidebar-nav a');
+const progressLine = L.polyline([], { color: '#e8c96f', weight: 3, opacity: 0.9 }).addTo(map);
 
-      function updateActiveNav() {
-        let current = '';
-        sections.forEach(section => {
-          const sectionTop = section.offsetTop;
-          const sectionHeight = section.clientHeight;
-          if (window.pageYOffset >= sectionTop - 200) {
-            current = section.getAttribute('id');
-          }
-        });
+const slider   = document.getElementById('timelineSlider');
+const fillBar  = document.getElementById('timelineSliderProgress');
+const dayLabel = document.getElementById('timelineCurrentDay');
 
-        navLinks.forEach(link => {
-          link.classList.remove('active');
-          if (link.getAttribute('href') === `#${current}`) {
-            link.classList.add('active');
-          }
-        });
-      }
+function updateFill(day) {
+  if (fillBar) fillBar.style.width = `${((day - 1) / 25) * 100}%`;
+}
 
-      window.addEventListener('scroll', updateActiveNav);
-      updateActiveNav();
+function focusDay(day, moveSlider = true) {
+  const stop = itineraryDays.find(d => d.day === day);
+  if (!stop) return;
 
-      // Smooth scroll for navigation links
-      navLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-          e.preventDefault();
-          const targetId = link.getAttribute('href');
-          const targetSection = document.querySelector(targetId);
-          if (targetSection) {
-            targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            if (window.innerWidth <= 1024) {
-              sidebar.classList.remove('open');
-            }
-          }
-        });
-      });
-    </script>
-  </body>
+  map.flyTo(stop.coords, stop.cityKey === 'disney' ? 10 : 6, { duration: 0.5 });
+
+  Object.entries(dayMarkers).forEach(([k, m]) => {
+    const isActive = Number(k) === day;
+    const color    = isActive ? '#e8c96f' : (cityColors[itineraryDays[Number(k)-1].cityKey] || '#e8c96f');
+    m.setStyle({ radius: isActive ? 10 : 6, color, fillColor: color });
+    if (isActive) m.openPopup();
+  });
+
+  const pathPoints = cityStops.filter(s => s.day <= day).map(s => s.coords);
+  progressLine.setLatLngs(pathPoints);
+
+  if (moveSlider) slider.value = day;
+  updateFill(day);
+  if (dayLabel) dayLabel.textContent = stop.title;
+}
+
+if (slider) slider.addEventListener('input', e => focusDay(Number(e.target.value), false));
+
+document.querySelectorAll('.day-card').forEach(card => {
+  card.addEventListener('click', () => {
+    const cb = card.querySelector('input[type="checkbox"]');
+    if (cb) focusDay(Number(cb.dataset.day));
+  });
+});
+
+focusDay(1);
+
+/* ──────────────────────────────────────────────
+   MINI-MAPS (Barcelona & Madrid)
+──────────────────────────────────────────────── */
+function buildMiniMap(id, center, zoom, stops, color) {
+  const m = L.map(id, { scrollWheelZoom: false, zoomControl: false, attributionControl: false }).setView(center, zoom);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { subdomains: 'abcd', maxZoom: 18 }).addTo(m);
+  stops.forEach((s, i) => {
+    const icon = L.divIcon({
+      className: '',
+      html: `<div style="background:${color};color:#fff;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;border:2px solid rgba(255,255,255,0.6);box-shadow:0 2px 6px rgba(0,0,0,.5);">${i+1}</div>`,
+      iconSize: [24,24], iconAnchor: [12,12],
+    });
+    L.marker(s.coords, { icon }).addTo(m).bindPopup(`<strong>${s.emoji} ${s.name}</strong>`);
+  });
+  L.polyline(stops.map(s => s.coords), { color, weight: 2.5, dashArray:'5 6', opacity:0.8 }).addTo(m);
+}
+
+buildMiniMap('bcn-map-day2', [41.3870,2.1890], 15, [
+  { name:"Hotel H10 Marina",     coords:[41.3905,2.1985], emoji:"🏨" },
+  { name:"Playa Barceloneta",    coords:[41.3790,2.1925], emoji:"🏖️" },
+  { name:"Parque Ciutadela",     coords:[41.3862,2.1862], emoji:"🌳" },
+  { name:"Arco de Triunfo",      coords:[41.3910,2.1808], emoji:"🏛️" },
+], '#f8b500');
+
+buildMiniMap('bcn-map-day3', [41.3760,2.1760], 13, [
+  { name:"Plaza Cataluña",       coords:[41.3874,2.1686], emoji:"🚶" },
+  { name:"Barrio Gótico",        coords:[41.3830,2.1762], emoji:"🏘️" },
+  { name:"Museo Picasso",        coords:[41.3852,2.1808], emoji:"🎨" },
+  { name:"Font Màgica",          coords:[41.3714,2.1517], emoji:"⛲" },
+], '#f8b500');
+
+buildMiniMap('bcn-map-day4', [41.3980,2.1650], 14, [
+  { name:"Sagrada Família",      coords:[41.4036,2.1744], emoji:"⛪" },
+  { name:"Hospital de Sant Pau", coords:[41.4119,2.1736], emoji:"🏥" },
+  { name:"Casa Batlló",          coords:[41.3916,2.1649], emoji:"🦎" },
+  { name:"La Pedrera",           coords:[41.3954,2.1619], emoji:"🌙" },
+], '#f8b500');
+
+buildMiniMap('bcn-map-day5', [41.3450,2.1400], 12, [
+  { name:"Las Ramblas",          coords:[41.3816,2.1717], emoji:"🛒" },
+  { name:"Palau Música Catalana",coords:[41.3875,2.1753], emoji:"🎶" },
+  { name:"El Born",              coords:[41.3852,2.1827], emoji:"🍺" },
+  { name:"Hostel Airport",       coords:[41.2974,2.0833], emoji:"🛌" },
+], '#f8b500');
+
+buildMiniMap('madrid-day-map', [40.4150,-3.6970], 14, [
+  { name:"AC Hotel Atocha",      coords:[40.4063,-3.6934], emoji:"🏨" },
+  { name:"Parque del Retiro",    coords:[40.4153,-3.6844], emoji:"🌳" },
+  { name:"Puerta de Alcalá",     coords:[40.4200,-3.6889], emoji:"🏛️" },
+  { name:"Cibeles",              coords:[40.4194,-3.6930], emoji:"⛲" },
+  { name:"Gran Vía · Metrópolis",coords:[40.4196,-3.6988], emoji:"🏛️" },
+  { name:"Patio de Leones",      coords:[40.4228,-3.6875], emoji:"🍽️" },
+], '#f0522e');
+
+</script>
+</body>
 </html>
-
