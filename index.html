@@ -9,18 +9,20 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 
   <style>
     /* ═══════════════════════════════════════════════
        TOKENS & RESET
     ═══════════════════════════════════════════════ */
     :root {
-      --bg:          #0a0c10;
-      --bg2:         #0f1218;
-      --surface:     #141720;
-      --surface2:    #1a1f2e;
-      --border:      rgba(255,255,255,0.07);
-      --border2:     rgba(255,255,255,0.12);
+      --bg:          #1a2d4a;
+      --bg2:         #1f3455;
+      --surface:     #263d65;
+      --surface2:    #2d4878;
+      --border:      rgba(255,255,255,0.14);
+      --border2:     rgba(255,255,255,0.24);
 
       /* city palette */
       --madrid:  #f0522e;
@@ -32,8 +34,8 @@
       --gold:    #e8c96f;
       --sky:     #4ab8ff;
       --white:   #f5f3ef;
-      --muted:   rgba(245,243,239,0.5);
-      --muted2:  rgba(245,243,239,0.25);
+      --muted:   rgba(245,243,239,0.75);
+      --muted2:  rgba(245,243,239,0.48);
 
       --font-display: 'Playfair Display', serif;
       --font-body:    'DM Sans', sans-serif;
@@ -78,7 +80,7 @@
       left: 0; top: 0;
       width: var(--sidebar-w);
       height: 100vh;
-      background: rgba(10,12,16,0.96);
+      background: rgba(18,32,56,0.97);
       backdrop-filter: blur(20px);
       border-right: 1px solid var(--border2);
       padding: 2rem 1.5rem;
@@ -184,7 +186,7 @@
       position: fixed;
       top: 1rem; left: 1rem;
       z-index: 1001;
-      background: rgba(10,12,16,0.9);
+      background: rgba(20,38,68,0.92);
       backdrop-filter: blur(10px);
       border: 1px solid var(--border2);
       color: var(--gold);
@@ -218,9 +220,10 @@
       position: absolute;
       inset: 0;
       background:
-        radial-gradient(ellipse 80% 60% at 70% 30%, rgba(232,201,111,0.07) 0%, transparent 60%),
-        radial-gradient(ellipse 60% 80% at 20% 80%, rgba(74,184,255,0.05) 0%, transparent 50%),
-        linear-gradient(160deg, #030508 0%, #0d111a 40%, #111520 100%);
+        radial-gradient(ellipse 70% 55% at 75% 25%, rgba(232,201,111,0.18) 0%, transparent 55%),
+        radial-gradient(ellipse 55% 70% at 15% 85%, rgba(74,184,255,0.15) 0%, transparent 50%),
+        radial-gradient(ellipse 40% 40% at 45% 55%, rgba(77,235,184,0.08) 0%, transparent 60%),
+        linear-gradient(150deg, #152340 0%, #1a2d4a 45%, #1f3455 100%);
     }
 
     /* animated flight path line */
@@ -276,7 +279,7 @@
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      background: rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.10);
       backdrop-filter: blur(12px);
       border: 1px solid rgba(255,255,255,0.1);
       border-radius: 100px;
@@ -284,8 +287,7 @@
       font-size: 0.78rem;
       font-weight: 500;
       color: rgba(245,243,239,0.85);
-      transition: all 0.3s ease;
-      animation: pill-in 0.6s ease both;
+      transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
     }
 
     .dest-pill:hover {
@@ -300,23 +302,6 @@
       object-fit: cover;
     }
 
-    @keyframes pill-in {
-      from { opacity: 0; transform: translateY(12px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .dest-pill:nth-child(1)  { animation-delay: 0.2s; }
-    .dest-pill:nth-child(2)  { animation-delay: 0.30s; }
-    .dest-pill:nth-child(3)  { animation-delay: 0.40s; }
-    .dest-pill:nth-child(4)  { animation-delay: 0.50s; }
-    .dest-pill:nth-child(5)  { animation-delay: 0.60s; }
-    .dest-pill:nth-child(6)  { animation-delay: 0.70s; }
-    .dest-pill:nth-child(7)  { animation-delay: 0.80s; }
-    .dest-pill:nth-child(8)  { animation-delay: 0.90s; }
-    .dest-pill:nth-child(9)  { animation-delay: 1.00s; }
-    .dest-pill:nth-child(10) { animation-delay: 1.10s; }
-    .dest-pill:nth-child(11) { animation-delay: 1.20s; }
-    .dest-pill:nth-child(12) { animation-delay: 1.30s; }
 
     .hero-content {
       position: relative;
@@ -371,9 +356,9 @@
     .countdown-bar {
       display: inline-flex;
       gap: 1px;
-      background: rgba(255,255,255,0.05);
+      background: rgba(255,255,255,0.10);
       backdrop-filter: blur(20px);
-      border: 1px solid var(--border2);
+      border: 1px solid rgba(255,255,255,0.26);
       border-radius: var(--radius);
       padding: 1.5rem 2rem;
       margin-bottom: 3rem;
@@ -577,11 +562,12 @@
 
     details.dest-item:hover {
       border-color: var(--border2);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.25);
     }
 
     details.dest-item[open] {
-      border-color: rgba(232,201,111,0.3);
-      box-shadow: 0 0 30px rgba(232,201,111,0.05);
+      border-color: rgba(232,201,111,0.35);
+      box-shadow: 0 0 40px rgba(232,201,111,0.08);
     }
 
     details.dest-item > summary {
@@ -595,7 +581,7 @@
     }
 
     details.dest-item > summary:hover {
-      background: rgba(255,255,255,0.02);
+      background: rgba(255,255,255,0.05);
     }
 
     details.dest-item > summary::-webkit-details-marker { display: none; }
@@ -670,24 +656,32 @@
       display: block;
     }
 
-    /* confirmed box */
+    /* confirmed box — traslados (teal) */
     .confirmed-box {
-      background: rgba(77,235,184,0.06);
-      border: 1px solid rgba(77,235,184,0.2);
+      background: rgba(77,235,184,0.08);
+      border: 1px solid rgba(77,235,184,0.28);
+      border-left: 3px solid var(--italy);
       border-radius: var(--radius-sm);
       padding: 1rem 1.25rem;
       margin-bottom: 1rem;
       font-size: 0.9rem;
-      color: rgba(245,243,239,0.85);
+      color: rgba(245,243,239,0.92);
       line-height: 1.7;
     }
-
     .confirmed-box strong { color: var(--italy); }
+
+    /* confirmed box — hoteles (gold/ámbar) */
+    .confirmed-box.hotel {
+      background: rgba(232,201,111,0.08);
+      border: 1px solid rgba(232,201,111,0.28);
+      border-left: 3px solid var(--gold);
+    }
+    .confirmed-box.hotel strong { color: var(--gold); }
 
     /* alert boxes */
     .alert-flight {
-      background: rgba(248,181,0,0.06);
-      border: 1px solid rgba(248,181,0,0.25);
+      background: rgba(248,181,0,0.09);
+      border: 1px solid rgba(248,181,0,0.32);
       border-radius: var(--radius-sm);
       padding: 1rem 1.25rem;
       margin: 1rem 0;
@@ -879,7 +873,7 @@
     .outfit-label {
       position: absolute;
       top: 12px; left: 12px;
-      background: rgba(10,12,16,0.85);
+      background: rgba(20,38,68,0.88);
       color: var(--gold);
       padding: 3px 10px;
       font-size: 0.65rem;
@@ -965,7 +959,7 @@
       border: 1px dashed rgba(255,255,255,0.12);
       border-radius: var(--radius);
       padding: 1.5rem;
-      background: rgba(255,255,255,0.02);
+      background: rgba(255,255,255,0.05);
     }
 
     .missing-section h3 {
@@ -1006,7 +1000,7 @@
     }
 
     .highlight {
-      background: rgba(255,255,255,0.03);
+      background: rgba(255,255,255,0.07);
       border-left: 2px solid var(--gold);
       border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
       padding: 1.25rem 1.5rem;
@@ -1178,7 +1172,7 @@
     }
 
     td { color: rgba(245,243,239,0.8); }
-    tr:hover td { background: rgba(255,255,255,0.02); }
+    tr:hover td { background: rgba(255,255,255,0.05); }
 
     /* ═══════════════════════════════════════════════
        GENERIC CARDS & UTILS
@@ -1206,18 +1200,9 @@
     li strong { color: var(--white); }
 
     /* ═══════════════════════════════════════════════
-       SCROLL-IN ANIMATION
+       SCROLL-IN ANIMATION (handled by GSAP)
     ═══════════════════════════════════════════════ */
-    .reveal {
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    /* GSAP sets opacity:0 via JS — no CSS needed here */
 
     /* ═══════════════════════════════════════════════
        FOOTER
@@ -1390,7 +1375,7 @@
   <!-- Wave transition -->
   <div class="hero-wave">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 80" preserveAspectRatio="none" style="display:block;width:100%;height:80px;">
-      <path d="M0,40 Q180,80 360,40 Q540,0 720,40 Q900,80 1080,40 Q1260,0 1440,40 L1440,80 L0,80 Z" fill="var(--bg2)"/>
+      <path d="M0,40 Q180,80 360,40 Q540,0 720,40 Q900,80 1080,40 Q1260,0 1440,40 L1440,80 L0,80 Z" fill="#1f3455"/>
     </svg>
   </div>
 </header>
@@ -1440,7 +1425,7 @@
         </summary>
         <div class="dest-body">
           <img src="https://images.unsplash.com/photo-1539037116277-4db20889f2d4?w=800&q=80" alt="Madrid" class="dest-image">
-          <div class="confirmed-box">
+          <div class="confirmed-box hotel">
             <strong>🏨 AC Hotel Atocha — CONFIRMADO</strong><br>
             C/ Delicias, 42, Madrid 28045 · 1–2 may (1 noche) · Confirmación: 86397505 · Tel: +34 91 506 2221
           </div>
@@ -1685,6 +1670,12 @@
             <div class="day-accordion-body">
               <ul>
                 <li><strong>13:50h:</strong> Llegada Milano Centrale (Frecciarossa 9281 desde París)</li>
+                <div class="confirmed-box hotel" style="margin:0.5rem 0;">
+                  <strong>🏨 Spice Hotel Milano — CONFIRMADO · Conf: 6088.005.510</strong><br>
+                  Via Vitruvio 48 · Estación Central · 11-12 may (1 noche)<br>
+                  Hab. Doble · 2 adultos · A nombre de: Yamila Altuna · Sin desayuno · <strong>No reembolsable</strong><br>
+                  <em style="font-size:0.88em;opacity:0.75;">Tel: +39 02 8359 7000 · Check-in desde 14:00 · Check-out hasta 12:00</em>
+                </div>
                 <li><strong>~15:00h:</strong> Check-in hotel · dejar equipaje</li>
                 <li><strong>~16:00h:</strong> Duomo di Milano — exterior + terraza · €14</li>
                 <li><strong>~17:30h:</strong> Galleria Vittorio Emanuele II · paseo por centro</li>
@@ -1731,7 +1722,7 @@
         </summary>
         <div class="dest-body">
           <img src="https://images.unsplash.com/photo-1514890547357-a9ee288728e0?w=800&q=80" alt="Venecia" class="dest-image">
-          <div class="confirmed-box" style="margin-bottom:1rem;">
+          <div class="confirmed-box hotel" style="margin-bottom:1rem;">
             <strong>🏨 Hotel Carlton On The Grand Canal — CONFIRMADO</strong><br>
             Santa Croce 578 · 12–14 may · Conf: 6369502862 · Tel: +39 041 275 2000
           </div>
@@ -1794,6 +1785,14 @@
         <div class="dest-body">
           <img src="https://images.unsplash.com/photo-1520175480921-4edfa2983e0f?w=800&q=80" alt="Florencia" class="dest-image">
 
+          <div class="confirmed-box hotel" style="margin-bottom:1rem;">
+            <strong>🏨 Hotel Mia Cara &amp; Spa — CONFIRMADO · Conf: 6725955130</strong><br>
+            Via Faenza 90 · 50123 Florencia · 14-16 may (2 noches)<br>
+            Hab. Doble · 2 adultos (Gaston Suarez) · <strong>Desayuno incluido</strong> · Total: €385,64 (pagado)<br>
+            Cancelación gratis hasta el <strong>8 de mayo</strong> · Impuesto municipal €24 (se paga en el hotel)<br>
+            <em style="font-size:0.88em;opacity:0.75;">Tel: +39 055 2399088 · Check-in desde 14:00 · Check-out hasta 11:00 · Zona de tráfico restringido — recibirán pase al llegar</em>
+          </div>
+
           <details class="day-accordion">
             <summary>Día 14 · 14 may — Llegada Florencia ⚜️</summary>
             <div class="day-accordion-body">
@@ -1818,13 +1817,11 @@
           </details>
 
           <details class="day-accordion">
-            <summary>Día 16 · 16 may — Oltrarno & Boboli 🌿</summary>
+            <summary>Día 16 · 16 may — Salida a Roma 🚄</summary>
             <div class="day-accordion-body">
               <ul>
-                <li><strong>Mañana:</strong> Palazzo Pitti · €16 · Jardines Boboli</li>
-                <li><strong>~13:00h:</strong> Oltrarno — barrio artesano · almuerzo local</li>
-                <li><strong>~16:00h:</strong> San Miniato al Monte (gratis) · vistas al atardecer</li>
-                <li><strong>Noche:</strong> Bistecca alla fiorentina · última cena toscana</li>
+                <li><strong>Temprano:</strong> Check-out Hotel Mia Cara · dejar maletas en consigna si hace falta</li>
+                <li><strong>Mañana:</strong> 🚄 Frecciarossa · Firenze SMN → Roma Termini · ~1h30 · salir temprano</li>
               </ul>
             </div>
           </details>
@@ -2255,13 +2252,84 @@ navLinks.forEach(link => {
 });
 
 /* ──────────────────────────────────────────────
-   SCROLL REVEAL
+   GSAP ANIMATIONS
 ──────────────────────────────────────────────── */
-const revealEls = document.querySelectorAll('.reveal');
-const observer  = new IntersectionObserver(entries => {
-  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
-}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
-revealEls.forEach(el => observer.observe(el));
+gsap.registerPlugin(ScrollTrigger);
+
+// ── Hero page-load timeline ──────────────────
+gsap.timeline({ defaults: { ease: 'power3.out' } })
+  .from('.hero-eyebrow',  { opacity: 0, x: -28, duration: 0.7 })
+  .from('header h1',      { opacity: 0, y: 48,  duration: 0.9 }, '-=0.4')
+  .from('.hero-sub',      { opacity: 0, y: 24,  duration: 0.7 }, '-=0.5')
+  .from('.countdown-bar', { opacity: 0, y: 16,  duration: 0.6 }, '-=0.4')
+  .from('.dest-pill',     { opacity: 0, y: 18,  stagger: 0.06, duration: 0.5, ease: 'back.out(1.3)' }, '-=0.2');
+
+// ── Sidebar: stagger sin afectar visibilidad base ──
+gsap.fromTo('.sidebar-nav a',
+  { opacity: 0 },
+  { opacity: 1, stagger: 0.045, duration: 0.4, ease: 'power2.out', delay: 0.3, clearProps: 'opacity,transform' }
+);
+
+// ── Section headers ──────────────────────────
+gsap.utils.toArray('.section-eyebrow').forEach(el => {
+  gsap.fromTo(el,
+    { opacity: 0, x: -20 },
+    { opacity: 1, x: 0, duration: 0.6, ease: 'power3.out',
+      scrollTrigger: { trigger: el, start: 'top 90%', once: true } }
+  );
+});
+
+// ── Destination accordions ───────────────────
+gsap.utils.toArray('.dest-item').forEach(el => {
+  gsap.fromTo(el,
+    { opacity: 0, y: 30 },
+    { opacity: 1, y: 0, duration: 0.65, ease: 'power3.out',
+      scrollTrigger: { trigger: el, start: 'top 92%', once: true } }
+  );
+});
+
+// ── Flight cards (traslados) ─────────────────
+gsap.utils.toArray('.flight-card').forEach((el, i) => {
+  gsap.fromTo(el,
+    { opacity: 0, y: 24 },
+    { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out', delay: (i % 2) * 0.1,
+      scrollTrigger: { trigger: el, start: 'top 93%', once: true } }
+  );
+});
+
+// ── Day cards ────────────────────────────────
+gsap.utils.toArray('.day-card').forEach((el, i) => {
+  gsap.fromTo(el,
+    { opacity: 0, y: 18 },
+    { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out', delay: (i % 3) * 0.07,
+      scrollTrigger: { trigger: el, start: 'top 94%', once: true } }
+  );
+});
+
+// ── Outfit cards ─────────────────────────────
+gsap.utils.toArray('.outfit-card').forEach((el, i) => {
+  gsap.fromTo(el,
+    { opacity: 0, y: 36, scale: 0.97 },
+    { opacity: 1, y: 0, scale: 1, duration: 0.65, ease: 'power3.out', delay: i * 0.1,
+      scrollTrigger: { trigger: el, start: 'top 90%', once: true } }
+  );
+});
+
+// ── Urgency cards ────────────────────────────
+gsap.utils.toArray('.urgency-card').forEach((el, i) => {
+  gsap.fromTo(el,
+    { opacity: 0, x: -18 },
+    { opacity: 1, x: 0, duration: 0.5, ease: 'power2.out', delay: i * 0.08,
+      scrollTrigger: { trigger: el, start: 'top 93%', once: true } }
+  );
+});
+
+// ── Map ──────────────────────────────────────
+gsap.fromTo('#travelMap',
+  { opacity: 0, scale: 0.97 },
+  { opacity: 1, scale: 1, duration: 0.8, ease: 'power2.out',
+    scrollTrigger: { trigger: '#travelMap', start: 'top 88%', once: true } }
+);
 
 /* ──────────────────────────────────────────────
    CHECKLIST (localStorage)
