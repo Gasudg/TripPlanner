@@ -1,0 +1,1120 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Gaston Suarez//Viaje Europa 2026//ES
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:✈️ Viaje Europa 2026
+X-WR-TIMEZONE:Europe/Madrid
+X-WR-CALDESC:Itinerario completo Europa — 30 abr al 26 may 2026
+BEGIN:VTIMEZONE
+TZID:Europe/Madrid
+BEGIN:DAYLIGHT
+TZOFFSETFROM:+0100
+TZOFFSETTO:+0200
+TZNAME:CEST
+DTSTART:19810329T020000
+RRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3
+END:DAYLIGHT
+BEGIN:STANDARD
+TZOFFSETFROM:+0200
+TZOFFSETTO:+0100
+TZNAME:CET
+DTSTART:19961027T030000
+RRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10
+END:STANDARD
+END:VTIMEZONE
+BEGIN:VTIMEZONE
+TZID:America/Montevideo
+BEGIN:STANDARD
+TZOFFSETFROM:-0300
+TZOFFSETTO:-0300
+TZNAME:UYT
+DTSTART:19700101T000000
+END:STANDARD
+END:VTIMEZONE
+BEGIN:VEVENT
+UID:viaje2026-001@gastonsuarez
+DTSTART;TZID=America/Montevideo:20260430T214500
+DTEND;TZID=Europe/Madrid:20260501T143500
+SUMMARY:✈️ IB0170 MVD → MAD
+LOCATION:Aeropuerto Internacional de Carrasco\, Montevideo\, Uruguay
+GEO:-34.8384;-56.0308
+DESCRIPTION:Iberia IB0170\nMVD → MAD T4S\nSalida: 21:45h Montevideo\nLlegada: 1 may 14:35h Madrid T4S\nPresentarse ~3h antes (18:45h)
+BEGIN:VALARM
+TRIGGER:-PT180M
+ACTION:DISPLAY
+DESCRIPTION:⚠️ 3h para el vuelo IB0170 a Madrid
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-002@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260501T143500
+DTEND;TZID=Europe/Madrid:20260501T160000
+SUMMARY:🛬 Llegada MAD T4S
+LOCATION:Aeropuerto Adolfo Suárez Madrid-Barajas T4S\, Madrid\, España
+GEO:40.4983;-3.5676
+DESCRIPTION:Llegada vuelo IB0170 desde Montevideo\nCercanías C1 T4 → Atocha (25 min\, €2.60)
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-003@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260501T153000
+DTEND;TZID=Europe/Madrid:20260501T163000
+SUMMARY:🏨 Check-in AC Hotel Atocha
+LOCATION:AC Hotel Atocha\, Calle Delicias 42\, 28045 Madrid\, España
+GEO:40.4063;-3.6934
+DESCRIPTION:AC Hotel Atocha · Conf: 86397505\nTel: +34 91 506 2221\n1-2 may (1 noche)\nCercanías Atocha a 5 min
+BEGIN:VALARM
+TRIGGER:-PT30M
+ACTION:DISPLAY
+DESCRIPTION:🏨 Check-in AC Hotel Atocha en 30 min
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-004@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260501T170000
+DTEND;TZID=Europe/Madrid:20260501T210000
+SUMMARY:🌆 Paseo Madrid — Retiro · Cibeles · Gran Vía
+LOCATION:Parque del Retiro\, Madrid\, España
+GEO:40.4153;-3.6844
+DESCRIPTION:Parque del Retiro → Puerta de Alcalá → Cibeles → Gran Vía → Edificio Metrópolis\nCena en Patio de Leones
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-005@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260502T110000
+DTEND;TZID=Europe/Madrid:20260502T120000
+SUMMARY:🏨 Check-out AC Hotel Atocha
+LOCATION:AC Hotel Atocha\, Calle Delicias 42\, 28045 Madrid\, España
+GEO:40.4063;-3.6934
+DESCRIPTION:Check-out · Ir a Madrid Puerta de Atocha (5 min a pie)\nTren AVE a las 12:22h
+BEGIN:VALARM
+TRIGGER:-PT60M
+ACTION:DISPLAY
+DESCRIPTION:⚠️ 1h para el check-out — recordar ir a Atocha para el AVE 12:22h
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-006@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260502T122200
+DTEND;TZID=Europe/Madrid:20260502T151400
+SUMMARY:🚄 AVE 06121 · Madrid → Barcelona
+LOCATION:Estación Madrid Puerta de Atocha\, Glorieta de Carlos V\, Madrid\, España
+GEO:40.4065;-3.6914
+DESCRIPTION:AVE 06121\nMadrid Atocha 12:22h → Barcelona-Sants 15:14h\nCoche 7 · Asientos 8C y 8D\n⚠️ Presentarse 30 min antes con billete QR y pasaporte
+BEGIN:VALARM
+TRIGGER:-PT60M
+ACTION:DISPLAY
+DESCRIPTION:🚄 1h para el AVE 06121 a Barcelona — Coche 7\, 8C/8D
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-007@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260502T151400
+DTEND;TZID=Europe/Madrid:20260502T163000
+SUMMARY:🛬 Llegada Barcelona-Sants
+LOCATION:Estación de Barcelona-Sants\, Plaça dels Països Catalans\, Barcelona\, España
+GEO:41.3792;2.1401
+DESCRIPTION:Llegada AVE 06121 desde Madrid\nCheck-in H10 Marina
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-008@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260502T163000
+DTEND;TZID=Europe/Madrid:20260502T173000
+SUMMARY:🏨 Check-in H10 Marina Barcelona
+LOCATION:Hotel H10 Marina\, Carrer de Pallars 203\, 08005 Barcelona\, España
+GEO:41.3900;2.1966
+DESCRIPTION:H10 Marina Barcelona\n2-5 mayo (3 noches)\nCheck-out: 5 mayo 12:00h\nGuardaequipaje disponible
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-009a@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260503T090000
+DTEND;TZID=Europe/Madrid:20260503T110000
+SUMMARY:🚶 Free Tour Barcelona · Res: A38697680
+LOCATION:Paseo de Gracia\, 1 / Plaza de Catalunya\, Barcelona\, España
+GEO:41.3870;2.1699
+DESCRIPTION:Free Tour Barcelona · Civitatis\nRes: A38697680 · 09:00h · 2 adultos · Español\n0€ + propina voluntaria ~10-15€/persona\n📍 Paseo de Gracia 1 / Plaza de Catalunya · Frente metro Plaza Catalunya\n🔵 Guía lleva carpeta azul en columnas puerta tienda Apple\n⚠️ Radioguías obligatorias: €1/persona · Presentarse 10 min antes\nFree Tour Barcelona · +34 609 209 043 · Yamila Altuna
+BEGIN:VALARM
+TRIGGER:-PT30M
+ACTION:DISPLAY
+DESCRIPTION:🚶 Free Tour Barcelona 9:00h — Paseo de Gracia 1 (carpeta azul)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-009@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260503T103000
+DTEND;TZID=Europe/Madrid:20260503T123000
+SUMMARY:🚶 Free Tour Barrio Gótico · Guía Ligto · Res: A37752357
+LOCATION:Esquina Calle Bergara con Plaza de Catalunya\, Barcelona\, España
+GEO:41.3870;2.1700
+DESCRIPTION:Free Tour Barrio Gótico · Civitatis\nRes: A37752357 · 10:30h · 2 adultos · Español\n0€ + propina voluntaria ~10-15€/persona\nGuía: Ligto · Radioguías: 1,50€/persona · Llegar con antelación\n📍 Esquina Calle Bergara con Plaza de Catalunya
+BEGIN:VALARM
+TRIGGER:-PT30M
+ACTION:DISPLAY
+DESCRIPTION:🚶 Free Tour Barrio Gótico 10:30h — Bergara/Catalunya (Guía Ligto)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-010@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260503T133000
+DTEND;TZID=Europe/Madrid:20260503T153000
+SUMMARY:🎨 Museo Picasso Barcelona
+LOCATION:Museu Picasso\, Carrer de Montcada 15-23\, 08003 Barcelona\, España
+GEO:41.3850;2.1802
+DESCRIPTION:Museo Picasso · €14\n⚠️ Sacar entrada online el 29/04\nBarrio El Born
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-011@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260503T200000
+DTEND;TZID=Europe/Madrid:20260503T213000
+SUMMARY:💡 Font Màgica de Montjuïc
+LOCATION:Font Màgica de Montjuïc\, Avinguda de la Reina Maria Cristina\, Barcelona\, España
+GEO:41.3713;2.1519
+DESCRIPTION:Espectáculo de luz y agua · Entrada gratuita\n⚠️ Shows jue-dom · verificar horario en web oficial
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-012@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260504T101500
+DTEND;TZID=Europe/Madrid:20260504T123000
+SUMMARY:⛪ Sagrada Família — CONFIRMADO
+LOCATION:Basílica de la Sagrada Família\, Carrer de Mallorca 401\, 08013 Barcelona\, España
+GEO:41.4036;2.1744
+DESCRIPTION:Sagrada Família · CONFIRMADO\nLoc: 96353661 · 2 entradas generales · €52.00\n⚠️ Llevar confirmación de reserva
+BEGIN:VALARM
+TRIGGER:-PT30M
+ACTION:DISPLAY
+DESCRIPTION:⛪ Sagrada Família en 30 min — Loc: 96353661
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-013@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260504T170000
+DTEND;TZID=Europe/Madrid:20260504T193000
+SUMMARY:🏛️ Casa Batlló — CONFIRMADO
+LOCATION:Casa Batlló\, Passeig de Gràcia 43\, 08007 Barcelona\, España
+GEO:41.3916;2.1649
+DESCRIPTION:Casa Batlló · CONFIRMADO\nLoc: 96352983\nGold + Exposición «Beyond the Façade»
+BEGIN:VALARM
+TRIGGER:-PT30M
+ACTION:DISPLAY
+DESCRIPTION:🏛️ Casa Batlló en 30 min — Loc: 96352983
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-014@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260504T224000
+DTEND;TZID=Europe/Madrid:20260505T003000
+SUMMARY:🌙 La Pedrera Night Experience — CONFIRMADO
+LOCATION:La Pedrera-Casa Milà\, Passeig de Gràcia 92\, 08008 Barcelona\, España
+GEO:41.3954;2.1619
+DESCRIPTION:La Pedrera Night Experience · CONFIRMADO\nLoc: 96342122 · €79.00\nTerrat/Azotea de noche
+BEGIN:VALARM
+TRIGGER:-PT30M
+ACTION:DISPLAY
+DESCRIPTION:🌙 La Pedrera Night Experience en 30 min — Loc: 96342122
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-015@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260505T120000
+DTEND;TZID=Europe/Madrid:20260505T123000
+SUMMARY:🏨 Check-out H10 Marina Barcelona
+LOCATION:Hotel H10 Marina\, Carrer de Pallars 203\, 08005 Barcelona\, España
+GEO:41.3900;2.1966
+DESCRIPTION:Check-out hasta 12:00h\nDejar equipaje en consigna del hotel
+BEGIN:VALARM
+TRIGGER:-PT60M
+ACTION:DISPLAY
+DESCRIPTION:⚠️ 1h para el check-out H10 Marina (hasta 12:00h)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-016@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260505T210000
+DTEND;TZID=Europe/Madrid:20260505T220000
+SUMMARY:🏨 Check-in Hostel Airport Barcelona
+LOCATION:Hostel Airport Barcelona\, Barcelona\, España
+GEO:41.2971;2.0785
+DESCRIPTION:Hostel Airport Barcelona · noche previa al vuelo\n⚠️ ALARMA 03:30h — vuelo AF1449 a las 06:10h\nEstar en terminal BCN T1 a las 04:00-04:30h
+BEGIN:VALARM
+TRIGGER:-PT30M
+ACTION:DISPLAY
+DESCRIPTION:🏨 Llegar al Hostel Airport — vuelo mañana 06:10h (alarma 03:30h)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-017@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260506T061000
+DTEND;TZID=Europe/Madrid:20260506T080500
+SUMMARY:✈️ AF1449 BCN → CDG (París)
+LOCATION:Aeropuerto El Prat T1\, 08820 El Prat de Llobregat\, Barcelona\, España
+GEO:41.2971;2.0785
+DESCRIPTION:Air France AF1449\nBCN T1 06:10h → CDG T2F 08:05h (1h 55min)\n⚠️ Alarma 03:30h · Estar en terminal a las 04:00-04:30h\nDuracion: 1h 55min
+BEGIN:VALARM
+TRIGGER:-PT160M
+ACTION:DISPLAY
+DESCRIPTION:⚠️ Alarma vuelo AF1449 — salir al aeropuerto BCN T1 YA (04:10h)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-018@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260506T093000
+DTEND;TZID=Europe/Madrid:20260506T110000
+SUMMARY:🚌 CDG → Disneyland Paris (RER B+A)
+LOCATION:Aéroport Charles de Gaulle T2F\, Roissy-en-France\, Francia
+GEO:49.0097;2.5479
+DESCRIPTION:CDG → Disneyland Paris\nRER B (CDG T2) → Châtelet → RER A → Marne-la-Vallée (~50 min)\nO taxi/shuttle directo
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-019@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260506T110000
+DTEND;TZID=Europe/Madrid:20260506T120000
+SUMMARY:🏨 Check-in Disney Sequoia Lodge
+LOCATION:Disney's Sequoia Lodge\, Allée de la Belle au Bois Dormant\, 77777 Marne-la-Vallée\, Francia
+GEO:48.8694;2.7792
+DESCRIPTION:Disney Sequoia Lodge · noche 6 may\n2 parques incluidos · Extra Magic Time · Shuttle gratuito\nRecibir pulseras al check-in
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-020@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260507T080000
+DTEND;TZID=Europe/Madrid:20260507T093000
+SUMMARY:⭐ Extra Magic Time — Disneyland Park
+LOCATION:Disneyland Paris — Disneyland Park\, Marne-la-Vallée\, Francia
+GEO:48.8722;2.7754
+DESCRIPTION:Extra Magic Time (solo huéspedes del hotel)\nParque casi vacío · 08:00h\nPrioridad: Big Thunder Mountain → Space Mountain → Indiana Jones\nLuego: Peter Pan's Flight (se llena enseguida a las 09:30h)
+BEGIN:VALARM
+TRIGGER:-PT30M
+ACTION:DISPLAY
+DESCRIPTION:⭐ Extra Magic Time empieza a las 08:00h — ¡ir al parque ya!
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-021@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260507T110000
+DTEND;TZID=Europe/Madrid:20260507T113000
+SUMMARY:🏨 Check-out Disney Sequoia Lodge
+LOCATION:Disney's Sequoia Lodge\, Allée de la Belle au Bois Dormant\, 77777 Marne-la-Vallée\, Francia
+GEO:48.8694;2.7792
+DESCRIPTION:Check-out Sequoia Lodge\nDejar equipaje en consigna · volver al parque
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-022@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260507T160000
+DTEND;TZID=Europe/Madrid:20260507T163000
+SUMMARY:🎉 Disney Stars on Parade — Main Street
+LOCATION:Disneyland Paris — Main Street U.S.A.\, Marne-la-Vallée\, Francia
+GEO:48.8720;2.7755
+DESCRIPTION:Disney Stars on Parade · El desfile grande\nMain Street U.S.A. · ~30 min\nPosicionarse 30 min antes
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-023@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260507T210000
+DTEND;TZID=Europe/Madrid:20260507T211600
+SUMMARY:🌊 Disney Cascade of Lights — Adventure Bay Lake
+LOCATION:Disneyland Paris — Disney Adventure World\, Marne-la-Vallée\, Francia
+GEO:48.8683;2.7807
+DESCRIPTION:Disney Cascade of Lights\n379 drones aéreos + acuáticos · pantallas de agua · pirotecnia · 16 min\nShow inaugural 2026 · Adventure Bay Lake\nZona reservada disponible €24/pp (mejor vista)
+BEGIN:VALARM
+TRIGGER:-PT30M
+ACTION:DISPLAY
+DESCRIPTION:🌊 Cascade of Lights en 30 min — posicionarse en Adventure Bay Lake
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-024@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260507T220000
+DTEND;TZID=Europe/Madrid:20260507T222500
+SUMMARY:🏰 Disney Tales of Magic — Castillo
+LOCATION:Disneyland Paris — Sleeping Beauty Castle\, Marne-la-Vallée\, Francia
+GEO:48.8721;2.7753
+DESCRIPTION:Disney Tales of Magic\nProyecciones y luces en el Castillo de la Bella Durmiente · ~25 min\nIMPERDIBLE · Segunda noche consecutiva
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-025@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260507T230000
+DTEND;TZID=Europe/Madrid:20260507T233000
+SUMMARY:🏨 Check-in Moxy Paris Val d'Europe
+LOCATION:Moxy Paris Val d'Europe\, 2 Avenue de L'Europe\, 77144 Montévrain\, Francia
+GEO:48.8583;2.7830
+DESCRIPTION:Moxy Paris Val d'Europe · noche 7 may\nTel: +33 1 73 08 98 65\n1 parada RER A desde Disneyland
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-026@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260508T100000
+DTEND;TZID=Europe/Madrid:20260508T110000
+SUMMARY:🏨 Check-in Ibis Styles Paris Gare de Lyon
+LOCATION:Ibis Styles Paris Gare de Lyon\, 52 Avenue Ledru Rollin\, 75012 París\, Francia
+GEO:48.8528;2.3701
+DESCRIPTION:Ibis Styles Paris Gare de Lyon · 8-11 mayo\nDesayuno buffet incluido · Metro Bastille 2 min\nMañana: RER A → Paris centro desde Val d'Europe
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-027@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260508T100000
+DTEND;TZID=Europe/Madrid:20260508T113000
+SUMMARY:🗼 Trocadéro & Torre Eiffel
+LOCATION:Tour Eiffel\, Champ de Mars\, 75007 París\, Francia
+GEO:48.8584;2.2945
+DESCRIPTION:~10:00h Trocadéro — mejor vista de la Torre (gratis)\n~11:00h Torre Eiffel — escaleras hasta 2° piso · €11.30\n~13:00h Almuerzo Champ de Mars
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-028@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260508T143000
+DTEND;TZID=Europe/Madrid:20260508T163000
+SUMMARY:🏛️ Campos Elíseos & Arco del Triunfo
+LOCATION:Arc de Triomphe\, Place Charles de Gaulle\, 75008 París\, Francia
+GEO:48.8738;2.2950
+DESCRIPTION:Campos Elíseos → Arco del Triunfo · €13\n~17:00h Petit Palais (gratis)
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-029@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260508T210000
+DTEND;TZID=Europe/Madrid:20260508T223000
+SUMMARY:🚢 Crucero por el Sena
+LOCATION:Port de la Bourdonnais\, 75007 París\, Francia
+GEO:48.8611;2.2994
+DESCRIPTION:Crucero por el Sena · ~€15/persona\nTorre centelleando a medianoche · Imperdible
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-030@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260509T090000
+DTEND;TZID=Europe/Madrid:20260509T120000
+SUMMARY:🎨 Louvre
+LOCATION:Musée du Louvre\, Rue de Rivoli\, 75001 París\, Francia
+GEO:48.8606;2.3376
+DESCRIPTION:Louvre · €22 · reservar online\nEntrada por Pirámide
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-031@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260509T100000
+DTEND;TZID=Europe/Madrid:20260509T123000
+SUMMARY:🚶 Free Tour París · Viaterra Tours · Res: A38698147
+LOCATION:Plaza del Hôtel de Ville\, 75004 París\, Francia
+GEO:48.8566;2.3522
+DESCRIPTION:Free Tour París · Viaterra Tours\nRes: A38698147 · 10:00h · 2 adultos · Español\n0€ + propina voluntaria al finalizar\n📍 Plaza Hôtel de Ville · Frente a salida nº5 Metro Hôtel de Ville\n🟣 Guía lleva paraguas morado/lila con logo Viaterra Tours\n⚠️ Presentarse puntual · Líneas 1 (amarillo) y 11 (marrón)\nViaterra Tours · +33 6 35 25 33 29 · Yamila Altuna
+BEGIN:VALARM
+TRIGGER:-PT30M
+ACTION:DISPLAY
+DESCRIPTION:🚶 Free Tour París 10:00h — Plaza Hôtel de Ville (paraguas lila · Viaterra Tours)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-032@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260509T173000
+DTEND;TZID=Europe/Madrid:20260509T193000
+SUMMARY:🏘️ Montmartre · Sacré-Cœur · Place du Tertre
+LOCATION:Sacré-Cœur\, 35 Rue du Chevalier de la Barre\, 75018 París\, Francia
+GEO:48.8867;2.3431
+DESCRIPTION:Visita libre por Montmartre\nSacré-Cœur · Place du Tertre · vistas panorámicas de París\nCena en el barrio al finalizar
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-033@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260510T100000
+DTEND;TZID=Europe/Madrid:20260510T163000
+SUMMARY:👑 Palacio de Versalles
+LOCATION:Château de Versailles\, Place d'Armes\, 78000 Versailles\, Francia
+GEO:48.8049;2.1204
+DESCRIPTION:~09:30h RER C → Versailles-Château-Rive Gauche (~35 min · €4.20)\n10:00h Palacio de Versalles\nSalón de los Espejos · Aposentos Reales\n~14:30h Jardines · Gran Trianón · Petit Trianón\n~17:30h RER C de regreso a París
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-034@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260511T053000
+DTEND;TZID=Europe/Madrid:20260511T060000
+SUMMARY:🏨 Check-out Ibis Styles Gare de Lyon
+LOCATION:Ibis Styles Paris Gare de Lyon\, 52 Avenue Ledru Rollin\, 75012 París\, Francia
+GEO:48.8528;2.3701
+DESCRIPTION:Check-out 05:30h · 52 Av. Ledru Rollin\n8 min a pie → Gare de Lyon\nTren Frecciarossa 9281 a las 06:30h
+BEGIN:VALARM
+TRIGGER:-PT60M
+ACTION:DISPLAY
+DESCRIPTION:⚠️ Check-out Ibis Styles a las 05:30h — Frecciarossa 9281 a las 06:30h
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-035@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260511T063000
+DTEND;TZID=Europe/Madrid:20260511T135000
+SUMMARY:🚄 Frecciarossa 9281 · París → Milán
+LOCATION:Gare de Lyon\, Place Louis-Armand\, 75012 París\, Francia
+GEO:48.8448;2.3735
+DESCRIPTION:Frecciarossa 9281 · CONFIRMADO\nParis Gare de Lyon 06:30h → Milano Centrale 13:50h\nBusiness Silenzio · Carrozza 2 · Asiento 17D\nDuración: ~7h20
+BEGIN:VALARM
+TRIGGER:-PT60M
+ACTION:DISPLAY
+DESCRIPTION:🚄 1h para el Frecciarossa 9281 a Milán — Gare de Lyon (Carrozza 2\, 17D)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-036@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260511T150000
+DTEND;TZID=Europe/Madrid:20260511T160000
+SUMMARY:🏨 Check-in Spice Hotel Milano
+LOCATION:Spice Hotel Milano\, Via Vitruvio 48\, 20124 Milán\, Italia
+GEO:45.4860;9.2050
+DESCRIPTION:Spice Hotel Milano · CONFIRMADO\nConf: 6088.005.510 · A nombre: Yamila Altuna\nTel: +39 02 8359 7000\n11-12 may (1 noche) · Sin desayuno · NO reembolsable\nCheck-in desde 14:00 · Check-out hasta 12:00
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-037@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260511T163000
+DTEND;TZID=Europe/Madrid:20260511T183000
+SUMMARY:🏛️ Duomo di Milano — Entrada + Azoteas · CONFIRMADO
+LOCATION:Duomo di Milano\, Piazza del Duomo 14/A\, 20122 Milán\, Italia
+GEO:45.4641;9.1919
+DESCRIPTION:Duomo di Milano — Entrada + Acceso Azoteas · CONFIRMADO\nFecha: 11 may 2026 · 16:30h · Duomo Pass Stairs\nCódigo: SVFD6B853QLZ67RZ · Ref: 1100886059 · Cód. proveedor: OFD3817878\nTicket digital — no imprimir · Yamila Altuna\n📍 Piazza del Duomo 14/A · Entrada norte · escanear en torniquete\n⚠️ Hombros y rodillas cubiertos · Última entrada 17:50h · Bajada por escaleras\nAntes: Starbucks Reserve (Piazza Cordusio 3) + Galleria Vittorio Emanuele II
+BEGIN:VALARM
+TRIGGER:-PT45M
+ACTION:DISPLAY
+DESCRIPTION:🏛️ Duomo di Milano 16:30h — entrada norte · Código: SVFD6B853QLZ67RZ
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-038@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260512T073000
+DTEND;TZID=Europe/Madrid:20260512T083000
+SUMMARY:🚂 Trenord · Milano → Varenna (Lago de Como)
+LOCATION:Stazione Milano Centrale\, Piazza Duca d'Aosta\, 20124 Milán\, Italia
+GEO:45.4854;9.2044
+DESCRIPTION:Trenord · Milano Centrale 07:30h → Varenna-Esino ~08:30h\n~1h · €7 aprox\n07:15h salida Spice Hotel (2 min a pie)
+BEGIN:VALARM
+TRIGGER:-PT60M
+ACTION:DISPLAY
+DESCRIPTION:🚂 Salir al Trenord para Varenna — salida 07:30h (07:15h del hotel)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-039@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260512T083000
+DTEND;TZID=Europe/Madrid:20260512T102000
+SUMMARY:🏡 Varenna — Villa Monastero & Paseggiata
+LOCATION:Varenna\, Lecco\, Italia
+GEO:46.0131;9.2840
+DESCRIPTION:Varenna — Villa Monastero (€10)\nPasseggiata degli Innamorati · vistas al lago
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-040@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260512T101500
+DTEND;TZID=Europe/Madrid:20260512T103000
+SUMMARY:⛴️ Ferry Varenna → Bellagio
+LOCATION:Ferry Dock Varenna\, Varenna\, Lecco\, Italia
+GEO:46.0131;9.2840
+DESCRIPTION:Ferry Varenna → Bellagio · 15 min · ~€5
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-041@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260512T103000
+DTEND;TZID=Europe/Madrid:20260512T133000
+SUMMARY:⛴️ Bellagio — Villa Melzi & almuerzo
+LOCATION:Bellagio\, Como\, Italia
+GEO:45.9875;9.2580
+DESCRIPTION:Bellagio — Villa Melzi (€10)\nAlmuerzo con vista al lago\n~13:30h Ferry Bellagio → Varenna → tren de regreso a Milano
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-042@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260512T173000
+DTEND;TZID=Europe/Madrid:20260512T190000
+SUMMARY:🍹 Aperitivo en Navigli — Milán
+LOCATION:Navigli\, Via Naviglio Grande\, Milán\, Italia
+GEO:45.4526;9.1763
+DESCRIPTION:Aperitivo milanés en Navigli\nCopa incluye buffet · ~€10-12
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-043@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260512T190000
+DTEND;TZID=Europe/Madrid:20260512T193000
+SUMMARY:🏨 Check-out Spice Hotel Milano
+LOCATION:Spice Hotel Milano\, Via Vitruvio 48\, 20124 Milán\, Italia
+GEO:45.4860;9.2050
+DESCRIPTION:Check-out Spice Hotel · recoger maletas\nIr a Milano Centrale para el Frecciarossa 9763 20:45h
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-044@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260512T204500
+DTEND;TZID=Europe/Madrid:20260512T231700
+SUMMARY:🚄 Frecciarossa 9763 · Milano → Venezia — JU9RW5
+LOCATION:Stazione Milano Centrale\, Piazza Duca d'Aosta\, 20124 Milán\, Italia
+GEO:45.4854;9.2044
+DESCRIPTION:Frecciarossa 9763 · CONFIRMADO · JU9RW5\nMilano Centrale 20:45h → Venezia Santa Lucia 23:17h\nDuración: ~2h30
+BEGIN:VALARM
+TRIGGER:-PT60M
+ACTION:DISPLAY
+DESCRIPTION:🚄 1h para el Frecciarossa 9763 a Venecia — JU9RW5
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-045@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260513T000000
+DTEND;TZID=Europe/Madrid:20260513T003000
+SUMMARY:🏨 Check-in Hotel Carlton on the Grand Canal
+LOCATION:Hotel Carlton on the Grand Canal\, Santa Croce 578\, 30135 Venecia\, Italia
+GEO:45.4408;12.3220
+DESCRIPTION:Hotel Carlton on the Grand Canal · CONFIRMADO\nConf: 6369502862 · Tel: +39 041 275 2000\n12-14 may (2 noches)\nLlegada desde tren 23:17h
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-046@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260513T083000
+DTEND;TZID=Europe/Madrid:20260513T100000
+SUMMARY:🐟 Mercado de Rialto
+LOCATION:Mercato di Rialto\, San Polo\, 30125 Venecia\, Italia
+GEO:45.4385;12.3357
+DESCRIPTION:Mercado de Rialto · 15 min a pie desde Hotel Carlton\n~10:00h Vaporetto línea 1 completo por el Gran Canal
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-047@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260513T100000
+DTEND;TZID=Europe/Madrid:20260513T113000
+SUMMARY:🚤 Vaporetto por el Gran Canal
+LOCATION:Fermata Vaporetto Santa Lucia\, Venecia\, Italia
+GEO:45.4408;12.3155
+DESCRIPTION:Vaporetto línea 1 completo por el Gran Canal · ~€9.50\n~11:30h Dorsoduro — Punta della Dogana · Zattere
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-048@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260513T150000
+DTEND;TZID=Europe/Madrid:20260513T183000
+SUMMARY:⛴️ Ferry → Murano o Burano
+LOCATION:Venecia\, Italia
+GEO:45.4581;12.3528
+DESCRIPTION:Ferry desde Fondamente Nuove → Murano o Burano\n~18:00h San Marco al atardecer
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-049@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260514T083000
+DTEND;TZID=Europe/Madrid:20260514T113000
+SUMMARY:🏛️ Basílica San Marcos & Campanile
+LOCATION:Basilica di San Marco\, Piazza San Marco\, 30100 Venecia\, Italia
+GEO:45.4345;12.3395
+DESCRIPTION:Basílica San Marcos (gratis) · temprano para evitar colas\nCampanile · €10\n~11:30h Cannaregio — Ghetto Veneziano · almuerzo osteria local
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-050@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260514T160000
+DTEND;TZID=Europe/Madrid:20260514T163000
+SUMMARY:🏨 Check-out Hotel Carlton Venecia
+LOCATION:Hotel Carlton on the Grand Canal\, Santa Croce 578\, 30135 Venecia\, Italia
+GEO:45.4408;12.3220
+DESCRIPTION:Check-out Hotel Carlton\nVaporetto → Venezia Santa Lucia\nTren Frecciarossa 9435 18:26h
+BEGIN:VALARM
+TRIGGER:-PT60M
+ACTION:DISPLAY
+DESCRIPTION:⚠️ 1h para el check-out Hotel Carlton — ir a Santa Lucia para el tren 18:26h
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-051@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260514T182600
+DTEND;TZID=Europe/Madrid:20260514T203900
+SUMMARY:🚄 Frecciarossa 9435 · Venezia → Florencia — KEX3EN
+LOCATION:Stazione Venezia Santa Lucia\, Fondamenta Santa Lucia\, 30121 Venecia\, Italia
+GEO:45.4408;12.3155
+DESCRIPTION:Frecciarossa 9435 · CONFIRMADO · KEX3EN\nVenezia Santa Lucia 18:26h → Firenze SMN 20:39h\nDuración: ~2h13
+BEGIN:VALARM
+TRIGGER:-PT60M
+ACTION:DISPLAY
+DESCRIPTION:🚄 1h para el Frecciarossa 9435 a Florencia — KEX3EN
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-052@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260514T210000
+DTEND;TZID=Europe/Madrid:20260514T213000
+SUMMARY:🏨 Check-in Hotel Mia Cara & Spa — Florencia
+LOCATION:Hotel Mia Cara & Spa\, Via Faenza 90\, 50123 Florencia\, Italia
+GEO:43.7780;11.2510
+DESCRIPTION:Hotel Mia Cara & Spa · CONFIRMADO\nConf: 6725955130 · Tel: +39 055 2399088\n14-16 may (2 noches) · Desayuno incluido · Total: €385.64\nCheck-in desde 14:00 · Check-out hasta 11:00\n⚠️ Zona tráfico restringido — recibirán pase al llegar\n5 min a pie desde Firenze SMN
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-053@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260514T213000
+DTEND;TZID=Europe/Madrid:20260514T230000
+SUMMARY:🌉 Ponte Vecchio de noche & Piazza della Repubblica
+LOCATION:Ponte Vecchio\, 50125 Florencia\, Italia
+GEO:43.7680;11.2531
+DESCRIPTION:Ponte Vecchio iluminado\nPiazza della Repubblica (10 min a pie)\n~22:30h Cena toscana — ribollita o pappardelle al cinghiale
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-054@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260515T093000
+DTEND;TZID=Europe/Madrid:20260515T113000
+SUMMARY:⛪ Duomo di Firenze + Cúpula Brunelleschi
+LOCATION:Cattedrale di Santa Maria del Fiore\, Piazza del Duomo\, 50122 Florencia\, Italia
+GEO:43.7731;11.2560
+DESCRIPTION:Duomo di Firenze + Cúpula Brunelleschi\n⚠️ RESERVA OBLIGATORIA online\n€20 (acceso cúpula) · 8 min a pie desde el hotel
+BEGIN:VALARM
+TRIGGER:-PT30M
+ACTION:DISPLAY
+DESCRIPTION:⛪ Duomo Florencia + Cúpula en 30 min — reserva obligatoria
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-055@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260515T113000
+DTEND;TZID=Europe/Madrid:20260515T140000
+SUMMARY:🎨 Galería Uffizi
+LOCATION:Gallerie degli Uffizi\, Piazzale degli Uffizi 6\, 50122 Florencia\, Italia
+GEO:43.7678;11.2553
+DESCRIPTION:Uffizi · €20 · reservar online\n15 min a pie desde el hotel · Almuerzo en Piazza della Signoria
+BEGIN:VALARM
+TRIGGER:-PT30M
+ACTION:DISPLAY
+DESCRIPTION:🎨 Galería Uffizi en 30 min — recordar reserva
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-056@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260515T160000
+DTEND;TZID=Europe/Madrid:20260515T173000
+SUMMARY:🌅 Piazzale Michelangelo
+LOCATION:Piazzale Michelangelo\, 50125 Florencia\, Italia
+GEO:43.7629;11.2652
+DESCRIPTION:Piazzale Michelangelo — vistas panorámicas de Florencia\nAtardecer con el Duomo de fondo
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-057@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260516T080000
+DTEND;TZID=Europe/Madrid:20260516T083000
+SUMMARY:🏨 Check-out Hotel Mia Cara Florencia
+LOCATION:Hotel Mia Cara & Spa\, Via Faenza 90\, 50123 Florencia\, Italia
+GEO:43.7780;11.2510
+DESCRIPTION:Check-out hasta 11:00h · 5 min a pie → Firenze SMN\nTren Frecciarossa 8505 a las 08:33h
+BEGIN:VALARM
+TRIGGER:-PT60M
+ACTION:DISPLAY
+DESCRIPTION:⚠️ Salir al Frecciarossa 8505 — check-out Hotel Mia Cara\, tren 08:33h
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-058@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260516T083300
+DTEND;TZID=Europe/Madrid:20260516T101500
+SUMMARY:🚄 Frecciarossa 8505 · Florencia → Roma — 27EU95
+LOCATION:Stazione Firenze Santa Maria Novella\, Piazza della Stazione\, 50123 Florencia\, Italia
+GEO:43.7762;11.2481
+DESCRIPTION:Frecciarossa 8505 · CONFIRMADO · Cód: 27EU95\nFirenze SMN 08:33h → Roma Termini 10:15h\nClase Premium · Vagón 4 · Asientos 9D y 8D\nDuración: ~1h42
+BEGIN:VALARM
+TRIGGER:-PT60M
+ACTION:DISPLAY
+DESCRIPTION:🚄 1h para Frecciarossa 8505 a Roma — Vagón 4\, 9D/8D (Cód: 27EU95)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-059@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260516T123000
+DTEND;TZID=Europe/Madrid:20260516T143000
+SUMMARY:🎫 Museos Vaticanos + Capilla Sixtina — CONFIRMADO
+LOCATION:Musei Vaticani\, Viale Vaticano\, 00165 Roma\, Italia
+GEO:41.9065;12.4536
+DESCRIPTION:Museos Vaticanos + Capilla Sixtina · CONFIRMADO\nCód: 2L2N0RA62JVMU3NZW · 12:30h · 2 personas (Gaston Suarez)\nAcceso: CORRIDOIO2/PASSAGEWAY2 · Total: €90.00\n⚠️ Presentar voucher en formato electrónico
+BEGIN:VALARM
+TRIGGER:-PT60M
+ACTION:DISPLAY
+DESCRIPTION:🎫 Museos Vaticanos en 1h — Cód: 2L2N0RA62JVMU3NZW (Acceso: CORRIDOIO2)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-060@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260516T150000
+DTEND;TZID=Europe/Madrid:20260516T160000
+SUMMARY:🏨 Check-in Hotel Giolli Nazionale — Roma
+LOCATION:Hotel Giolli Nazionale\, Via Nazionale 69\, 00184 Roma\, Italia
+GEO:41.9009;12.4977
+DESCRIPTION:Hotel Giolli Nazionale · CONFIRMADO\nRes: 2026040647418735 · Tel: +39 06 4882393\n16-18 may (2 noches) · Desayuno incluido\nTotal: €574.88 · NO reembolsable\nCheck-in desde 14:00 · Check-out hasta 12:00
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-061@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260516T163000
+DTEND;TZID=Europe/Madrid:20260516T183000
+SUMMARY:⛪ Basílica de San Pedro
+LOCATION:Basilica di San Pietro in Vaticano\, Piazza San Pietro\, 00120 Vaticano
+GEO:41.9022;12.4539
+DESCRIPTION:Basílica San Pedro · entrada gratis\nCúpula €8 (escaleras o ascensor)\nVistas panorámicas de Roma desde arriba
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-062@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260516T183000
+DTEND;TZID=Europe/Madrid:20260516T210000
+SUMMARY:⛲ Fontana di Trevi & Piazza Navona
+LOCATION:Fontana di Trevi\, Piazza di Trevi\, 00187 Roma\, Italia
+GEO:41.9009;12.4833
+DESCRIPTION:Fontana di Trevi · tirar moneda\nPiazza Navona · Iglesia San Luigi dei Francesi (pinturas Caravaggio — gratis\, a pasos de Navona)\nCena en el centro histórico
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-063@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260517T100000
+DTEND;TZID=Europe/Madrid:20260517T120000
+SUMMARY:🏰 Castel Sant'Angelo
+LOCATION:Castel Sant'Angelo\, Lungotevere Castello 50\, 00193 Roma\, Italia
+GEO:41.9031;12.4663
+DESCRIPTION:Castel Sant'Angelo · vistas desde el puente\nEntrada €15.50
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-064@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260517T123000
+DTEND;TZID=Europe/Madrid:20260517T143000
+SUMMARY:🎫 Coliseo + Foro Romano + Palatino — CONFIRMADO
+LOCATION:Colosseo\, Piazza del Colosseo 1\, 00184 Roma\, Italia
+GEO:41.8902;12.4922
+DESCRIPTION:Colosseo + Foro Romano + Palatino · CONFIRMADO\nCód: SPCOQDKBPX6DZ8LZ · 12:30h · 2 personas (Yamila Altuna)\nIntero 24h · Total: €18.00\n⚠️ Presentar biglietto elettronico
+BEGIN:VALARM
+TRIGGER:-PT60M
+ACTION:DISPLAY
+DESCRIPTION:🎫 Coliseo en 1h — Cód: SPCOQDKBPX6DZ8LZ
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-065@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260517T150000
+DTEND;TZID=Europe/Madrid:20260517T183000
+SUMMARY:🍷 Barrio Trastevere
+LOCATION:Trastevere\, Roma\, Italia
+GEO:41.8896;12.4685
+DESCRIPTION:Trastevere — almuerzo y paseo por el barrio\n~17:00h Campo de' Fiori · Piazza Farnese
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-066@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260518T090000
+DTEND;TZID=Europe/Madrid:20260518T103000
+SUMMARY:🏛️ Panteón & Piazza Navona
+LOCATION:Panthéon\, Piazza della Rotonda\, 00186 Roma\, Italia
+GEO:41.8986;12.4769
+DESCRIPTION:Panteón · €5 · llegar temprano para evitar colas\n~10:30h Piazza Navona · Campo de' Fiori
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-067@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260518T150000
+DTEND;TZID=Europe/Madrid:20260518T153000
+SUMMARY:🏨 Check-out Hotel Giolli Nazionale
+LOCATION:Hotel Giolli Nazionale\, Via Nazionale 69\, 00184 Roma\, Italia
+GEO:41.9009;12.4977
+DESCRIPTION:Check-out Hotel Giolli · recoger maletas\nTraslado a Roma Termini (~16:00h)\nTren Frecciarossa 8343 17:10h → Nápoles
+BEGIN:VALARM
+TRIGGER:-PT60M
+ACTION:DISPLAY
+DESCRIPTION:⚠️ 1h para el check-out Hotel Giolli — Frecciarossa 8343 a Nápoles 17:10h
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-068@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260518T171000
+DTEND;TZID=Europe/Madrid:20260518T182300
+SUMMARY:🚄 Frecciarossa 8343 · Roma → Nápoles — 2HEZAN
+LOCATION:Roma Termini\, Piazza dei Cinquecento\, 00185 Roma\, Italia
+GEO:41.9009;12.5002
+DESCRIPTION:Frecciarossa 8343 · CONFIRMADO · PNR: 2HEZAN\nRoma Termini 17:10h → Napoli Centrale 18:23h\nVagón 6 · Gaston: 7D / Yamila: 8D\nSuper Economy Premium — sin cambios ni reembolso
+BEGIN:VALARM
+TRIGGER:-PT60M
+ACTION:DISPLAY
+DESCRIPTION:🚄 1h para Frecciarossa 8343 a Nápoles — PNR: 2HEZAN (Vagón 6\, 7D/8D)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-069@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260518T190000
+DTEND;TZID=Europe/Madrid:20260518T200000
+SUMMARY:🏨 Check-in Four Points Suites — Nápoles
+LOCATION:Four Points Suites\, Via Liborio Romano 2\, 80133 Nápoles\, Italia
+GEO:40.8427;14.2570
+DESCRIPTION:Four Points Suites · CONFIRMADO\nConf: 6182731207 · Tel: +39 344 6452977\n18-19 may (1 noche) · Desayuno incluido\nTotal: €124.40 · Cancelación gratis hasta 10 may\nCheck-in 13:00-23:30 · Check-out 07:00-10:00\nMolo Beverello — 10 min desde Napoli Centrale
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-070@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260518T203000
+DTEND;TZID=Europe/Madrid:20260518T223000
+SUMMARY:🍕 Pizza napolitana — Spaccanapoli
+LOCATION:Via Spaccanapoli\, Nápoles\, Italia
+GEO:40.8500;14.2606
+DESCRIPTION:Pizza napolitana — Da Michele (Via Cesare Sersale 1) o Sorbillo (Via dei Tribunali 32)\nVia Toledo · Spaccanapoli · 10 min a pie desde el hotel
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-071@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260519T093000
+DTEND;TZID=Europe/Madrid:20260519T100000
+SUMMARY:🏨 Check-out Four Points Suites
+LOCATION:Four Points Suites\, Via Liborio Romano 2\, 80133 Nápoles\, Italia
+GEO:40.8427;14.2570
+DESCRIPTION:Check-out hasta 10:00h\nDejar equipaje en consigna Four Points
+BEGIN:VALARM
+TRIGGER:-PT60M
+ACTION:DISPLAY
+DESCRIPTION:⚠️ 1h para el check-out Four Points (hasta 10:00h)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-072@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260519T103000
+DTEND;TZID=Europe/Madrid:20260519T120000
+SUMMARY:🏰 Castel dell'Ovo & Lungomare
+LOCATION:Castel dell'Ovo\, Via Eldorado 3\, 80132 Nápoles\, Italia
+GEO:40.8292;14.2476
+DESCRIPTION:Castel dell'Ovo · Lungomare · vistas al Vesubio\n~12:30h Almuerzo rápido · volver a Molo Beverello para el ferry 13:30h
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-073@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260519T133000
+DTEND;TZID=Europe/Madrid:20260519T142000
+SUMMARY:⛴️ Ferry Molo Beverello → Capri
+LOCATION:Molo Beverello\, Piazza Municipio\, 80133 Nápoles\, Italia
+GEO:40.8384;14.2531
+DESCRIPTION:Ferry Molo Beverello → Capri · ~€20 · ~50 min\n~14:00-18:00h Check-in Capri Inn al llegar
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-074@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260519T143000
+DTEND;TZID=Europe/Madrid:20260519T153000
+SUMMARY:🏨 Check-in Capri Inn
+LOCATION:Capri Inn\, Via Marina Grande 222\, 80073 Capri\, Italia
+GEO:40.5537;14.2426
+DESCRIPTION:Capri Inn · CONFIRMADO\nConf: 5009227644 · Tel: +39 081 837 4073\n19-20 may (1 noche) · Desayuno incluido · Vistas al mar\nTotal: €299.70 · NO reembolsable\nCheck-in 14:00-18:00 · Check-out 08:00-10:00\n⚠️ Avisar hora de llegada
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-075@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260519T153000
+DTEND;TZID=Europe/Madrid:20260519T193000
+SUMMARY:🏝️ Capri — Piazzetta & panorama
+LOCATION:Piazzetta di Capri\, Piazza Umberto I\, 80073 Capri\, Italia
+GEO:40.5506;14.2414
+DESCRIPTION:Piazzetta di Capri · paseo panorámico\nVistas al mar · cena con vista
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-076@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260520T090000
+DTEND;TZID=Europe/Madrid:20260520T093000
+SUMMARY:🏨 Check-out Capri Inn
+LOCATION:Capri Inn\, Via Marina Grande 222\, 80073 Capri\, Italia
+GEO:40.5537;14.2426
+DESCRIPTION:Check-out hasta 10:00h · equipaje listo\nFerry Capri → Salerno a las ~09:00h
+BEGIN:VALARM
+TRIGGER:-PT60M
+ACTION:DISPLAY
+DESCRIPTION:⚠️ 1h para el check-out Capri Inn — ferry a Salerno
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-077@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260520T090000
+DTEND;TZID=Europe/Madrid:20260520T110000
+SUMMARY:⛴️ Ferry Capri → Salerno
+LOCATION:Porto di Marina Grande\, Capri\, Italia
+GEO:40.5537;14.2426
+DESCRIPTION:Ferry Capri → Salerno · ~€20 · ~1h\nLlegada Salerno ~11:00h
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-078@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260520T120000
+DTEND;TZID=Europe/Madrid:20260520T160000
+SUMMARY:🏘️ Amalfi — Catedral & casco histórico
+LOCATION:Amalfi\, Salerno\, Italia
+GEO:40.6341;14.6027
+DESCRIPTION:~12:00h SITA Bus Salerno → Amalfi (~1h15) · llegan ~13:15h\nCatedral de Amalfi · casco histórico · callejuelas del centro\n~15:00h Regreso a Salerno · paseo por el Lungomare Trieste
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-079@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260520T173000
+DTEND;TZID=Europe/Madrid:20260520T183000
+SUMMARY:🏨 Check-in Corso 66 Luxury Apartment — Salerno
+LOCATION:Corso 66 Luxury Apartment\, Corso Vittorio Emanuele 66\, 84123 Salerno\, Italia
+GEO:40.6793;14.7601
+DESCRIPTION:Corso 66 Luxury Apartment · CONFIRMADO\nConf: 6797084556 · Tel: +39 335 6488508\n20-23 may (3 noches) · Sin desayuno\nTotal: €385.31 · NO reembolsable — sin cambios\nCheck-in 15:00-23:00 · Check-out 06:00-11:00\n⚠️ Alguien esperará en el alojamiento · avisar hora
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-080@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260521T090000
+DTEND;TZID=Europe/Madrid:20260521T100000
+SUMMARY:⛴️ Ferry Salerno → Capri (día excursión)
+LOCATION:Porto di Salerno\, Via Lungomare Trieste\, 84121 Salerno\, Italia
+GEO:40.6744;14.7573
+DESCRIPTION:Ferry Salerno → Capri · ~€25-30 · ~1h\nExcursión de día completo
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-081@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260521T100000
+DTEND;TZID=Europe/Madrid:20260521T120000
+SUMMARY:🌀 Gruta Azul — Capri
+LOCATION:Grotta Azzurra\, Via Grotta Azzurra\, 80071 Anacapri\, Italia
+GEO:40.5606;14.2077
+DESCRIPTION:Gruta Azul · €18 · Barca de remo desde afuera\n⚠️ Depende del clima y de la marea — puede estar cerrada\n~12:00h Anacapri · Monte Solaro (teleférico €12)
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-082@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260521T163000
+DTEND;TZID=Europe/Madrid:20260521T183000
+SUMMARY:⛴️ Ferry Capri → Salerno (regreso)
+LOCATION:Porto di Marina Grande\, Capri\, Italia
+GEO:40.5537;14.2426
+DESCRIPTION:Ferry Capri → Salerno · ~1h\nRegreso a Corso 66
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-083a@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260522T080000
+DTEND;TZID=Europe/Madrid:20260522T130000
+SUMMARY:🌿 Ravello — Villa Cimbrone & Villa Rufolo
+LOCATION:Ravello\, Salerno\, Italia
+GEO:40.6494;14.6122
+DESCRIPTION:~08:00h Bus SITA Salerno → Amalfi (~1h15) · Bus Amalfi → Ravello (~30 min · €1.30)\n🌿 Villa Cimbrone — jardines y Terraza del Infinito · €8\n🌿 Villa Rufolo — jardines con vistas al mar · €7\n~12:00h Almuerzo con vistas · Café Calce o Cumpa Cosimo
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-083@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260522T150000
+DTEND;TZID=Europe/Madrid:20260522T180000
+SUMMARY:🌅 Positano — Spiaggia Grande & miradores
+LOCATION:Positano\, Salerno\, Italia
+GEO:40.6281;14.4850
+DESCRIPTION:~13:30h Bus Ravello → Amalfi → bus costero hacia Positano (~45 min desde Amalfi)\n~15:00h Playa Spiaggia Grande · paseo panorámico · miradores · souvenirs\n~18:00h Ferry o bus Positano → Salerno → Corso 66
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-084@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260523T110000
+DTEND;TZID=Europe/Madrid:20260523T113000
+SUMMARY:🏨 Check-out Corso 66 Salerno
+LOCATION:Corso 66 Luxury Apartment\, Corso Vittorio Emanuele 66\, 84123 Salerno\, Italia
+GEO:40.6793;14.7601
+DESCRIPTION:Check-out hasta 11:00h · traslado a Nápoles (~1h en tren o bus)\n⚠️ VUELO MAÑANA 06:05h — alarma 04:00h
+BEGIN:VALARM
+TRIGGER:-PT60M
+ACTION:DISPLAY
+DESCRIPTION:⚠️ 1h para el check-out Corso 66 — vuelo MAÑANA 06:05h NAP → MAD
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-085@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260523T120000
+DTEND;TZID=Europe/Madrid:20260523T143000
+SUMMARY:🏛️ Museo Arqueológico Nacional de Nápoles
+LOCATION:Museo Archeologico Nazionale di Napoli\, Piazza Museo 19\, 80135 Nápoles\, Italia
+GEO:40.8534;14.2507
+DESCRIPTION:Museo Arqueológico Nacional · €18\nColección de Pompeya y Herculano\n~14:30h Spaccanapoli · San Gregorio Armeno (callejón de los belenes)
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-086@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260523T160000
+DTEND;TZID=Europe/Madrid:20260523T170000
+SUMMARY:🏨 Check-in Casa Imperatore — Nápoles
+LOCATION:Casa Imperatore\, Corso Umberto I 237\, 80138 Nápoles\, Italia
+GEO:40.8518;14.2681
+DESCRIPTION:Casa Imperatore · CONFIRMADO\nConf: 5754892088 · Tel: +39 081 553 6402\n23-24 may (1 noche) · Hab. Doble Deluxe con balcón\nTotal: €96.05 · Cancelación gratis hasta 15 may\nCheck-in 15:00-18:00 · Check-out hasta 10:00\n⚠️ ALARMA 04:00h — vuelo I21836 06:05h
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-087@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260524T060500
+DTEND;TZID=Europe/Madrid:20260524T085000
+SUMMARY:✈️ I21836 NAP → MAD (Iberia Express)
+LOCATION:Aeroporto di Napoli-Capodichino\, Via Umberto Maddalena\, 80144 Nápoles\, Italia
+GEO:40.8860;14.2908
+DESCRIPTION:Iberia Express I21836\nNápoles NAP 06:05h → Madrid MAD T4S 08:50h\n⚠️ Alarma 04:00h · Estar en aeropuerto ~04:30h\nNota: Check-out Casa Imperatore hasta 10:00h (antes del vuelo)
+BEGIN:VALARM
+TRIGGER:-PT125M
+ACTION:DISPLAY
+DESCRIPTION:⚠️ Salir al aeropuerto NAP YA — vuelo I21836 a las 06:05h
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-088@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260524T140000
+DTEND;TZID=Europe/Madrid:20260524T150000
+SUMMARY:🏨 Check-in Hotel Emperador Gran Vía — Madrid
+LOCATION:Hotel Emperador\, Calle Gran Vía 53\, 28013 Madrid\, España
+GEO:40.4202;-3.7013
+DESCRIPTION:Hotel Emperador **** · CONFIRMADO\nRes: 26021953756 · Tel: +34 915 47 28 00\n24-26 may (2 noches) · Hab. Classic · Sin desayuno\nTotal: €432.63 · NO reembolsable\nCheck-in desde 14:00 · Check-out hasta 12:00
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-089@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260524T160000
+DTEND;TZID=Europe/Madrid:20260524T200000
+SUMMARY:🌆 Paseo Gran Vía & descanso
+LOCATION:Gran Vía\, 28013 Madrid\, España
+GEO:40.4196;-3.6988
+DESCRIPTION:Paseo Gran Vía · compras · cena tranquila\nPuerta del Sol · Callao
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-090@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260525T100000
+DTEND;TZID=Europe/Madrid:20260525T120000
+SUMMARY:🏰 Palacio Real de Madrid
+LOCATION:Palacio Real\, Calle de Bailén\, 28071 Madrid\, España
+GEO:40.4178;-3.7144
+DESCRIPTION:Palacio Real · €14 · Armería Real · Salón del Trono\n15 min a pie desde Hotel Emperador (Calle Bailén)\n~12:00h Catedral de la Almudena (gratis) + Plaza de Oriente
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-090b@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260525T130000
+DTEND;TZID=Europe/Madrid:20260525T143000
+SUMMARY:🥘 Mercado de San Miguel + Plaza Mayor
+LOCATION:Mercado de San Miguel\, Plaza de San Miguel\, 28005 Madrid\, España
+GEO:40.4155;-3.7091
+DESCRIPTION:Mercado de San Miguel · vermut + tapas + mejillones\n5 min a pie desde Palacio Real\nPlaza Mayor · arcadas · Casa de la Panadería · souvenirs\nPuerta del Sol (5 min)
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-090c@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260525T160000
+DTEND;TZID=Europe/Madrid:20260525T180000
+SUMMARY:🛍️ Compras Gran Vía — El Corte Inglés
+LOCATION:El Corte Inglés\, Calle Preciados 3\, 28013 Madrid\, España
+GEO:40.4193;-3.7029
+DESCRIPTION:Gran Vía · El Corte Inglés · Zara · Mango · H&M\n⚠️ GUARDAR TODOS LOS TICKETS para reclamar tax free mañana en T4S
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-090d@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260525T180000
+DTEND;TZID=Europe/Madrid:20260525T193000
+SUMMARY:🌳 Parque del Retiro — Palacio de Cristal
+LOCATION:Parque del Buen Retiro\, Paseo del Prado\, 28009 Madrid\, España
+GEO:40.4151;-3.6844
+DESCRIPTION:Parque del Retiro · Palacio de Cristal (gratis) · lago de las barcas\nPaseo de despedida · entrada por Puerta del Alcalá
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-091@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260525T193000
+DTEND;TZID=Europe/Madrid:20260525T210000
+SUMMARY:🎨 Museo del Prado — entrada gratis 18:00–20:00h
+LOCATION:Museo Nacional del Prado\, Paseo del Prado 28\, 28014 Madrid\, España
+GEO:40.4138;-3.6922
+DESCRIPTION:Museo del Prado · GRATIS 18:00–20:00h (lunes)\nVelázquez · Goya · Rubens · El Bosco\n10 min a pie desde el Retiro
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-091b@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260525T210000
+DTEND;TZID=Europe/Madrid:20260525T230000
+SUMMARY:🍷 Última cena española — Barrio de Las Letras
+LOCATION:Barrio de Las Letras\, Calle de las Huertas\, 28012 Madrid\, España
+GEO:40.4131;-3.6981
+DESCRIPTION:Última cena española en el Barrio de Las Letras\nChuletón\, cocido madrileño o patatas bravas\nA 10 min a pie del Prado
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-092@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260526T093000
+DTEND;TZID=Europe/Madrid:20260526T103000
+SUMMARY:💰 Tax Free — Aeropuerto MAD T4S
+LOCATION:Aeropuerto Adolfo Suárez Madrid-Barajas T4S\, Madrid\, España
+GEO:40.4983;-3.5676
+DESCRIPTION:⚠️ Reclamar tax free ANTES de embarcar\nPresentar tickets de compras + pasaporte + tarjeta bancaria\nMostrador DIVA o Global Blue en T4S
+BEGIN:VALARM
+TRIGGER:-PT30M
+ACTION:DISPLAY
+DESCRIPTION:💰 Reclamar tax free en T4S antes del vuelo IB0169
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-093@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260526T110000
+DTEND;TZID=Europe/Madrid:20260526T120000
+SUMMARY:🏨 Check-out Hotel Emperador Madrid
+LOCATION:Hotel Emperador\, Calle Gran Vía 53\, 28013 Madrid\, España
+GEO:40.4202;-3.7013
+DESCRIPTION:Check-out hasta 12:00h · packing · traslado a T4S\n⚠️ Vuelo IB0169 11:50h — salir temprano al aeropuerto
+BEGIN:VALARM
+TRIGGER:-PT60M
+ACTION:DISPLAY
+DESCRIPTION:⚠️ Check-out Hotel Emperador — vuelo IB0169 a las 11:50h
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:viaje2026-094@gastonsuarez
+DTSTART;TZID=Europe/Madrid:20260526T115000
+DTEND;TZID=America/Montevideo:20260526T194500
+SUMMARY:✈️ IB0169 MAD → MVD (¡De vuelta a casa!)
+LOCATION:Aeropuerto Adolfo Suárez Madrid-Barajas T4S\, Madrid\, España
+GEO:40.4983;-3.5676
+DESCRIPTION:Iberia IB0169\nMAD T4S 11:50h → MVD 19:45h\nEmbarcando 11:20h\nDuración: ~12h\n¡FIN DEL VIAJE! 🎉
+BEGIN:VALARM
+TRIGGER:-PT140M
+ACTION:DISPLAY
+DESCRIPTION:⚠️ 2h20 para el vuelo IB0169 MAD→MVD — embarque 11:20h
+END:VALARM
+END:VEVENT
+END:VCALENDAR

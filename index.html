@@ -7,7 +7,7 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✈️</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
@@ -247,34 +247,22 @@
       to   { stroke-dashoffset: -140; }
     }
 
-    /* the flying plane */
-    .flying-plane {
-      position: absolute;
-      font-size: 1.8rem;
-      animation: fly-across 14s linear infinite;
-      filter: drop-shadow(0 0 12px rgba(232,201,111,0.6));
-      transform-origin: center;
-      z-index: 2;
-    }
-
-    @keyframes fly-across {
-      0%   { left: 32%; top: 80%; opacity: 0; transform: rotate(-68deg); }
-      4%   { opacity: 1; }
-      35%  { left: 36%; top: 60%; transform: rotate(-68deg); }
-      70%  { left: 42%; top: 40%; transform: rotate(-65deg); }
-      88%  { left: 47%; top: 26%; opacity: 1; transform: rotate(-62deg); }
-      94%  { left: 47%; top: 24%; opacity: 0; transform: rotate(-62deg); }
-      99%  { left: 32%; top: 80%; opacity: 0; transform: rotate(-68deg); }
-      100% { left: 32%; top: 80%; opacity: 0; transform: rotate(-68deg); }
-    }
 
     /* city destination pills */
     .hero-destinations {
       display: flex;
-      gap: 0.6rem;
-      flex-wrap: wrap;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.55rem;
       margin-top: 1.5rem;
       z-index: 3;
+    }
+
+    .pills-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.55rem;
     }
 
     .dest-pill {
@@ -290,6 +278,8 @@
       font-weight: 500;
       color: rgba(245,243,239,0.85);
       transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+      text-decoration: none;
+      cursor: pointer;
     }
 
     .dest-pill:hover {
@@ -754,7 +744,7 @@
 
     /* mini maps inside day accordions */
     .mini-map {
-      height: 240px;
+      height: 320px;
       border-radius: var(--radius-sm);
       overflow: hidden;
       border: 1px solid var(--border);
@@ -1042,6 +1032,11 @@
     .flight-card.regreso::before { background: linear-gradient(90deg, var(--italy), transparent); }
     .flight-card.europeo::before { background: linear-gradient(90deg, var(--paris), transparent); }
     .flight-card.tren::before    { background: linear-gradient(90deg, var(--amalfi), transparent); }
+    .flight-card.hotel-mad::before   { background: linear-gradient(90deg, var(--madrid), transparent); }
+    .flight-card.hotel-bcn::before   { background: linear-gradient(90deg, var(--barcelona), transparent); }
+    .flight-card.hotel-par::before   { background: linear-gradient(90deg, var(--paris), transparent); }
+    .flight-card.hotel-ita::before   { background: linear-gradient(90deg, var(--italy), transparent); }
+    .flight-card.hotel-south::before { background: linear-gradient(90deg, var(--amalfi), transparent); }
 
     .flight-card:hover {
       border-color: var(--border2);
@@ -1064,6 +1059,11 @@
     .flight-type-badge.regreso  { background: rgba(77,235,184,0.15); color: var(--italy); }
     .flight-type-badge.europeo  { background: rgba(126,183,255,0.15); color: var(--paris); }
     .flight-type-badge.tren     { background: rgba(255,107,157,0.15); color: var(--amalfi); }
+    .flight-type-badge.hotel-mad   { background: rgba(240,82,46,0.15);  color: var(--madrid); }
+    .flight-type-badge.hotel-bcn   { background: rgba(248,181,0,0.15);  color: var(--barcelona); }
+    .flight-type-badge.hotel-par   { background: rgba(126,183,255,0.15); color: var(--paris); }
+    .flight-type-badge.hotel-ita   { background: rgba(77,235,184,0.15); color: var(--italy); }
+    .flight-type-badge.hotel-south { background: rgba(255,107,157,0.15); color: var(--amalfi); }
 
     .flight-route {
       font-size: 1.2rem;
@@ -1241,6 +1241,518 @@
     .urgency-green  { border-left: 3px solid var(--italy) !important; }
 
   </style>
+
+  <style>
+  /* ═══════════════════════════════════════════════════════
+     GLOW UP · Luxury Editorial Override Layer
+  ═══════════════════════════════════════════════════════ */
+
+  :root {
+    --bg:          #0e1f35;
+    --bg2:         #112340;
+    --surface:     #172d4a;
+    --surface2:    #1e3858;
+    --border:      rgba(255,255,255,0.065);
+    --border2:     rgba(255,255,255,0.13);
+
+    --madrid:    #e8472a;
+    --barcelona: #f5a623;
+    --paris:     #6baff0;
+    --italy:     #3ecfa0;
+    --amalfi:    #f06292;
+
+    --gold:       #c8961a;
+    --gold-light: #f0ce5a;
+    --sky:        #5bc2e7;
+    --white:      #f0ece5;
+    --muted:      rgba(240,236,229,0.66);
+    --muted2:     rgba(240,236,229,0.36);
+
+    --font-display: 'Cormorant', 'Playfair Display', serif;
+    --font-body:    'Outfit', 'DM Sans', sans-serif;
+    --font-mono:    'JetBrains Mono', monospace;
+
+    --sidebar-w: 272px;
+    --radius:    18px;
+    --radius-sm: 11px;
+  }
+
+  /* ── Grain overlay ── */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 9998;
+    pointer-events: none;
+    opacity: 0.032;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 250px 250px;
+  }
+
+  /* ── Stars ── */
+  #stars-canvas { opacity: 0.65; }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    background: rgba(5,10,20,0.97);
+    border-right: 1px solid rgba(255,255,255,0.055);
+    padding: 2.5rem 1.75rem;
+    gap: 0;
+  }
+  .sidebar::-webkit-scrollbar { width: 2px; }
+  .sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); }
+
+  .sidebar-logo {
+    margin-bottom: 2.5rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(255,255,255,0.055);
+  }
+  .sidebar-logo .plane-icon {
+    width: 42px; height: 42px;
+    background: linear-gradient(135deg, var(--gold-light), var(--gold));
+    border-radius: 12px;
+    font-size: 1.1rem;
+    box-shadow: 0 0 24px rgba(200,150,26,0.3);
+  }
+  .sidebar-logo-text h2 {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--gold-light);
+    letter-spacing: 0.1px;
+    line-height: 1.25;
+  }
+  .sidebar-logo-text p {
+    font-size: 0.65rem;
+    letter-spacing: 3px;
+    color: var(--muted2);
+  }
+
+  .sidebar-section-label {
+    font-size: 0.58rem;
+    letter-spacing: 3.5px;
+    color: var(--muted2);
+    padding: 1.6rem 0.6rem 0.6rem;
+    font-weight: 600;
+  }
+
+  .sidebar-nav a {
+    padding: 0.6rem 0.8rem;
+    border-radius: 8px;
+    border-left: none;
+    font-size: 0.82rem;
+    font-weight: 400;
+    color: var(--muted);
+    letter-spacing: 0.05px;
+    transition: color 0.2s, background 0.2s;
+  }
+  .sidebar-nav a:hover {
+    color: var(--white);
+    background: rgba(255,255,255,0.04);
+    border-left: none;
+  }
+  .sidebar-nav a.active {
+    color: var(--gold-light);
+    background: rgba(200,150,26,0.09);
+    border-left: none;
+  }
+  .sidebar-nav a .nav-dot {
+    width: 5px; height: 5px;
+    background: var(--muted2);
+  }
+  .sidebar-nav a:hover .nav-dot,
+  .sidebar-nav a.active .nav-dot {
+    background: var(--gold-light);
+    box-shadow: 0 0 6px var(--gold);
+  }
+
+  /* ── Hero ── */
+  .hero-bg {
+    background:
+      radial-gradient(ellipse 60% 50% at 82% 12%, rgba(200,150,26,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 45% 60% at 8%  92%, rgba(91,194,231,0.09) 0%, transparent 55%),
+      radial-gradient(ellipse 30% 30% at 50% 50%, rgba(62,207,160,0.04) 0%, transparent 65%),
+      linear-gradient(155deg, #04090f 0%, #07101d 45%, #0a1525 100%);
+  }
+
+  .hero-eyebrow {
+    font-size: 0.7rem;
+    letter-spacing: 5.5px;
+    color: var(--gold-light);
+    font-weight: 500;
+  }
+  .hero-eyebrow::before { background: var(--gold-light); width: 28px; }
+
+  header h1 {
+    font-family: var(--font-display);
+    font-size: clamp(4.2rem, 9.5vw, 8.5rem);
+    font-weight: 700;
+    line-height: 0.9;
+    letter-spacing: -2px;
+    color: var(--white);
+  }
+  header h1 .highlight-text {
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--gold-light);
+    font-style: italic;
+    font-weight: 700;
+  }
+  header .hero-sub {
+    font-size: 1.05rem;
+    color: var(--muted);
+    font-weight: 300;
+    line-height: 1.95;
+    letter-spacing: 0.1px;
+  }
+
+  /* ── Countdown ── */
+  .countdown-bar {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.09);
+    backdrop-filter: blur(32px);
+    border-radius: var(--radius);
+    padding: 1.5rem 2.5rem;
+  }
+  .countdown-unit .val {
+    font-family: var(--font-display);
+    font-size: 3.2rem;
+    font-weight: 600;
+    color: var(--gold-light);
+    letter-spacing: -1px;
+  }
+  .countdown-unit .lbl { font-size: 0.56rem; letter-spacing: 3.5px; color: var(--muted2); }
+  .countdown-unit:not(:last-child)::after { color: rgba(240,236,229,0.2); font-size: 2rem; }
+
+  /* ── Dest pills ── */
+  .dest-pill {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--muted);
+  }
+  .dest-pill:hover {
+    background: rgba(200,150,26,0.07);
+    border-color: rgba(200,150,26,0.28);
+    color: var(--gold-light);
+  }
+
+  /* ── Section headers ── */
+  section { border-bottom: 1px solid rgba(255,255,255,0.045); }
+
+  h2 {
+    font-family: var(--font-display);
+    font-size: clamp(2.4rem, 5vw, 3.6rem);
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: -0.5px;
+    color: var(--white);
+  }
+
+  .section-eyebrow {
+    font-size: 0.62rem;
+    letter-spacing: 4.5px;
+    color: var(--gold-light);
+    font-weight: 500;
+  }
+  .section-eyebrow::before { background: var(--gold-light); width: 18px; }
+
+  /* ── Map ── */
+  #travelMap {
+    border: 1px solid rgba(255,255,255,0.09);
+    border-radius: var(--radius);
+    box-shadow: 0 0 100px rgba(91,194,231,0.05), 0 40px 80px rgba(0,0,0,0.5);
+  }
+
+  /* ── Timeline ── */
+  .timeline-wrap {
+    background: rgba(15,30,52,0.6);
+    border: 1px solid rgba(255,255,255,0.07);
+    backdrop-filter: blur(24px);
+    border-radius: var(--radius);
+  }
+
+  /* ── Destination accordions ── */
+  details.dest-item {
+    background: linear-gradient(160deg, var(--surface) 0%, rgba(15,30,52,0.9) 100%);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: var(--radius);
+    margin-bottom: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  details.dest-item:hover {
+    border-color: rgba(255,255,255,0.11);
+    box-shadow: 0 16px 56px rgba(0,0,0,0.4);
+  }
+  details.dest-item[open] {
+    border-color: rgba(200,150,26,0.22);
+    box-shadow: 0 0 70px rgba(200,150,26,0.04), 0 24px 48px rgba(0,0,0,0.45);
+  }
+  details.dest-item > summary { padding: 1.85rem 2.25rem; gap: 1.5rem; }
+  details.dest-item > summary:hover { background: rgba(255,255,255,0.025); }
+
+  .dest-city-badge { width: 50px; height: 50px; border-radius: 13px; font-size: 1.45rem; }
+
+  .dest-summary-info h3 {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+
+  .dest-body {
+    padding: 0 2.25rem 2.25rem;
+    border-top: 1px solid rgba(255,255,255,0.055);
+  }
+
+  .dest-image {
+    height: 240px;
+    border-radius: var(--radius-sm);
+    margin: 1.75rem 0 1.5rem;
+  }
+
+  .date-tag {
+    background: rgba(200,150,26,0.07);
+    color: var(--gold-light);
+    border: 1px solid rgba(200,150,26,0.18);
+    font-size: 0.69rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    font-family: var(--font-mono);
+  }
+
+  /* ── Day accordions ── */
+  details.day-accordion {
+    background: rgba(21,37,64,0.45);
+    border: 1px solid rgba(255,255,255,0.055);
+    border-radius: var(--radius-sm);
+    margin-bottom: 0.5rem;
+    backdrop-filter: blur(12px);
+  }
+  details.day-accordion > summary {
+    padding: 1rem 1.4rem;
+    font-size: 0.86rem;
+    font-weight: 500;
+    color: rgba(240,236,229,0.6);
+    letter-spacing: 0.05px;
+  }
+  details.day-accordion > summary::after { content: '›'; font-size: 1rem; opacity: 0.45; }
+  details.day-accordion > summary:hover { color: var(--white); }
+  details.day-accordion[open] > summary { color: var(--gold-light); }
+
+  .day-accordion-body {
+    padding: 1.1rem 1.4rem 1.4rem;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+  .day-accordion-body li {
+    font-size: 0.865rem;
+    color: rgba(240,236,229,0.73);
+    padding: 0.35rem 0;
+    line-height: 1.8;
+  }
+  .day-accordion-body li strong { color: var(--white); font-weight: 600; }
+  .day-accordion-body ul { padding-left: 1.2rem; }
+
+  /* ── Confirmed / alert boxes ── */
+  .confirmed-box {
+    background: rgba(62,207,160,0.055);
+    border: 1px solid rgba(62,207,160,0.16);
+    border-left: 3px solid var(--italy);
+    border-radius: var(--radius-sm);
+    padding: 1.1rem 1.4rem;
+    font-size: 0.875rem;
+    line-height: 1.8;
+    color: rgba(240,236,229,0.86);
+  }
+  .confirmed-box strong { color: var(--italy); }
+
+  .confirmed-box.hotel {
+    background: rgba(200,150,26,0.055);
+    border: 1px solid rgba(200,150,26,0.17);
+    border-left: 3px solid var(--gold-light);
+  }
+  .confirmed-box.hotel strong { color: var(--gold-light); }
+
+  .alert-flight {
+    background: rgba(245,166,35,0.065);
+    border: 1px solid rgba(245,166,35,0.18);
+    border-radius: var(--radius-sm);
+    padding: 1.1rem 1.4rem;
+    font-size: 0.875rem;
+    line-height: 1.8;
+    color: rgba(240,236,229,0.84);
+  }
+  .alert-flight strong { color: var(--barcelona); }
+
+  .alert-warning {
+    background: rgba(232,71,42,0.05);
+    border: 1px solid rgba(232,71,42,0.18);
+    border-radius: var(--radius-sm);
+    padding: 1.1rem 1.4rem;
+  }
+
+  /* ── Mini maps ── */
+  .mini-map {
+    height: 320px;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(255,255,255,0.07);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.35);
+    transition: box-shadow 0.3s;
+  }
+  .mini-map:hover { box-shadow: 0 16px 50px rgba(0,0,0,0.5); }
+
+  /* ── Flight cards ── */
+  .flight-card {
+    background: linear-gradient(160deg, var(--surface) 0%, rgba(15,30,52,0.85) 100%);
+    border: 1px solid rgba(255,255,255,0.065);
+    border-radius: var(--radius);
+  }
+  .flight-card:hover {
+    border-color: rgba(255,255,255,0.13);
+    transform: translateY(-3px);
+    box-shadow: 0 24px 56px rgba(0,0,0,0.45);
+  }
+  .flight-route {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+  .flight-row .fl { color: var(--muted); font-size: 0.78rem; }
+  .flight-row .fv { color: var(--white); font-size: 0.82rem; font-weight: 500; font-family: var(--font-mono); }
+
+  /* ── Urgency cards ── */
+  .urgency-card {
+    background: linear-gradient(135deg, var(--surface) 0%, rgba(15,30,52,0.85) 100%);
+    border: 1px solid rgba(255,255,255,0.065);
+    border-radius: var(--radius-sm);
+    transition: border-color 0.25s;
+  }
+  .urgency-card:hover { border-color: rgba(255,255,255,0.13); }
+  .urgency-info strong { font-size: 0.89rem; }
+  .urgency-info p { font-size: 0.79rem; }
+
+  /* ── Day checklist cards ── */
+  .day-card {
+    background: linear-gradient(135deg, var(--surface) 0%, rgba(15,30,52,0.8) 100%);
+    border: 1px solid rgba(255,255,255,0.065);
+    border-radius: var(--radius-sm);
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+  }
+  .day-card:hover {
+    border-color: rgba(255,255,255,0.12);
+    background: var(--surface2);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 24px rgba(0,0,0,0.3);
+  }
+  .day-title { font-size: 0.875rem; color: var(--white); font-weight: 500; }
+  .day-subtitle { font-size: 0.77rem; color: var(--muted); line-height: 1.65; }
+
+  /* ── Tables ── */
+  th {
+    background: rgba(21,37,64,0.85);
+    color: var(--gold-light);
+    font-size: 0.68rem;
+    letter-spacing: 2px;
+  }
+  th, td { border-color: rgba(255,255,255,0.055); padding: 0.85rem 1.15rem; }
+  td { color: rgba(240,236,229,0.76); font-size: 0.875rem; }
+  tr:hover td { background: rgba(255,255,255,0.028); }
+
+  /* ── Generic cards ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid rgba(255,255,255,0.065);
+    border-radius: var(--radius-sm);
+  }
+  .card:hover {
+    border-color: rgba(255,255,255,0.12);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  }
+  .card p { color: rgba(240,236,229,0.9); font-size: 0.875rem; }
+  .card li { color: var(--muted); font-size: 0.82rem; }
+
+  /* ── Outfit cards ── */
+  .outfit-card {
+    background: var(--surface);
+    border: 1px solid rgba(255,255,255,0.065);
+    border-radius: var(--radius);
+  }
+  .outfit-info h3 { font-family: var(--font-display); font-size: 1.22rem; }
+
+  /* ── Highlight quote block ── */
+  .highlight {
+    background: rgba(255,255,255,0.03);
+    border-left: 2px solid rgba(200,150,26,0.45);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding: 1.4rem 1.75rem;
+    color: rgba(240,236,229,0.78);
+  }
+
+  /* ── Missing items ── */
+  .missing-section {
+    border: 1px dashed rgba(255,255,255,0.07);
+    background: rgba(255,255,255,0.015);
+    border-radius: var(--radius);
+  }
+  .missing-item {
+    background: var(--surface);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: var(--radius-sm);
+  }
+  .missing-text strong { color: var(--white); font-size: 0.8rem; }
+  .missing-text span { color: var(--muted); font-size: 0.74rem; }
+
+  /* ── Footer ── */
+  footer {
+    border-top: 1px solid rgba(255,255,255,0.045);
+    color: var(--muted2);
+  }
+
+  /* ── Global text ── */
+  body { font-family: var(--font-body); font-size: 0.975rem; }
+  li { color: rgba(240,236,229,0.76); font-size: 0.9rem; }
+  li strong { color: var(--white); }
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.09); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.16); }
+
+  /* ── Menu toggle ── */
+  .menu-toggle {
+    background: rgba(7,16,29,0.96);
+    border: 1px solid rgba(255,255,255,0.11);
+    color: var(--gold-light);
+    border-radius: var(--radius-sm);
+  }
+
+  /* ── Booking ID / codes in mono ── */
+  .confirmed-box, .alert-flight {
+    font-family: var(--font-body);
+  }
+
+  /* ── Summary chevron refinement ── */
+  .summary-chevron { font-size: 1rem; color: var(--muted2); }
+  details.dest-item[open] .summary-chevron { color: var(--gold-light); }
+
+  /* ── Reset btn ── */
+  .reset-btn {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--muted);
+    border-radius: var(--radius-sm);
+    transition: all 0.2s;
+  }
+  .reset-btn:hover { background: rgba(255,255,255,0.08); color: var(--white); }
+
+  /* ── Piece thumb in outfit ── */
+  .piece-thumb { border-radius: 5px; border-color: rgba(255,255,255,0.07); }
+  .outfit-pieces-list li { border-bottom-color: rgba(255,255,255,0.05); color: rgba(240,236,229,0.72); }
+  .outfit-tag { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.07); color: var(--muted); }
+
+  </style>
 </head>
 <body>
 
@@ -1276,7 +1788,32 @@
 
     <div class="sidebar-section-label">Logística</div>
     <a href="#traslados"><span class="nav-dot"></span>🚀 Traslados</a>
+    <a href="#hoteles"><span class="nav-dot"></span>🏨 Hoteles</a>
   </nav>
+
+  <div style="margin-top:auto;padding-top:2rem;padding-bottom:0.5rem;">
+    <button onclick="exportCalendar()" style="
+      width:100%;
+      display:flex;align-items:center;justify-content:center;gap:0.55rem;
+      background:rgba(200,150,26,0.1);
+      border:1px solid rgba(200,150,26,0.3);
+      color:#f0ce5a;
+      border-radius:10px;
+      padding:0.75rem 1rem;
+      font-size:0.8rem;font-weight:600;
+      letter-spacing:0.5px;
+      cursor:pointer;
+      font-family:var(--font-body);
+      transition:all 0.2s ease;
+    "
+    onmouseover="this.style.background='rgba(200,150,26,0.18)';this.style.borderColor='rgba(200,150,26,0.5)'"
+    onmouseout="this.style.background='rgba(200,150,26,0.1)';this.style.borderColor='rgba(200,150,26,0.3)'">
+      📅 Exportar al calendario
+    </button>
+    <p style="font-size:0.65rem;color:rgba(240,236,229,0.3);text-align:center;margin-top:0.5rem;line-height:1.5;">
+      .ics · Google Calendar · Apple · Android
+    </p>
+  </div>
 </aside>
 
 <!-- HERO -->
@@ -1292,17 +1829,25 @@
 
   <!-- Animated flight path -->
   <svg class="flight-path-svg" viewBox="0 0 1200 600" preserveAspectRatio="none" aria-hidden="true">
-    <!-- Uruguay (~384,480) → España/Madrid (~564,156) con arco sobre el Atlántico -->
-    <path class="flight-path-line" d="M384,490 Q420,370 468,280 Q510,200 564,156"/>
+    <!-- Uruguay (~372,408) → España/Madrid (~540,192) con arco sobre el Atlántico -->
+    <path id="flight-route" class="flight-path-line" d="M390,420 Q416,338 462,262 Q510,208 558,204"/>
     <path class="flight-path-line" style="stroke:rgba(74,184,255,0.08);animation-delay:-4s;"
-          d="M390,500 Q435,385 480,295 Q522,215 572,168"/>
+          d="M394,426 Q420,344 468,270 Q516,216 564,210"/>
+
+    <!-- Plane travels along the path -->
+    <g style="filter:drop-shadow(0 0 10px rgba(232,201,111,0.7));">
+      <animateMotion dur="10s" repeatCount="indefinite" rotate="auto">
+        <mpath href="#flight-route"/>
+      </animateMotion>
+      <animate attributeName="opacity" dur="10s" repeatCount="indefinite"
+               keyTimes="0;0.04;0.88;0.94;1"
+               values="0;1;1;0;0"/>
+      <text font-size="22" text-anchor="middle" dominant-baseline="central" x="0" y="0">✈️</text>
+    </g>
   </svg>
 
-  <!-- Flying plane -->
-  <div class="flying-plane" aria-hidden="true">✈️</div>
-
   <div class="hero-content">
-    <div class="hero-eyebrow">30 abril → 26 mayo 2026 · 26 días</div>
+    <div class="hero-eyebrow">Jue 30 abr → 26 mayo 2026 · 26 días</div>
     <h1>Nos vamos<br>a <span class="highlight-text">Europa</span></h1>
     <p class="hero-sub">España · Francia · Italia — Madrid, Barcelona, París, Disneyland, Milán, Lago de Como, Venecia, Florencia, Roma, Nápoles, Costa Amalfitana, Salerno & Capri.</p>
 
@@ -1328,49 +1873,53 @@
 
     <!-- City pills -->
     <div class="hero-destinations">
-      <div class="dest-pill">
-        <img src="https://images.unsplash.com/photo-1539037116277-4db20889f2d4?w=60&q=80" alt="Madrid">
-        <span>Madrid</span>
+      <div class="pills-row">
+        <a href="#dest-madrid" class="dest-pill">
+          <img src="https://images.unsplash.com/photo-1539037116277-4db20889f2d4?w=60&q=80" alt="Madrid">
+          <span>Madrid</span>
+        </a>
+        <a href="#dest-barcelona" class="dest-pill">
+          <img src="https://images.pexels.com/photos/1388030/pexels-photo-1388030.jpeg?w=60&h=60&fit=crop" alt="Barcelona">
+          <span>Barcelona</span>
+        </a>
+        <a href="#dest-paris" class="dest-pill">
+          <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=60&q=80" alt="París">
+          <span>París</span>
+        </a>
+        <a href="#dest-paris" class="dest-pill">
+          <img src="https://images.unsplash.com/photo-1569880153113-76e33fc52d5f?w=60&q=80" alt="Disneyland">
+          <span>Disneyland</span>
+        </a>
+        <a href="#dest-milan" class="dest-pill">
+          <img src="https://images.unsplash.com/photo-1513581166391-887a96ddeafd?w=60&q=80" alt="Milán">
+          <span>Milán</span>
+        </a>
+        <a href="#dest-milan" class="dest-pill">
+          <img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=60&q=80" alt="Lago de Como">
+          <span>Lago de Como</span>
+        </a>
       </div>
-      <div class="dest-pill">
-        <img src="https://images.pexels.com/photos/1388030/pexels-photo-1388030.jpeg?w=60&h=60&fit=crop" alt="Barcelona">
-        <span>Barcelona</span>
-      </div>
-      <div class="dest-pill">
-        <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=60&q=80" alt="París">
-        <span>París</span>
-      </div>
-      <div class="dest-pill">
-        <img src="https://images.unsplash.com/photo-1569880153113-76e33fc52d5f?w=60&q=80" alt="Disneyland">
-        <span>Disneyland</span>
-      </div>
-      <div class="dest-pill">
-        <img src="https://images.unsplash.com/photo-1513581166391-887a96ddeafd?w=60&q=80" alt="Milán">
-        <span>Milán</span>
-      </div>
-      <div class="dest-pill">
-        <img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=60&q=80" alt="Lago de Como">
-        <span>Lago de Como</span>
-      </div>
-      <div class="dest-pill">
-        <img src="https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?w=60&q=80" alt="Venecia">
-        <span>Venecia</span>
-      </div>
-      <div class="dest-pill">
-        <img src="https://images.unsplash.com/photo-1520175480921-4edfa2983e0f?w=60&q=80" alt="Florencia">
-        <span>Florencia</span>
-      </div>
-      <div class="dest-pill">
-        <img src="https://images.unsplash.com/photo-1529260830199-42c24126f198?w=60&q=80" alt="Roma">
-        <span>Roma</span>
-      </div>
-      <div class="dest-pill">
-        <img src="https://images.unsplash.com/photo-1515542622106-78bda8ba0e5b?w=60&q=80" alt="Amalfi">
-        <span>Costa Amalfitana</span>
-      </div>
-      <div class="dest-pill">
-        <img src="https://images.unsplash.com/photo-1533587851505-d119e13fa0d7?w=60&q=80" alt="Capri">
-        <span>Capri</span>
+      <div class="pills-row">
+        <a href="#dest-venecia" class="dest-pill">
+          <img src="https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?w=60&q=80" alt="Venecia">
+          <span>Venecia</span>
+        </a>
+        <a href="#dest-florencia" class="dest-pill">
+          <img src="https://images.unsplash.com/photo-1520175480921-4edfa2983e0f?w=60&q=80" alt="Florencia">
+          <span>Florencia</span>
+        </a>
+        <a href="#dest-roma" class="dest-pill">
+          <img src="https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=60&q=80" alt="Roma">
+          <span>Roma</span>
+        </a>
+        <a href="#dest-amalfi" class="dest-pill">
+          <img src="https://images.unsplash.com/photo-1515542622106-78bda8ba0e5b?w=60&q=80" alt="Amalfi">
+          <span>Costa Amalfitana</span>
+        </a>
+        <a href="#dest-amalfi" class="dest-pill">
+          <img src="https://images.unsplash.com/photo-1533587851505-d119e13fa0d7?w=60&q=80" alt="Capri">
+          <span>Capri</span>
+        </a>
       </div>
     </div>
   </div>
@@ -1401,7 +1950,7 @@
       <div class="timeline-labels">
         <span>1 may</span><span>6 may</span><span>11 may</span><span>16 may</span><span>21 may</span><span>26 may</span>
       </div>
-      <div class="timeline-day-name" id="timelineCurrentDay">Día 1 · 1 may · Madrid</div>
+      <div class="timeline-day-name" id="timelineCurrentDay">Día 1 · Vie 1 may · Madrid</div>
     </div>
   </section>
 
@@ -1433,7 +1982,7 @@
             C/ Delicias, 42, Madrid 28045 · 1–2 may (1 noche) · Confirmación: 86397505 · Tel: +34 91 506 2221
           </div>
           <details class="day-accordion">
-            <summary>Día 1 · 1 may — Llegada & paseo por Madrid</summary>
+            <summary>Día 1 · Vie 1 may — Llegada & paseo por Madrid</summary>
             <div class="day-accordion-body">
               <ul>
                 <li><strong>Llegada:</strong> 14:35h (MAD, Terminal 4S) · Cercanías C1 T4 → Atocha (25 min, €2.60) · Check-in · Descanso</li>
@@ -1464,7 +2013,7 @@
           <img src="https://images.pexels.com/photos/1388030/pexels-photo-1388030.jpeg?auto=compress&cs=tinysrgb&w=800&h=400&fit=crop" alt="Barcelona" class="dest-image">
 
           <details class="day-accordion">
-            <summary>Día 2 · 2 may — Llegada & primer paseo</summary>
+            <summary>Día 2 · Sáb 2 may — Llegada & primer paseo</summary>
             <div class="day-accordion-body">
               <div class="confirmed-box" style="margin-bottom:0.8rem;">
                 <strong>🏨 Hotel H10 Marina — 2 al 5 mayo (3 noches)</strong><br>
@@ -1479,14 +2028,25 @@
           </details>
 
           <details class="day-accordion">
-            <summary>Día 3 · 3 may — Barrio Gótico · Picasso · Montjuïc</summary>
+            <summary>Día 3 · Dom 3 may — Barrio Gótico · Picasso · Montjuïc</summary>
             <div class="day-accordion-body">
               <div class="confirmed-box" style="margin-bottom:0.8rem;">
-                <strong>🚶 Walking Tour Civitatis — CONFIRMADO</strong><br>
-                Reserva: A37752357 · 10:00h — Esquina Calle Bergara con Plaza Cataluña
+                <strong>🚶 Free Tour Barcelona — CONFIRMADO · Res: A38697680</strong><br>
+                <strong>09:00h</strong> · 2 adultos · Español · 0 € (propina voluntaria ~10-15€/persona)<br>
+                📍 Paseo de Gracia, 1 / Plaza de Catalunya · Frente al metro Plaza de Catalunya<br>
+                🔵 Guía lleva carpeta azul, en las columnas de la puerta principal de la tienda Apple<br>
+                ⚠️ Radioguías obligatorias: €1/persona · Presentarse 10 min antes<br>
+                <em style="font-size:0.88em;opacity:0.75;">Free Tour Barcelona · +34 609 209 043 · Yamila Altuna</em>
+              </div>
+              <div class="confirmed-box" style="margin-bottom:0.8rem;">
+                <strong>🚶 Free Tour Barcelona · Opción B — CONFIRMADO (Civitatis)</strong><br>
+                Reserva: A37752357 · <strong>10:30h</strong> · 2 personas · 0 € (propina voluntaria ~10-15€/persona)<br>
+                📍 Esquina Calle Bergara con Plaza de Catalunya · Guía: <strong>Ligto</strong><br>
+                ⚠️ Radioguías obligatorias: 1,50 €/persona
               </div>
               <ul>
-                <li><strong>10:00h:</strong> Walking tour Barrio Gótico (Civitatis) · Plaza Cataluña → Fossar de les Moreres (~1.5-2h)</li>
+                <li><strong>09:00h:</strong> Free Tour Barcelona (Civitatis) · Punto: Paseo de Gracia, 1 · Llegar con antelación</li>
+                <li><strong>10:30h:</strong> Free Tour Barrio Gótico (Civitatis · Guía Ligto) · Bergara/Plaza Catalunya → Fossar de les Moreres (~1.5-2h) · Reserva A37752357</li>
                 <li><strong>~13:30h:</strong> Museo Picasso ⚠️ <em>sacar entrada online el 29/04</em></li>
                 <li><strong>~20:00h:</strong> Font Màgica de Montjuïc — espectáculo de luz y agua ⚠️ <em>shows jue-dom, verificar horario</em></li>
               </ul>
@@ -1495,7 +2055,7 @@
           </details>
 
           <details class="day-accordion">
-            <summary>Día 4 · 4 may — Full Gaudí 🦎</summary>
+            <summary>Día 4 · Lun 4 may — Full Gaudí 🦎</summary>
             <div class="day-accordion-body">
               <ul>
                 <li><strong>10:15h:</strong> Sagrada Família — <strong>CONFIRMADO</strong> · Loc: 96353661 · 2 entradas generales · €52.00</li>
@@ -1510,7 +2070,7 @@
           </details>
 
           <details class="day-accordion">
-            <summary>Día 5 · 5 may — Ramblas & Eixample</summary>
+            <summary>Día 5 · Mar 5 may — Ramblas & Eixample</summary>
             <div class="day-accordion-body">
               <ul>
                 <li><strong>12:00h:</strong> Checkout H10 Marina · dejar equipaje en consigna</li>
@@ -1528,7 +2088,7 @@
           </details>
 
           <details class="day-accordion">
-            <summary>Día 6 · 6 may — Vuelo a París ✈️</summary>
+            <summary>Día 6 · Mié 6 may — Vuelo a París ✈️</summary>
             <div class="day-accordion-body">
               <div class="alert-flight">
                 <strong>⚠️ VUELO 06:10h — Air France AF1449</strong><br>
@@ -1557,44 +2117,100 @@
           <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=800&q=80" alt="París" class="dest-image">
 
           <details class="day-accordion">
-            <summary>Día 6 · 6 may — Llegada CDG + Disney 🎢</summary>
+            <summary>Día 6 · Mié 6 may — Llegada CDG + Disney 🎢</summary>
             <div class="day-accordion-body">
               <div class="alert-flight">
                 <strong>✈️ AF1449 · BCN T1 06:10h → CDG T2F 08:05h</strong><br>
                 Alarma 3:30h · Estar en terminal 04:00-04:30h
               </div>
+              <div style="background:rgba(91,194,231,0.07);border-left:3px solid rgba(91,194,231,0.4);padding:0.7rem 1rem;border-radius:8px;margin-bottom:0.9rem;font-size:0.83rem;color:rgba(240,236,229,0.82);line-height:1.7;">
+                💡 <strong>Día de llegada — ritmo tranquilo.</strong> Vienen sin dormir desde las 3:30h. La idea es disfrutar sin apurarse y estar en cama antes de las 23:00h para el EMH del día siguiente.
+              </div>
               <ul>
                 <li><strong>~09:30h:</strong> CDG → Disneyland Paris · RER B + RER A (~50 min) o taxi/shuttle</li>
-                <li><strong>~11:00h:</strong> Check-in Disney Sequoia Lodge · 2 parques incluidos · Extra Magic Time 08:00h</li>
-                <li><strong>Tarde:</strong> Disneyland Park — atracciones principales</li>
+                <li><strong>~11:00h:</strong> Check-in Disney Sequoia Lodge · recibir pulseras · orientarse por el resort</li>
+                <li><strong>~12:00h:</strong> Almuerzo en Disneyland Park — Main Street U.S.A.</li>
+                <li><strong>~13:00h:</strong> Disneyland Park — atracciones con cola moderada (no las grandes, esas son para mañana con EMH):
+                  <ul style="margin-top:0.3rem;">
+                    <li>🏴‍☠️ Pirates of the Caribbean</li>
+                    <li>👻 Phantom Manor</li>
+                    <li>🚀 Buzz Lightyear Laser Blast</li>
+                  </ul>
+                </li>
+                <li><strong>~14:30h:</strong> 🦁 <strong>El Rey León · Rhythms of the Pride Lands</strong> — Frontierland Theatre · llegar 15 min antes · ~30 min</li>
+                <li><strong>~15:30h:</strong> Paseo libre — Castillo de la Bella Durmiente · Fantasyland · fotos · helado · sin apuro</li>
+                <li><strong>~17:00h:</strong> Cruzar a <strong>Disney Adventure World</strong> — World of Frozen (zona nueva, abrió marzo 2026)</li>
+                <li><strong>~17:30h:</strong> ❄️ <strong>Frozen Ever After</strong> — atracción de botes por el reino de Arendelle</li>
+                <li><strong>~18:30h:</strong> ⛵ <strong>A Celebration in Arendelle</strong> — show 15 min · Anna, Elsa, Olaf en barcos vikingos · llegar 15 min antes</li>
+                <li><strong>~19:30h:</strong> Cena en Arendelle · explorar las calles del reino · sin apuro</li>
+                <li><strong>~21:00h:</strong> Volver a Disneyland Park · posicionarse frente al Castillo</li>
+                <li><strong>~22:00h:</strong> 🏰 <strong>Disney Tales of Magic</strong> — proyecciones y luces en el Castillo · ~25 min · IMPERDIBLE</li>
+                <li><strong>~22:30h:</strong> Hotel · descanso <em>obligatorio</em> — mañana EMH a las 08:00h</li>
               </ul>
               <div class="confirmed-box" style="margin-top:0.8rem;">
                 <strong>🏨 Disney Sequoia Lodge — CONFIRMADO · noche 6 may</strong><br>
                 2 parques incluidos · Extra Magic Time · Shuttle gratuito
               </div>
+              <div style="background:rgba(245,166,35,0.08);border-left:3px solid rgba(245,166,35,0.45);padding:0.7rem 1rem;border-radius:8px;margin-top:0.9rem;font-size:0.83rem;color:rgba(240,236,229,0.82);line-height:1.7;">
+                ⚠️ <strong>Horarios de shows:</strong> verificar en la app oficial de Disneyland Paris el día anterior — pueden variar. Descargar la app antes del viaje.
+              </div>
+              <div style="font-size:0.75rem;font-weight:600;color:rgba(240,236,229,0.45);margin-bottom:0.3rem;margin-top:1rem;letter-spacing:1px;text-transform:uppercase;">🗺️ Circuito Día 6 — Disneyland Park</div>
               <div id="disney-map-day6" class="mini-map"></div>
             </div>
           </details>
 
           <details class="day-accordion">
-            <summary>Día 7 · 7 may — Disneyland 🏰</summary>
+            <summary>Día 7 · Jue 7 may — Disneyland día completo 🏰✨</summary>
             <div class="day-accordion-body">
               <ul>
-                <li><strong>08:00h:</strong> Extra Magic Time desde Sequoia Lodge — parques antes que el público general</li>
-                <li><strong>Día completo:</strong> Disneyland Park + Walt Disney Studios</li>
-                <li><strong>~11:00h:</strong> Check-out Sequoia Lodge · equipaje en consigna del hotel</li>
-                <li><strong>Noche:</strong> Traslado a Moxy Val d'Europe (1 parada RER A)</li>
+                <li><strong>08:00h:</strong> ⭐ <strong>Extra Magic Time</strong> — parque casi vacío (solo huéspedes del hotel) · ir directo a:
+                  <ul style="margin-top:0.3rem;">
+                    <li>Big Thunder Mountain → sin cola</li>
+                    <li>Space Mountain: Mission 2 → sin cola</li>
+                    <li>Indiana Jones & Temple of Peril → sin cola</li>
+                  </ul>
+                </li>
+                <li><strong>~09:30h:</strong> Parque abre al público · ir directo a <strong>Peter Pan's Flight</strong> (se llena enseguida)</li>
+                <li><strong>~10:00h:</strong> Star Tours · Discoveryland · resto de Fantasyland</li>
+                <li><strong>~11:00h:</strong> Check-out Sequoia Lodge · dejar equipaje en consigna · volver al parque</li>
+                <li><strong>~11:30h:</strong> 🦁 <strong>El Rey León</strong> — <em>opcional si quieren repetirlo, o tiempo libre en el parque</em></li>
+                <li><strong>~12:30h:</strong> Almuerzo — las colas de atracciones están en pico, ideal para comer tranquilos</li>
+                <li><strong>~13:30h:</strong> <strong>Disney Adventure World</strong> → atracciones principales (ir en orden de mayor a menor cola):
+                  <ul style="margin-top:0.3rem;">
+                    <li>🦑 <strong>Crush's Coaster</strong> — ir primero, es el más demandado de todo el resort</li>
+                    <li>🐭 Ratatouille: The Adventure</li>
+                    <li>🎸 Rock 'n' Roller Coaster</li>
+                    <li>🗼 Tower of Terror</li>
+                    <li>🕷️ Spider-Man W.E.B. Adventure (Avengers Campus)</li>
+                  </ul>
+                </li>
+                <li><strong>~15:30h:</strong> Volver a Disneyland Park · tomar posición en Main Street U.S.A. · 30 min antes</li>
+                <li><strong>~16:00h:</strong> 🎉 <strong>Disney Stars on Parade</strong> — el desfile grande · Main Street U.S.A. · ~30 min</li>
+                <li><strong>~17:00h:</strong> Cena en el parque</li>
+                <li><strong>~18:30h:</strong> Tiempo libre — atracciones pendientes, souvenirs, fotos nocturnas del castillo</li>
+                <li><strong>~20:15h:</strong> Cruzar a Disney Adventure World · posicionarse en <strong>Adventure Bay Lake</strong> · considerar zona reservada <strong>€24/pp</strong> para mejor vista</li>
+                <li><strong>~21:00h:</strong> 🌊 <strong>Disney Cascade of Lights</strong> — 379 drones aéreos + acuáticos · pantallas de agua · pirotecnia · 16 min · show inaugural 2026</li>
+                <li><strong>~21:20h:</strong> Salir rápido → cruzar a Disneyland Park · ~10 min caminando</li>
+                <li><strong>~21:45h:</strong> Posicionarse frente al Castillo de la Bella Durmiente</li>
+                <li><strong>~22:00h:</strong> 🏰 <strong>Disney Tales of Magic</strong> — segunda noche · luces y proyecciones en el castillo · ~25 min</li>
+                <li><strong>~22:45h:</strong> Retirar equipaje de consigna · 1 parada RER A → Moxy Val d'Europe</li>
               </ul>
               <div class="confirmed-box" style="margin-top:0.8rem;">
                 <strong>🏨 Moxy Paris Val d'Europe — CONFIRMADO · noche 7 may</strong><br>
                 2 Avenue de L'Europe, 77144 Montévrain · Tel: +33 1 73 08 98 65
               </div>
-              <div id="disney-map-day7" class="mini-map"></div>
+              <div style="background:rgba(245,166,35,0.08);border-left:3px solid rgba(245,166,35,0.45);padding:0.7rem 1rem;border-radius:8px;margin-top:0.9rem;font-size:0.83rem;color:rgba(240,236,229,0.82);line-height:1.7;">
+                ⚠️ <strong>Shows Día 7:</strong> confirmar horarios en la app oficial · Disney Adventure World cierra antes que Disneyland Park · la transición Cascade of Lights → Tales of Magic son ~10 min caminando entre parques.
+              </div>
+              <div style="font-size:0.75rem;font-weight:600;color:rgba(240,236,229,0.45);margin-bottom:0.3rem;margin-top:1rem;letter-spacing:1px;text-transform:uppercase;">🗺️ Mañana — Extra Magic Time · Disneyland Park</div>
+              <div id="disney-map-day7a" class="mini-map"></div>
+              <div style="font-size:0.75rem;font-weight:600;color:rgba(240,236,229,0.45);margin-bottom:0.3rem;margin-top:0.8rem;letter-spacing:1px;text-transform:uppercase;">🗺️ Tarde/Noche — Studios + Espectáculos</div>
+              <div id="disney-map-day7b" class="mini-map"></div>
             </div>
           </details>
 
           <details class="day-accordion">
-            <summary>Día 8 · 8 may — Torre Eiffel & Campos Elíseos 🗼</summary>
+            <summary>Día 8 · Vie 8 may — Torre Eiffel & Campos Elíseos 🗼</summary>
             <div class="day-accordion-body">
               <ul>
                 <li><strong>Mañana:</strong> RER A → Paris centro (~40 min) · Check-in Ibis Styles Gare de Lyon · 52 Av. Ledru Rollin</li>
@@ -1614,14 +2230,22 @@
           </details>
 
           <details class="day-accordion">
-            <summary>Día 9 · 9 may — Louvre & Montmartre 🎨</summary>
+            <summary>Día 9 · Sáb 9 may — Free Tour París & Montmartre 🎨</summary>
             <div class="day-accordion-body">
+              <div class="confirmed-box" style="margin-bottom:0.8rem;">
+                <strong>🚶 Free Tour por París (Viaterra Tours) — CONFIRMADO · Res: A38698147</strong><br>
+                <strong>10:00h</strong> · 2 adultos · Español · 0 € (propina voluntaria al finalizar)<br>
+                📍 Plaza del Hôtel de Ville (Ayuntamiento) · Frente a salida nº 5 del Metro Hôtel de Ville<br>
+                🟣 Guía lleva paraguas morado/lila con logo Viaterra Tours · <strong>Presentarse puntual</strong><br>
+                <em style="font-size:0.88em;opacity:0.75;">Viaterra Tours · +33 6 35 25 33 29 · Metro líneas 1 (amarillo) y 11 (marrón) · Yamila Altuna</em>
+              </div>
               <ul>
-                <li><strong>~08:30h:</strong> Desayuno Ibis Styles · Metro Bastille → Palais Royal (Louvre)</li>
-                <li><strong>~09:00h:</strong> Louvre · €22 · reservar online</li>
-                <li><strong>12:00h:</strong> 🚶 Free Tour GuruWalk · Metro Hôtel de Ville · Ref: PAR11406835</li>
-                <li><strong>~14:30h:</strong> Notre-Dame (exterior, en restauración) · Sainte-Chapelle · €11.50</li>
-                <li><strong>18:00h:</strong> 🚶 Tour Montmartre GuruWalk · Metro Blanche · Ref: PAR11406960</li>
+                <li><strong>~08:30h:</strong> Desayuno Ibis Styles · Metro Bastille → Hôtel de Ville (línea 1, 3 paradas)</li>
+                <li><strong>~09:45h:</strong> Explorar el Marais · Place des Vosges (a 10 min a pie de Hôtel de Ville)</li>
+                <li><strong>10:00h:</strong> 🚶 Free Tour París · Plaza Hôtel de Ville · Guía con paraguas lila · ~2.5h</li>
+                <li><strong>~12:30h:</strong> Notre-Dame (exterior, en restauración) · Sainte-Chapelle · €11.50 (5 min a pie)</li>
+                <li><strong>~15:00h:</strong> Louvre · Pirámide exterior · Jardín de Tullerías · €22 si queda energía</li>
+                <li><strong>~17:30h:</strong> Montmartre · Sacré-Cœur · Place du Tertre · vistas panorámicas</li>
                 <li><strong>Noche:</strong> Cena en Montmartre · Metro de regreso al hotel</li>
               </ul>
               <div id="paris-map-day9" class="mini-map"></div>
@@ -1629,12 +2253,12 @@
           </details>
 
           <details class="day-accordion">
-            <summary>Día 10 · 10 may — Palacio de Versalles 👑</summary>
+            <summary>Día 10 · Dom 10 may — Palacio de Versalles 👑</summary>
             <div class="day-accordion-body">
               <ul>
                 <li><strong>~08:30h:</strong> Desayuno Ibis Styles · Metro Bastille → Gare du Nord / RER C</li>
                 <li><strong>~09:30h:</strong> RER C → Versailles-Château-Rive Gauche (~35 min) · €4.20 ida</li>
-                <li><strong>~10:00h:</strong> Palacio de Versalles · €21 · reservar online · Salón de los Espejos, Aposentos Reales</li>
+                <li><strong>~10:00h:</strong> Palacio de Versalles ✅ · Salón de los Espejos, Aposentos Reales</li>
                 <li><strong>~13:00h:</strong> Almuerzo cerca del palacio</li>
                 <li><strong>~14:30h:</strong> Jardines de Versalles (gratis fuera de temporada de fuentes) · Gran Trianón · Petit Trianón</li>
                 <li><strong>~17:30h:</strong> RER C de regreso a París · ~40 min</li>
@@ -1645,7 +2269,7 @@
           </details>
 
           <details class="day-accordion">
-            <summary>Día 11 · 11 may — Salida a Milán 🚄</summary>
+            <summary>Día 11 · Lun 11 may — Salida a Milán 🚄</summary>
             <div class="day-accordion-body">
               <ul>
                 <li><strong>05:30h:</strong> Check-out Ibis Styles · 52 Av. Ledru Rollin</li>
@@ -1680,7 +2304,7 @@
           <img src="https://images.unsplash.com/photo-1513581166391-887a96ddeafd?w=800&q=80" alt="Milán" class="dest-image">
 
           <details class="day-accordion">
-            <summary>Día 11 · 11 may — Llegada Milán 🏙️</summary>
+            <summary>Día 11 · Lun 11 may — Llegada Milán 🏙️</summary>
             <div class="day-accordion-body">
               <ul>
                 <li><strong>13:50h:</strong> Llegada Milano Centrale (Frecciarossa 9281 desde París)</li>
@@ -1691,16 +2315,27 @@
                   <em style="font-size:0.88em;opacity:0.75;">Tel: +39 02 8359 7000 · Check-in desde 14:00 · Check-out hasta 12:00</em>
                 </div>
                 <li><strong>~15:00h:</strong> Check-in Spice Hotel · Via Vitruvio 48 · dejar equipaje</li>
-                <li><strong>~16:00h:</strong> Metro M3 → Duomo di Milano — exterior + terraza · €14</li>
-                <li><strong>~17:30h:</strong> Galleria Vittorio Emanuele II · paseo por centro</li>
-                <li><strong>~20:00h:</strong> Cena en Navigli — zona de canales</li>
+                <li><strong>~15:30h:</strong> Metro M3 → Piazza Cordusio · ☕ <strong>Starbucks Reserve Roastery</strong> — Piazza Cordusio 3 · entrada libre</li>
+                <li><strong>~16:00h:</strong> 🏛️ <strong>Galleria Vittorio Emanuele II</strong> — cúpula de hierro y vidrio · mosaicos · girar sobre el toro · 5 min a pie a la entrada norte del Duomo</li>
+                <li><strong>16:30h:</strong> ✅ <strong>Terraza Duomo di Milano — CONFIRMADO</strong> · Duomo Pass Stairs · Piazza del Duomo 14/A · Entrada norte · escanear ticket en torniquete · subir por escaleras o ascensor</li>
+                <li><strong>~18:00h:</strong> 🥪 <strong>All'Antico Vinaio</strong> — schiacciate rellenas · comer en la Piazza del Duomo al anochecer</li>
+                <li><strong>~18:30h:</strong> Piazza del Duomo con la fachada iluminada · fotos</li>
+                <li><strong>~21:00h:</strong> Cena en Navigli — zona de canales</li>
               </ul>
+              <div class="confirmed-box" style="margin-top:0.8rem;">
+                <strong>🏛️ Duomo di Milano — Entrada + Azoteas — CONFIRMADO</strong><br>
+                Fecha: 11 may 2026 · <strong>16:30h</strong> · Duomo Pass Stairs · 2 adultos<br>
+                Código: <strong>SVFD6B853QLZ67RZ</strong> · Ref: 1100886059 · Cód. proveedor: OFD3817878<br>
+                📍 Piazza del Duomo 14/A · Entrada norte · Ticket digital (no imprimir)<br>
+                ⚠️ Hombros y rodillas cubiertos · No shorts ni tirantes · Última entrada 17:50h · Bajada siempre por escaleras<br>
+                <em style="font-size:0.88em;opacity:0.75;">Yamila Altuna · Válido 2 días consecutivos · Cancelación gratis hasta 23:59h del 10 may</em>
+              </div>
               <div id="milan-map-day11" class="mini-map"></div>
             </div>
           </details>
 
           <details class="day-accordion">
-            <summary>Día 12 · 12 may — Lago de Como 🏔️</summary>
+            <summary>Día 12 · Mar 12 may — Lago de Como 🏔️</summary>
             <div class="day-accordion-body">
               <ul>
                 <li><strong>07:15h:</strong> Salida Spice Hotel · 2 min a pie → Milano Centrale</li>
@@ -1709,9 +2344,11 @@
                 <li><strong>~10:15h:</strong> ⛴️ Ferry Varenna → Bellagio · 15 min · ~€5</li>
                 <li><strong>~10:30h:</strong> Bellagio — Villa Melzi (€10) · almuerzo con vista al lago</li>
                 <li><strong>~13:30h:</strong> ⛴️ Ferry Bellagio → Varenna · 🚂 → Milano Centrale</li>
-                <li><strong>~15:30h:</strong> Barrio Brera — galerías y ambiente local</li>
-                <li><strong>~17:30h:</strong> 🍹 Aperitivo milanés en Navigli — copa incluye buffet</li>
-                <li><strong>~19:30h:</strong> Cena ligera · recoger maletas en Spice Hotel</li>
+                <li><strong>~15:30h:</strong> 🏰 <strong>Castello Sforzesco</strong> — foso, torres y patios · acceso a los jardines gratis · Parco Sempione adyacente</li>
+                <li><strong>~17:00h:</strong> 🏛️ <strong>Arco della Pace</strong> — 15 min a pie por Corso Sempione · mirador del arco y Piazza Sempione</li>
+                <li><strong>~18:00h:</strong> Barrio Brera — calles empedradas · galerías de arte · ambiente bohemio</li>
+                <li><strong>~19:00h:</strong> 🍹 Aperitivo milanés en Navigli — copa incluye buffet</li>
+                <li><strong>~20:15h:</strong> Cena ligera · recoger maletas en Spice Hotel</li>
               </ul>
               <div class="confirmed-box" style="margin-top:0.8rem;">
                 <strong>🚄 Frecciarossa 9763 — CONFIRMADO · JU9RW5</strong><br>
@@ -1738,14 +2375,14 @@
           <span class="summary-chevron">›</span>
         </summary>
         <div class="dest-body">
-          <img src="https://images.unsplash.com/photo-1514890547357-a9ee288728e0?w=800&q=80" alt="Venecia" class="dest-image">
+          <img src="https://images.unsplash.com/photo-1520175480921-4edfa2983e0f?w=800&q=80" alt="Venecia" class="dest-image">
           <div class="confirmed-box hotel" style="margin-bottom:1rem;">
             <strong>🏨 Hotel Carlton On The Grand Canal — CONFIRMADO</strong><br>
             Santa Croce 578 · 12–14 may · Conf: 6369502862 · Tel: +39 041 275 2000
           </div>
 
           <details class="day-accordion">
-            <summary>Día 12 · 12 may — Llegada Venecia 🚤</summary>
+            <summary>Día 12 · Mar 12 may — Llegada Venecia 🚤</summary>
             <div class="day-accordion-body">
               <ul>
                 <li><strong>23:17h:</strong> Llegada Venezia Santa Lucia (tren JU9RW5)</li>
@@ -1756,7 +2393,7 @@
           </details>
 
           <details class="day-accordion">
-            <summary>Día 13 · 13 may — Venecia 🌊</summary>
+            <summary>Día 13 · Mié 13 may — Venecia 🌊</summary>
             <div class="day-accordion-body">
               <ul>
                 <li><strong>~08:30h:</strong> Salida Hotel Carlton · Santa Croce 578 · Mercado de Rialto (15 min a pie)</li>
@@ -1771,7 +2408,7 @@
           </details>
 
           <details class="day-accordion">
-            <summary>Día 14 · 14 may — Venecia → Florencia 🚄</summary>
+            <summary>Día 14 · Jue 14 may — Venecia → Florencia 🚄</summary>
             <div class="day-accordion-body">
               <ul>
                 <li><strong>~08:30h:</strong> Salida Hotel Carlton · Basílica San Marcos (gratis) · Campanile (€10) · sin multitudes</li>
@@ -1797,13 +2434,13 @@
             <h3>Florencia</h3>
             <div class="dest-meta">
               <span class="date-tag">14–16 may</span>
-              <span class="dest-note">Llegan noche 14 may. 15 y 16 días completos. 17 may tren a Roma (~1h30).</span>
+              <span class="dest-note">Llegan noche 14 may. 15 día completo. 16 may tren a Roma 08:33h (~1h30).</span>
             </div>
           </div>
           <span class="summary-chevron">›</span>
         </summary>
         <div class="dest-body">
-          <img src="https://images.unsplash.com/photo-1520175480921-4edfa2983e0f?w=800&q=80" alt="Florencia" class="dest-image">
+          <img src="https://images.unsplash.com/photo-1776377231754-d36928e6ee4d?w=800&q=80" alt="Florencia" class="dest-image">
 
           <div class="confirmed-box hotel" style="margin-bottom:1rem;">
             <strong>🏨 Hotel Mia Cara &amp; Spa — CONFIRMADO · Conf: 6725955130</strong><br>
@@ -1814,7 +2451,7 @@
           </div>
 
           <details class="day-accordion">
-            <summary>Día 14 · 14 may — Llegada Florencia ⚜️</summary>
+            <summary>Día 14 · Jue 14 may — Llegada Florencia ⚜️</summary>
             <div class="day-accordion-body">
               <ul>
                 <li><strong>20:39h:</strong> Llegada Firenze Santa Maria Novella</li>
@@ -1827,7 +2464,7 @@
           </details>
 
           <details class="day-accordion">
-            <summary>Día 15 · 15 may — Duomo & Uffizi 🎨</summary>
+            <summary>Día 15 · Vie 15 may — Duomo & Uffizi 🎨</summary>
             <div class="day-accordion-body">
               <ul>
                 <li><strong>~08:30h:</strong> Desayuno incluido Hotel Mia Cara · Via Faenza 90</li>
@@ -1841,11 +2478,11 @@
           </details>
 
           <details class="day-accordion">
-            <summary>Día 16 · 16 may — Salida a Roma 🚄</summary>
+            <summary>Día 16 · Sáb 16 may — Salida a Roma 🚄</summary>
             <div class="day-accordion-body">
               <ul>
-                <li><strong>~10:30h:</strong> Check-out Hotel Mia Cara (hasta 11:00h) · Via Faenza 90 · 5 min a pie → Firenze SMN</li>
-                <li><strong>Mañana:</strong> 🚄 Frecciarossa · Firenze SMN → Roma Termini · ~1h30</li>
+                <li><strong>~08:00h:</strong> Check-out Hotel Mia Cara (hasta 11:00h) · Via Faenza 90 · 5 min a pie → Firenze SMN</li>
+                <li><strong>08:33h:</strong> 🚄 Frecciarossa 8505 · Firenze SMN → Roma Termini · 1h42 · Clase Premium · Vagón 4 · Asientos 9D y 8D · Cód: 27EU95</li>
               </ul>
               <div id="florence-map-day16" class="mini-map"></div>
             </div>
@@ -1868,7 +2505,7 @@
           <span class="summary-chevron">›</span>
         </summary>
         <div class="dest-body">
-          <img src="https://images.unsplash.com/photo-1529260830199-42c24126f198?w=800&q=80" alt="Roma" class="dest-image">
+          <img src="https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=800&q=80" alt="Roma" class="dest-image">
 
           <div class="confirmed-box hotel" style="margin-bottom:1rem;">
             <strong>🏨 Hotel Giolli Nazionale — CONFIRMADO · Res: 2026040647418735</strong><br>
@@ -1879,14 +2516,14 @@
           </div>
 
           <details class="day-accordion">
-            <summary>Día 16 · 16 may — Llegada Roma & Museos Vaticanos 🏛️</summary>
+            <summary>Día 16 · Sáb 16 may — Llegada Roma & Museos Vaticanos 🏛️</summary>
             <div class="day-accordion-body">
               <ul>
-                <li><strong>Mañana:</strong> 🚄 Frecciarossa · Firenze SMN → Roma Termini · ~1h30</li>
+                <li><strong>08:33h → 10:15h:</strong> 🚄 Frecciarossa 8505 · Firenze SMN → Roma Termini · Clase Premium · Vagón 4 · Asientos 9D y 8D · Cód: 27EU95</li>
                 <li><strong>~12:30h:</strong> 🎫 Museos Vaticanos + Capilla Sixtina · Visita Guiada · CORRIDOIO2/PASSAGEWAY2</li>
                 <li><strong>~15:00h:</strong> Check-in Hotel Giolli Nazionale · Via Nazionale · dejar equipaje</li>
                 <li><strong>~16:30h:</strong> Basílica San Pedro (gratis) · cúpula €8</li>
-                <li><strong>~18:30h:</strong> Fontana di Trevi · Piazza Navona</li>
+                <li><strong>~18:30h:</strong> Fontana di Trevi · Piazza Navona · <strong>Iglesia San Luigi dei Francesi</strong> (pinturas Caravaggio — gratis, a pasos de Navona)</li>
                 <li><strong>Noche:</strong> Cena en el centro histórico</li>
               </ul>
               <div class="confirmed-box" style="margin-top:0.8rem;">
@@ -1900,7 +2537,7 @@
           </details>
 
           <details class="day-accordion">
-            <summary>Día 17 · 17 may — Coliseo & Roma Clásica 🏛️</summary>
+            <summary>Día 17 · Dom 17 may — Coliseo & Roma Clásica 🏛️</summary>
             <div class="day-accordion-body">
               <ul>
                 <li><strong>~10:00h:</strong> Castel Sant'Angelo · vistas desde el puente</li>
@@ -1918,7 +2555,7 @@
           </details>
 
           <details class="day-accordion">
-            <summary>Día 18 · 18 may — Panteón, Trastevere & salida a Nápoles 🏛️</summary>
+            <summary>Día 18 · Lun 18 may — Panteón, Trastevere & salida a Nápoles 🏛️</summary>
             <div class="day-accordion-body">
               <ul>
                 <li><strong>~09:00h:</strong> Panteón · €5 · llegar temprano</li>
@@ -1953,7 +2590,7 @@
           <span class="summary-chevron">›</span>
         </summary>
         <div class="dest-body">
-          <img src="https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?w=800&q=80" alt="Nápoles" class="dest-image">
+          <img src="https://images.unsplash.com/photo-1760001484687-90c9bf650419?w=800&q=80" alt="Nápoles - Mural Maradona" class="dest-image">
 
           <div class="confirmed-box hotel" style="margin-bottom:1rem;">
             <strong>🏨 Four Points Suites — CONFIRMADO · Conf: 6182731207</strong><br>
@@ -1964,7 +2601,7 @@
           </div>
 
           <details class="day-accordion">
-            <summary>Día 18 · 18 may — Llegada Nápoles 🍕</summary>
+            <summary>Día 18 · Lun 18 may — Llegada Nápoles 🍕</summary>
             <div class="day-accordion-body">
               <ul>
                 <li><strong>18:23h:</strong> Llegada Napoli Centrale (Frecciarossa 8343 desde Roma)</li>
@@ -1977,7 +2614,7 @@
           </details>
 
           <details class="day-accordion">
-            <summary>Día 19 · 19 may — Nápoles → Capri 🏝️</summary>
+            <summary>Día 19 · Mar 19 may — Nápoles → Capri 🏝️</summary>
             <div class="day-accordion-body">
               <ul>
                 <li><strong>Check-out:</strong> hasta 10:00h · dejar equipaje en consigna Four Points</li>
@@ -2010,13 +2647,13 @@
             <h3>Costa Amalfitana & Salerno</h3>
             <div class="dest-meta">
               <span class="date-tag">20–23 may</span>
-              <span class="dest-note">Corso 66 Salerno confirmado · base para Amalfi, Positano & Capri. Vuelo 24 may 06:05h</span>
+              <span class="dest-note">Corso 66 Salerno confirmado · base para Amalfi, Positano, Ravello & Capri. Vuelo 24 may 06:05h</span>
             </div>
           </div>
           <span class="summary-chevron">›</span>
         </summary>
         <div class="dest-body">
-          <img src="https://images.unsplash.com/photo-1515542622106-78bda8ba0e5b?w=800&q=80" alt="Costa Amalfitana" class="dest-image">
+          <img src="https://images.unsplash.com/photo-1588608544977-acba9aa33618?w=800&q=80" alt="Costa Amalfitana" class="dest-image">
 
           <div class="confirmed-box hotel" style="margin-bottom:1rem;">
             <strong>🏨 Corso 66 Luxury Apartment — CONFIRMADO · Conf: 6797084556</strong><br>
@@ -2027,22 +2664,21 @@
           </div>
 
           <details class="day-accordion">
-            <summary>Día 20 · 20 may — Check-in Salerno + Amalfi & Ravello 🏘️</summary>
+            <summary>Día 20 · Mié 20 may — Check-in Salerno + Amalfi 🏘️</summary>
             <div class="day-accordion-body">
               <ul>
                 <li><strong>~09:00h:</strong> Check-out Capri Inn · ⛴️ Ferry Capri → Salerno · ~€20 · ~1h</li>
                 <li><strong>~11:00h:</strong> Llegada Salerno · dejar equipaje en Corso 66 · explorar el centro</li>
-                <li><strong>~12:00h:</strong> Bus → Amalfi · Catedral de Amalfi · casco histórico (SITA bus desde Corso Vittorio Emanuele)</li>
-                <li><strong>~13:30h:</strong> Bus → Ravello · Villa Cimbrone — mirador infinito · Villa Rufolo</li>
-                <li><strong>~15:30h:</strong> Almuerzo con vistas al mar · regreso a Salerno</li>
-                <li><strong>17:00h:</strong> Check-in Corso 66 · 66 Corso Vittorio Emanuele · avisar al anfitrión hora de llegada</li>
+                <li><strong>~12:00h:</strong> SITA Bus Salerno → Amalfi (~1h15) · llegan ~13:15h · Catedral de Amalfi · casco histórico · callejuelas del centro</li>
+                <li><strong>~15:00h:</strong> Regreso a Salerno · paseo por el Lungomare Trieste</li>
+                <li><strong>~17:30h:</strong> Check-in Corso 66 · 66 Corso Vittorio Emanuele · avisar al anfitrión hora de llegada</li>
               </ul>
               <div id="salerno-map-day20" class="mini-map"></div>
             </div>
           </details>
 
           <details class="day-accordion">
-            <summary>Día 21 · 21 may — Capri 🏝️</summary>
+            <summary>Día 21 · Jue 21 may — Capri 🏝️</summary>
             <div class="day-accordion-body">
               <ul>
                 <li><strong>~08:30h:</strong> Salida Corso 66 · ferry terminal Salerno (~10 min a pie)</li>
@@ -2057,14 +2693,15 @@
           </details>
 
           <details class="day-accordion">
-            <summary>Día 22 · 22 may — Positano 🌅</summary>
+            <summary>Día 22 · Vie 22 may — Positano & Ravello 🌅</summary>
             <div class="day-accordion-body">
               <ul>
-                <li><strong>~08:30h:</strong> Salida Corso 66 · bus costero Salerno → Positano · ~1h (SITA desde Piazza della Concordia)</li>
-                <li><strong>~10:00h:</strong> Playa Spiaggia Grande · paseo panorámico</li>
-                <li><strong>~13:00h:</strong> Almuerzo con vista al mar</li>
-                <li><strong>~15:00h:</strong> Paseo por calles y miradores · souvenirs</li>
-                <li><strong>~18:00h:</strong> Bus de regreso a Salerno · Corso 66</li>
+                <li><strong>~08:00h:</strong> Salida Corso 66 · SITA Bus Salerno → Amalfi (~1h15, desde Piazza della Concordia)</li>
+                <li><strong>~09:15h:</strong> Bus Amalfi → Ravello (~30 min · €1.30) · 🌿 Villa Cimbrone — jardines y mirador al infinito · €8 · Villa Rufolo · €7</li>
+                <li><strong>~12:00h:</strong> Almuerzo con vistas al mar en Ravello · Café Calce o Cumpa Cosimo</li>
+                <li><strong>~13:30h:</strong> Bus Ravello → Amalfi → bus costero hacia Positano (~45 min desde Amalfi)</li>
+                <li><strong>~15:00h:</strong> Positano — Playa Spiaggia Grande · paseo panorámico · miradores · souvenirs</li>
+                <li><strong>~18:00h:</strong> Ferry o bus Positano → Salerno · regreso a Corso 66</li>
                 <li><strong>Noche:</strong> Preparar maletas · última cena en Salerno</li>
               </ul>
               <div id="salerno-map-day22" class="mini-map"></div>
@@ -2072,13 +2709,13 @@
           </details>
 
           <details class="day-accordion">
-            <summary>Día 23 · 23 may — Check-out Salerno & Traslado 🛫</summary>
+            <summary>Día 23 · Sáb 23 may — Check-out Salerno & Traslado 🛫</summary>
             <div class="day-accordion-body">
               <ul>
                 <li><strong>Check-out:</strong> hasta 11:00h · Corso 66 · traslado a Nápoles (~1h en tren o bus)</li>
                 <li><strong>~12:00h:</strong> Llegada Nápoles · Museo Arqueológico Nacional · €18 · colección de Pompeya</li>
-                <li><strong>~15:00h:</strong> Spaccanapoli · San Gregorio Armeno (callejón de los belenes)</li>
-                <li><strong>~15:00h:</strong> Check-in Casa Imperatore · Corso Umberto I 237 · Molo Beverello (check-in hasta 18:00h)</li>
+                <li><strong>~14:30h:</strong> Spaccanapoli · San Gregorio Armeno (callejón de los belenes) — a 10 min del museo</li>
+                <li><strong>~16:00h:</strong> Check-in Casa Imperatore · Corso Umberto I 237 · Molo Beverello (check-in hasta 18:00h)</li>
               </ul>
               <div class="confirmed-box hotel" style="margin-top:0.8rem;">
                 <strong>🏨 Casa Imperatore — CONFIRMADO · Conf: 5754892088</strong><br>
@@ -2112,6 +2749,7 @@
           <span class="summary-chevron">›</span>
         </summary>
         <div class="dest-body">
+          <img src="https://images.unsplash.com/photo-1543785734-4b6e564642f8?w=800&q=80" alt="Madrid Gran Vía" class="dest-image">
 
           <div class="confirmed-box hotel" style="margin-bottom:1rem;">
             <strong>🏨 Hotel Emperador **** — CONFIRMADO · Res: 26021953756</strong><br>
@@ -2122,7 +2760,7 @@
           </div>
 
           <details class="day-accordion">
-            <summary>Día 24 · 24 may — Llegada Madrid 🏠</summary>
+            <summary>Día 24 · Dom 24 may — Llegada Madrid 🏠</summary>
             <div class="day-accordion-body">
               <ul>
                 <li><strong>08:50h:</strong> Llegada MAD T4S (vuelo I21836 desde Nápoles)</li>
@@ -2130,22 +2768,30 @@
                 <li><strong>14:00h:</strong> Check-in Hotel Emperador · Gran Vía · descanso</li>
                 <li><strong>Tarde:</strong> Paseo Gran Vía · compras · cena tranquila</li>
               </ul>
+              <div id="madrid-final-map-day24" class="mini-map"></div>
             </div>
           </details>
 
           <details class="day-accordion">
-            <summary>Día 25 · 25 may — Compras & Museos 🛍️</summary>
+            <summary>Día 25 · Lun 25 may — Madrid despedida 👑</summary>
             <div class="day-accordion-body">
               <ul>
-                <li><strong>Mañana:</strong> Compras — Gran Vía · El Corte Inglés · Zara · Mango ⚠️ <em>guardar tickets para tax free</em></li>
-                <li><strong>Tarde:</strong> Museo del Prado o Reina Sofía (gratis desde 18:00h)</li>
-                <li><strong>Noche:</strong> Última cena española</li>
+                <li><strong>~09:00h:</strong> Desayuno en el hotel · Gran Vía 53</li>
+                <li><strong>~10:00h:</strong> 🏰 <strong>Palacio Real</strong> — €14 · interior con la Armería Real y Salón del Trono · 15 min a pie por Calle Bailén</li>
+                <li><strong>~12:00h:</strong> ⛪ <strong>Catedral de la Almudena</strong> (gratis) · vista desde la terraza €8 · Plaza de Oriente con estatua ecuestre de Felipe IV</li>
+                <li><strong>~13:00h:</strong> 🥘 <strong>Mercado de San Miguel</strong> — vermut + tapas + mejillones · 5 min a pie desde Palacio · mercado cubierto de hierro y vidrio del s. XX</li>
+                <li><strong>~14:30h:</strong> Plaza Mayor — arcadas · Casa de la Panadería · souvenirs de última hora · Puerta del Sol (5 min)</li>
+                <li><strong>~16:00h:</strong> 🛍️ Gran Vía — El Corte Inglés · Zara · Mango · H&M · <strong>⚠️ guardar todos los tickets para reclamar tax free mañana en T4S</strong></li>
+                <li><strong>~18:00h:</strong> 🌳 <strong>Parque del Retiro</strong> — paseo de despedida · Palacio de Cristal (gratis) · lago de las barcas</li>
+                <li><strong>~19:30h:</strong> 🎨 <strong>Museo del Prado</strong> — entrada gratis 18:00–20:00 · Velázquez · Goya · Rubens · 10 min a pie desde el Retiro</li>
+                <li><strong>~21:00h:</strong> 🍷 Última cena española en el <strong>Barrio de Las Letras</strong> — chuletón, cocido madrileño o patatas bravas · a 10 min del Prado</li>
               </ul>
+              <div id="madrid-final-map-day25" class="mini-map"></div>
             </div>
           </details>
 
           <details class="day-accordion">
-            <summary>Día 26 · 26 may — Vuelo a casa ✈️</summary>
+            <summary>Día 26 · Mar 26 may — Vuelo a casa ✈️</summary>
             <div class="day-accordion-body">
               <ul>
                 <li><strong>Mañana:</strong> Check-out hasta 12:00h · packing · traslado T4S</li>
@@ -2155,6 +2801,7 @@
               <div class="alert-flight" style="margin-top:0.8rem;">
                 <strong>✈️ IB0169 MAD → MVD · 11:50h → 19:45h MVD</strong>
               </div>
+              <div id="madrid-final-map-day26" class="mini-map"></div>
             </div>
           </details>
 
@@ -2174,7 +2821,7 @@
         <span class="flight-type-badge ida">✈️ Vuelo de Ida</span>
         <div class="flight-route"><span>MVD</span><span class="arrow">→</span><span>MAD</span></div>
         <div class="flight-details">
-          <div class="flight-row"><span class="fl">Fecha</span><span class="fv">30 abr 2026</span></div>
+          <div class="flight-row"><span class="fl">Fecha</span><span class="fv">Jue 30 abr 2026</span></div>
           <div class="flight-row"><span class="fl">Vuelo</span><span class="fv">IB0170</span></div>
           <div class="flight-row"><span class="fl">Salida</span><span class="fv">21:45h MVD</span></div>
           <div class="flight-row"><span class="fl">Llegada</span><span class="fv">1 may 14:35h MAD T4S</span></div>
@@ -2250,6 +2897,21 @@
 
       <div class="flight-card tren reveal">
         <span class="flight-type-badge tren">🚄 Frecciarossa</span>
+        <div class="flight-route"><span>FLR</span><span class="arrow">→</span><span>ROM</span></div>
+        <div class="flight-details">
+          <div class="flight-row"><span class="fl">Fecha</span><span class="fv">16 may 2026</span></div>
+          <div class="flight-row"><span class="fl">Tren</span><span class="fv">Frecciarossa 8505</span></div>
+          <div class="flight-row"><span class="fl">Código</span><span class="fv">27EU95</span></div>
+          <div class="flight-row"><span class="fl">Salida</span><span class="fv">08:33h Firenze SMN</span></div>
+          <div class="flight-row"><span class="fl">Llegada</span><span class="fv">10:15h Roma Termini</span></div>
+          <div class="flight-row"><span class="fl">Clase</span><span class="fv">Premium · Super Economy</span></div>
+          <div class="flight-row"><span class="fl">Asientos</span><span class="fv">Vagón 4 · 9D (Gaston) / 8D (Yamila)</span></div>
+          <div class="flight-confirmed-badge">✅ Confirmado</div>
+        </div>
+      </div>
+
+      <div class="flight-card tren reveal">
+        <span class="flight-type-badge tren">🚄 Frecciarossa</span>
         <div class="flight-route"><span>ROM</span><span class="arrow">→</span><span>NAP</span></div>
         <div class="flight-details">
           <div class="flight-row"><span class="fl">Fecha</span><span class="fv">18 may 2026</span></div>
@@ -2287,6 +2949,220 @@
           <div class="flight-confirmed-badge">✅ Confirmado</div>
         </div>
       </div>
+    </div>
+  </section>
+
+  <section id="hoteles">
+    <div class="section-eyebrow">🏨 Alojamiento</div>
+    <h2>Hoteles Confirmados</h2>
+    <div class="flights-grid">
+
+      <div class="flight-card hotel-mad reveal">
+        <span class="flight-type-badge hotel-mad">🏙️ Madrid · 1–2 may</span>
+        <div class="flight-route"><span>MAD</span><span class="arrow">🏨</span><span>AC Atocha</span></div>
+        <div class="flight-details">
+          <div class="flight-row"><span class="fl">Noches</span><span class="fv">1 noche (1–2 may)</span></div>
+          <div class="flight-row"><span class="fl">Dirección</span><span class="fv">C/ Delicias, 42 · Madrid 28045</span></div>
+          <div class="flight-row"><span class="fl">Conf.</span><span class="fv">86397505</span></div>
+          <div class="flight-row"><span class="fl">Tel</span><span class="fv">+34 91 506 2221</span></div>
+          <div class="flight-confirmed-badge">✅ Confirmado</div>
+        </div>
+      </div>
+
+      <div class="flight-card hotel-bcn reveal">
+        <span class="flight-type-badge hotel-bcn">🏙️ Barcelona · 2–5 may</span>
+        <div class="flight-route"><span>BCN</span><span class="arrow">🏨</span><span>H10 Marina</span></div>
+        <div class="flight-details">
+          <div class="flight-row"><span class="fl">Noches</span><span class="fv">3 noches (2–5 may)</span></div>
+          <div class="flight-row"><span class="fl">Check-out</span><span class="fv">5 mayo · 12:00h</span></div>
+          <div class="flight-row"><span class="fl">Nota</span><span class="fv">Guardaequipaje disponible</span></div>
+          <div class="flight-confirmed-badge">✅ Confirmado</div>
+        </div>
+      </div>
+
+      <div class="flight-card hotel-bcn reveal">
+        <span class="flight-type-badge hotel-bcn">🏙️ Barcelona · 5–6 may</span>
+        <div class="flight-route"><span>BCN</span><span class="arrow">🏨</span><span>Hostel Airport</span></div>
+        <div class="flight-details">
+          <div class="flight-row"><span class="fl">Noches</span><span class="fv">1 noche (5–6 may)</span></div>
+          <div class="flight-row"><span class="fl">Motivo</span><span class="fv">Noche previa al vuelo BCN → CDG 06:10h</span></div>
+          <div class="flight-row"><span class="fl">⚠️ Alarma</span><span class="fv">03:30h · terminal a las 04:00h</span></div>
+          <div class="flight-confirmed-badge">✅ Confirmado</div>
+        </div>
+      </div>
+
+      <div class="flight-card hotel-par reveal">
+        <span class="flight-type-badge hotel-par">🏰 Disneyland · 6 may</span>
+        <div class="flight-route"><span>CDG</span><span class="arrow">🏨</span><span>Sequoia Lodge</span></div>
+        <div class="flight-details">
+          <div class="flight-row"><span class="fl">Noches</span><span class="fv">1 noche (6–7 may)</span></div>
+          <div class="flight-row"><span class="fl">Nota</span><span class="fv">2 parques incluidos · Extra Magic Time</span></div>
+          <div class="flight-row"><span class="fl">Traslado</span><span class="fv">Shuttle gratuito al parque</span></div>
+          <div class="flight-confirmed-badge">✅ Confirmado</div>
+        </div>
+      </div>
+
+      <div class="flight-card hotel-par reveal">
+        <span class="flight-type-badge hotel-par">🏰 Disneyland · 7 may</span>
+        <div class="flight-route"><span>CDG</span><span class="arrow">🏨</span><span>Moxy Val d'Europe</span></div>
+        <div class="flight-details">
+          <div class="flight-row"><span class="fl">Noches</span><span class="fv">1 noche (7–8 may)</span></div>
+          <div class="flight-row"><span class="fl">Dirección</span><span class="fv">2 Av. de L'Europe · 77144 Montévrain</span></div>
+          <div class="flight-row"><span class="fl">Tel</span><span class="fv">+33 1 73 08 98 65</span></div>
+          <div class="flight-confirmed-badge">✅ Confirmado</div>
+        </div>
+      </div>
+
+      <div class="flight-card hotel-par reveal">
+        <span class="flight-type-badge hotel-par">🗼 París · 8–11 may</span>
+        <div class="flight-route"><span>PAR</span><span class="arrow">🏨</span><span>Ibis Gare Lyon</span></div>
+        <div class="flight-details">
+          <div class="flight-row"><span class="fl">Noches</span><span class="fv">3 noches (8–11 may)</span></div>
+          <div class="flight-row"><span class="fl">Dirección</span><span class="fv">52 Av. Ledru Rollin · 75012 París</span></div>
+          <div class="flight-row"><span class="fl">Metro</span><span class="fv">Bastille · 2 min a pie</span></div>
+          <div class="flight-row"><span class="fl">Régimen</span><span class="fv">Desayuno buffet incluido</span></div>
+          <div class="flight-confirmed-badge">✅ Confirmado</div>
+        </div>
+      </div>
+
+      <div class="flight-card hotel-ita reveal">
+        <span class="flight-type-badge hotel-ita">🏙️ Milán · 11–12 may</span>
+        <div class="flight-route"><span>MIL</span><span class="arrow">🏨</span><span>Spice Hotel</span></div>
+        <div class="flight-details">
+          <div class="flight-row"><span class="fl">Noches</span><span class="fv">1 noche (11–12 may)</span></div>
+          <div class="flight-row"><span class="fl">Dirección</span><span class="fv">Via Vitruvio 48 · Est. Central</span></div>
+          <div class="flight-row"><span class="fl">Conf.</span><span class="fv">6088.005.510</span></div>
+          <div class="flight-row"><span class="fl">Tel</span><span class="fv">+39 02 8359 7000</span></div>
+          <div class="flight-row"><span class="fl">Check-in</span><span class="fv">desde 14:00</span></div>
+          <div class="flight-row"><span class="fl">Check-out</span><span class="fv">hasta 12:00</span></div>
+          <div class="flight-row"><span class="fl">Nombre</span><span class="fv">Yamila Altuna · Sin desayuno</span></div>
+          <div class="flight-confirmed-badge">✅ Confirmado · No reembolsable</div>
+        </div>
+      </div>
+
+      <div class="flight-card hotel-ita reveal">
+        <span class="flight-type-badge hotel-ita">🏙️ Venecia · 12–14 may</span>
+        <div class="flight-route"><span>VCE</span><span class="arrow">🏨</span><span>Carlton Canal</span></div>
+        <div class="flight-details">
+          <div class="flight-row"><span class="fl">Noches</span><span class="fv">2 noches (12–14 may)</span></div>
+          <div class="flight-row"><span class="fl">Dirección</span><span class="fv">Santa Croce 578 · Venecia</span></div>
+          <div class="flight-row"><span class="fl">Conf.</span><span class="fv">6369502862</span></div>
+          <div class="flight-row"><span class="fl">Tel</span><span class="fv">+39 041 275 2000</span></div>
+          <div class="flight-confirmed-badge">✅ Confirmado</div>
+        </div>
+      </div>
+
+      <div class="flight-card hotel-ita reveal">
+        <span class="flight-type-badge hotel-ita">🏙️ Florencia · 14–16 may</span>
+        <div class="flight-route"><span>FLR</span><span class="arrow">🏨</span><span>Mia Cara</span></div>
+        <div class="flight-details">
+          <div class="flight-row"><span class="fl">Noches</span><span class="fv">2 noches (14–16 may)</span></div>
+          <div class="flight-row"><span class="fl">Dirección</span><span class="fv">Via Faenza 90 · 50123 Florencia</span></div>
+          <div class="flight-row"><span class="fl">Conf.</span><span class="fv">6725955130</span></div>
+          <div class="flight-row"><span class="fl">Tel</span><span class="fv">+39 055 2399088</span></div>
+          <div class="flight-row"><span class="fl">Check-in</span><span class="fv">desde 14:00</span></div>
+          <div class="flight-row"><span class="fl">Check-out</span><span class="fv">hasta 11:00</span></div>
+          <div class="flight-row"><span class="fl">Régimen</span><span class="fv">Desayuno incluido</span></div>
+          <div class="flight-row"><span class="fl">Total</span><span class="fv">€385,64 pagado + €24 city tax</span></div>
+          <div class="flight-confirmed-badge">✅ Confirmado · Cancel. gratis hasta 8 may</div>
+        </div>
+      </div>
+
+      <div class="flight-card hotel-ita reveal">
+        <span class="flight-type-badge hotel-ita">🏙️ Roma · 16–18 may</span>
+        <div class="flight-route"><span>ROM</span><span class="arrow">🏨</span><span>Giolli Naz.</span></div>
+        <div class="flight-details">
+          <div class="flight-row"><span class="fl">Noches</span><span class="fv">2 noches (16–18 may)</span></div>
+          <div class="flight-row"><span class="fl">Dirección</span><span class="fv">Via Nazionale 69 · 00184 Roma</span></div>
+          <div class="flight-row"><span class="fl">Res.</span><span class="fv">2026040647418735</span></div>
+          <div class="flight-row"><span class="fl">Tel</span><span class="fv">+39 06 4882393</span></div>
+          <div class="flight-row"><span class="fl">Email</span><span class="fv">reservations@hotelgiolli.it</span></div>
+          <div class="flight-row"><span class="fl">Régimen</span><span class="fv">Desayuno incluido</span></div>
+          <div class="flight-row"><span class="fl">Total</span><span class="fv">€574,88 (€550,88 pag. + €24 city tax)</span></div>
+          <div class="flight-confirmed-badge">✅ Confirmado · NO reembolsable</div>
+        </div>
+      </div>
+
+      <div class="flight-card hotel-south reveal">
+        <span class="flight-type-badge hotel-south">🏙️ Nápoles · 18–19 may</span>
+        <div class="flight-route"><span>NAP</span><span class="arrow">🏨</span><span>Four Points</span></div>
+        <div class="flight-details">
+          <div class="flight-row"><span class="fl">Noches</span><span class="fv">1 noche (18–19 may)</span></div>
+          <div class="flight-row"><span class="fl">Dirección</span><span class="fv">Via Liborio Romano 2 · Molo Beverello</span></div>
+          <div class="flight-row"><span class="fl">Conf.</span><span class="fv">6182731207</span></div>
+          <div class="flight-row"><span class="fl">Tel</span><span class="fv">+39 344 6452977</span></div>
+          <div class="flight-row"><span class="fl">Check-in</span><span class="fv">13:00–23:30</span></div>
+          <div class="flight-row"><span class="fl">Check-out</span><span class="fv">07:00–10:00</span></div>
+          <div class="flight-row"><span class="fl">Régimen</span><span class="fv">Desayuno incluido</span></div>
+          <div class="flight-row"><span class="fl">Total</span><span class="fv">€124,40 (€113,40 pag. + €11 mun.)</span></div>
+          <div class="flight-confirmed-badge">✅ Confirmado · Cancel. gratis hasta 10 may</div>
+        </div>
+      </div>
+
+      <div class="flight-card hotel-south reveal">
+        <span class="flight-type-badge hotel-south">🏝️ Capri · 19–20 may</span>
+        <div class="flight-route"><span>CAP</span><span class="arrow">🏨</span><span>Capri Inn</span></div>
+        <div class="flight-details">
+          <div class="flight-row"><span class="fl">Noches</span><span class="fv">1 noche (19–20 may)</span></div>
+          <div class="flight-row"><span class="fl">Dirección</span><span class="fv">Via Marina Grande 222 · 80073 Capri</span></div>
+          <div class="flight-row"><span class="fl">Conf.</span><span class="fv">5009227644</span></div>
+          <div class="flight-row"><span class="fl">Tel</span><span class="fv">+39 081 837 4073</span></div>
+          <div class="flight-row"><span class="fl">Check-in</span><span class="fv">14:00–18:00 · avisar hora llegada</span></div>
+          <div class="flight-row"><span class="fl">Check-out</span><span class="fv">08:00–10:00</span></div>
+          <div class="flight-row"><span class="fl">Régimen</span><span class="fv">Desayuno incluido · vistas al mar</span></div>
+          <div class="flight-row"><span class="fl">Total</span><span class="fv">€299,70 pagado completo</span></div>
+          <div class="flight-confirmed-badge">✅ Confirmado · NO reembolsable</div>
+        </div>
+      </div>
+
+      <div class="flight-card hotel-south reveal">
+        <span class="flight-type-badge hotel-south">🌊 Salerno · 20–23 may</span>
+        <div class="flight-route"><span>SAL</span><span class="arrow">🏨</span><span>Corso 66</span></div>
+        <div class="flight-details">
+          <div class="flight-row"><span class="fl">Noches</span><span class="fv">3 noches (20–23 may)</span></div>
+          <div class="flight-row"><span class="fl">Dirección</span><span class="fv">Corso Vittorio Emanuele 66 · 84123 Salerno</span></div>
+          <div class="flight-row"><span class="fl">Conf.</span><span class="fv">6797084556</span></div>
+          <div class="flight-row"><span class="fl">Tel</span><span class="fv">+39 335 6488508</span></div>
+          <div class="flight-row"><span class="fl">Check-in</span><span class="fv">15:00–23:00 · alguien esperará</span></div>
+          <div class="flight-row"><span class="fl">Check-out</span><span class="fv">06:00–11:00</span></div>
+          <div class="flight-row"><span class="fl">Tipo</span><span class="fv">Apart. 1 dorm. · sin desayuno</span></div>
+          <div class="flight-row"><span class="fl">Total</span><span class="fv">€385,31 pagado completo</span></div>
+          <div class="flight-confirmed-badge">✅ Confirmado · NO reembolsable — sin cambios</div>
+        </div>
+      </div>
+
+      <div class="flight-card hotel-south reveal">
+        <span class="flight-type-badge hotel-south">🏙️ Nápoles · 23–24 may</span>
+        <div class="flight-route"><span>NAP</span><span class="arrow">🏨</span><span>Casa Imperatore</span></div>
+        <div class="flight-details">
+          <div class="flight-row"><span class="fl">Noches</span><span class="fv">1 noche (23–24 may)</span></div>
+          <div class="flight-row"><span class="fl">Dirección</span><span class="fv">Corso Umberto I 237 · Molo Beverello</span></div>
+          <div class="flight-row"><span class="fl">Conf.</span><span class="fv">5754892088</span></div>
+          <div class="flight-row"><span class="fl">Tel</span><span class="fv">+39 081 553 6402</span></div>
+          <div class="flight-row"><span class="fl">Check-in</span><span class="fv">15:00–18:00</span></div>
+          <div class="flight-row"><span class="fl">Check-out</span><span class="fv">hasta 10:00 ⚠️ vuelo 06:05h</span></div>
+          <div class="flight-row"><span class="fl">Tipo</span><span class="fv">Doble Deluxe con balcón</span></div>
+          <div class="flight-row"><span class="fl">Total</span><span class="fv">€96,05 (€85,05 pag. + €11 mun.)</span></div>
+          <div class="flight-confirmed-badge">✅ Confirmado · Cancel. gratis hasta 15 may</div>
+        </div>
+      </div>
+
+      <div class="flight-card hotel-mad reveal">
+        <span class="flight-type-badge hotel-mad">🏙️ Madrid · 24–26 may</span>
+        <div class="flight-route"><span>MAD</span><span class="arrow">🏨</span><span>Emperador</span></div>
+        <div class="flight-details">
+          <div class="flight-row"><span class="fl">Noches</span><span class="fv">2 noches (24–26 may)</span></div>
+          <div class="flight-row"><span class="fl">Dirección</span><span class="fv">Gran Vía 53 · 28013 Madrid</span></div>
+          <div class="flight-row"><span class="fl">Res.</span><span class="fv">26021953756</span></div>
+          <div class="flight-row"><span class="fl">Tel</span><span class="fv">+34 915 47 28 00</span></div>
+          <div class="flight-row"><span class="fl">Check-in</span><span class="fv">desde 14:00</span></div>
+          <div class="flight-row"><span class="fl">Check-out</span><span class="fv">hasta 12:00</span></div>
+          <div class="flight-row"><span class="fl">Régimen</span><span class="fv">Solo alojamiento (sin desayuno)</span></div>
+          <div class="flight-row"><span class="fl">Total</span><span class="fv">€432,63 con IVA (prepagado 100%)</span></div>
+          <div class="flight-confirmed-badge">✅ Confirmado · NO reembolsable</div>
+        </div>
+      </div>
+
     </div>
   </section>
 
@@ -2515,33 +3391,33 @@ if (resetBtn) resetBtn.addEventListener('click', () => {
    LEAFLET MAIN MAP
 ──────────────────────────────────────────────── */
 const itineraryDays = [
-  { day:1,  title:"Día 1 · 1 may · Madrid",            cityKey:"madrid",    coords:[40.4168,-3.7038] },
-  { day:2,  title:"Día 2 · 2 may · Tren → Barcelona",  cityKey:"barcelona", coords:[41.3874,2.1686] },
-  { day:3,  title:"Día 3 · 3 may · Barcelona",          cityKey:"barcelona", coords:[41.3874,2.1686] },
-  { day:4,  title:"Día 4 · 4 may · Full Gaudí",         cityKey:"barcelona", coords:[41.3874,2.1686] },
-  { day:5,  title:"Día 5 · 5 may · Ramblas",            cityKey:"barcelona", coords:[41.3874,2.1686] },
-  { day:6,  title:"Día 6 · 6 may · Disney (llegada)",   cityKey:"disney",    coords:[48.8674,2.7834] },
-  { day:7,  title:"Día 7 · 7 may · Disney + Moxy",      cityKey:"disney",    coords:[48.8674,2.7834] },
-  { day:8,  title:"Día 8 · 8 may · París — Torre Eiffel", cityKey:"paris",  coords:[48.8566,2.3522] },
-  { day:9,  title:"Día 9 · 9 may · Louvre & Montmartre", cityKey:"paris",   coords:[48.8566,2.3522] },
-  { day:10, title:"Día 10 · 10 may · Le Marais",         cityKey:"paris",   coords:[48.8566,2.3522] },
-  { day:11, title:"Día 11 · 11 may · Milán",             cityKey:"milan",   coords:[45.4642,9.19] },
-  { day:12, title:"Día 12 · 12 may · Lago de Como",      cityKey:"venecia", coords:[45.4408,12.3155] },
-  { day:13, title:"Día 13 · 13 may · Venecia",           cityKey:"venecia", coords:[45.4408,12.3155] },
-  { day:14, title:"Día 14 · 14 may · Venecia → Florencia", cityKey:"florencia", coords:[43.7696,11.2558] },
-  { day:15, title:"Día 15 · 15 may · Florencia",         cityKey:"florencia", coords:[43.7696,11.2558] },
-  { day:16, title:"Día 16 · 16 may · Florencia (2°)",    cityKey:"florencia", coords:[43.7696,11.2558] },
-  { day:16, title:"Día 16 · 16 may · Llegada Roma",           cityKey:"roma",    coords:[41.9028,12.4964] },
-  { day:17, title:"Día 17 · 17 may · Roma Clásica",          cityKey:"roma",    coords:[41.9028,12.4964] },
-  { day:18, title:"Día 18 · 18 may · Vaticano → Nápoles",    cityKey:"napoles", coords:[40.8518,14.2681] },
-  { day:19, title:"Día 19 · 19 may · Nápoles → Positano",   cityKey:"positano",coords:[40.6333,14.602] },
-  { day:20, title:"Día 20 · 20 may · Salerno · Amalfi",     cityKey:"salerno", coords:[40.6824,14.7681] },
-  { day:21, title:"Día 21 · 21 may · Capri",                cityKey:"salerno", coords:[40.5531,14.2222] },
-  { day:22, title:"Día 22 · 22 may · Positano desde Salerno", cityKey:"salerno",coords:[40.6824,14.7681] },
-  { day:23, title:"Día 23 · 23 may · Check-out Salerno → Nápoles", cityKey:"napoles",coords:[40.8518,14.2681] },
-  { day:24, title:"Día 24 · 24 may · Vuelo → Madrid",    cityKey:"madrid",  coords:[40.4168,-3.7038] },
-  { day:25, title:"Día 25 · 25 may · Madrid compras",    cityKey:"madrid",  coords:[40.4168,-3.7038] },
-  { day:26, title:"Día 26 · 26 may · Vuelo → Uruguay",   cityKey:"madrid",  coords:[40.4168,-3.7038] },
+  { day:1,  title:"Día 1 · Vie 1 may · Madrid",            cityKey:"madrid",    coords:[40.4168,-3.7038] },
+  { day:2,  title:"Día 2 · Sáb 2 may · Tren → Barcelona",  cityKey:"barcelona", coords:[41.3874,2.1686] },
+  { day:3,  title:"Día 3 · Dom 3 may · Barcelona",          cityKey:"barcelona", coords:[41.3874,2.1686] },
+  { day:4,  title:"Día 4 · Lun 4 may · Full Gaudí",         cityKey:"barcelona", coords:[41.3874,2.1686] },
+  { day:5,  title:"Día 5 · Mar 5 may · Ramblas",            cityKey:"barcelona", coords:[41.3874,2.1686] },
+  { day:6,  title:"Día 6 · Mié 6 may · Disney (llegada)",   cityKey:"disney",    coords:[48.8674,2.7834] },
+  { day:7,  title:"Día 7 · Jue 7 may · Disney + Moxy",      cityKey:"disney",    coords:[48.8674,2.7834] },
+  { day:8,  title:"Día 8 · Vie 8 may · París — Torre Eiffel", cityKey:"paris",  coords:[48.8566,2.3522] },
+  { day:9,  title:"Día 9 · Sáb 9 may · Louvre & Montmartre", cityKey:"paris",   coords:[48.8566,2.3522] },
+  { day:10, title:"Día 10 · Dom 10 may · Le Marais",         cityKey:"paris",   coords:[48.8566,2.3522] },
+  { day:11, title:"Día 11 · Lun 11 may · Milán",             cityKey:"milan",   coords:[45.4642,9.19] },
+  { day:12, title:"Día 12 · Mar 12 may · Lago de Como",      cityKey:"venecia", coords:[45.4408,12.3155] },
+  { day:13, title:"Día 13 · Mié 13 may · Venecia",           cityKey:"venecia", coords:[45.4408,12.3155] },
+  { day:14, title:"Día 14 · Jue 14 may · Venecia → Florencia", cityKey:"florencia", coords:[43.7696,11.2558] },
+  { day:15, title:"Día 15 · Vie 15 may · Florencia",         cityKey:"florencia", coords:[43.7696,11.2558] },
+  { day:16, title:"Día 16 · Sáb 16 may · Florencia (2°)",    cityKey:"florencia", coords:[43.7696,11.2558] },
+  { day:16, title:"Día 16 · Sáb 16 may · Llegada Roma",           cityKey:"roma",    coords:[41.9028,12.4964] },
+  { day:17, title:"Día 17 · Dom 17 may · Roma Clásica",          cityKey:"roma",    coords:[41.9028,12.4964] },
+  { day:18, title:"Día 18 · Lun 18 may · Vaticano → Nápoles",    cityKey:"napoles", coords:[40.8518,14.2681] },
+  { day:19, title:"Día 19 · Mar 19 may · Nápoles → Positano",   cityKey:"positano",coords:[40.6333,14.602] },
+  { day:20, title:"Día 20 · Mié 20 may · Salerno · Amalfi",     cityKey:"salerno", coords:[40.6824,14.7681] },
+  { day:21, title:"Día 21 · Jue 21 may · Capri",                cityKey:"salerno", coords:[40.5531,14.2222] },
+  { day:22, title:"Día 22 · Vie 22 may · Positano desde Salerno", cityKey:"salerno",coords:[40.6824,14.7681] },
+  { day:23, title:"Día 23 · Sáb 23 may · Check-out Salerno → Nápoles", cityKey:"napoles",coords:[40.8518,14.2681] },
+  { day:24, title:"Día 24 · Dom 24 may · Vuelo → Madrid",    cityKey:"madrid",  coords:[40.4168,-3.7038] },
+  { day:25, title:"Día 25 · Lun 25 may · Madrid compras",    cityKey:"madrid",  coords:[40.4168,-3.7038] },
+  { day:26, title:"Día 26 · Mar 26 may · Vuelo → Uruguay",   cityKey:"madrid",  coords:[40.4168,-3.7038] },
 ];
 
 const map = L.map('travelMap', { scrollWheelZoom: false }).setView([44,8], 4);
@@ -2625,7 +3501,7 @@ focusDay(1);
    MINI-MAPS (Barcelona & Madrid)
 ──────────────────────────────────────────────── */
 function buildMiniMap(id, center, zoom, stops, color) {
-  const m = L.map(id, { scrollWheelZoom: false, zoomControl: false, attributionControl: false }).setView(center, zoom);
+  const m = L.map(id, { scrollWheelZoom: false, zoomControl: true, attributionControl: false }).setView(center, zoom);
   L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { subdomains: 'abcd', maxZoom: 18 }).addTo(m);
   stops.forEach((s, i) => {
     const icon = L.divIcon({
@@ -2646,6 +3522,7 @@ buildMiniMap('bcn-map-day2', [41.3870,2.1890], 15, [
 ], '#f8b500');
 
 buildMiniMap('bcn-map-day3', [41.3760,2.1760], 13, [
+  { name:"Hotel H10 Marina",     coords:[41.3905,2.1985], emoji:"🏨" },
   { name:"Plaza Cataluña",       coords:[41.3874,2.1686], emoji:"🚶" },
   { name:"Barrio Gótico",        coords:[41.3830,2.1762], emoji:"🏘️" },
   { name:"Museo Picasso",        coords:[41.3852,2.1808], emoji:"🎨" },
@@ -2653,6 +3530,7 @@ buildMiniMap('bcn-map-day3', [41.3760,2.1760], 13, [
 ], '#f8b500');
 
 buildMiniMap('bcn-map-day4', [41.3980,2.1650], 14, [
+  { name:"Hotel H10 Marina",     coords:[41.3905,2.1985], emoji:"🏨" },
   { name:"Sagrada Família",      coords:[41.4036,2.1744], emoji:"⛪" },
   { name:"Hospital de Sant Pau", coords:[41.4119,2.1736], emoji:"🏥" },
   { name:"Casa Batlló",          coords:[41.3916,2.1649], emoji:"🦎" },
@@ -2660,6 +3538,7 @@ buildMiniMap('bcn-map-day4', [41.3980,2.1650], 14, [
 ], '#f8b500');
 
 buildMiniMap('bcn-map-day5', [41.3450,2.1400], 12, [
+  { name:"Hotel H10 Marina",     coords:[41.3905,2.1985], emoji:"🏨" },
   { name:"Las Ramblas",          coords:[41.3816,2.1717], emoji:"🛒" },
   { name:"Palau Música Catalana",coords:[41.3875,2.1753], emoji:"🎶" },
   { name:"El Born",              coords:[41.3852,2.1827], emoji:"🍺" },
@@ -2667,22 +3546,45 @@ buildMiniMap('bcn-map-day5', [41.3450,2.1400], 12, [
 ], '#f8b500');
 
 /* ── Disney ── */
-buildMiniMap('disney-map-day6', [48.8690,2.7800], 14, [
-  { name:"Sequoia Lodge",          coords:[48.8675,2.7784], emoji:"🏨" },
-  { name:"Disneyland Park",        coords:[48.8697,2.7800], emoji:"🎢" },
-  { name:"Walt Disney Studios",    coords:[48.8681,2.7818], emoji:"🎬" },
-], '#7eb7ff');
+/* Día 6 — ritmo tranquilo, sin Stars on Parade (se mueve al Día 7) */
+buildMiniMap('disney-map-day6', [48.8685,2.7810], 15, [
+  { name:"Sequoia Lodge — llegada y almuerzo (11:00h)",     coords:[48.8653,2.7762], emoji:"🏨" },
+  { name:"Pirates of the Caribbean (~13:00h)",             coords:[48.8699,2.7778], emoji:"🏴‍☠️" },
+  { name:"Phantom Manor",                                  coords:[48.8713,2.7768], emoji:"👻" },
+  { name:"Buzz Lightyear Laser Blast",                     coords:[48.8704,2.7820], emoji:"🚀" },
+  { name:"El Rey León · Frontierland Theatre (14:30h)",    coords:[48.8712,2.7777], emoji:"🦁" },
+  { name:"Castillo · Fantasyland — paseo libre (15:30h)",  coords:[48.8703,2.7793], emoji:"🏰" },
+  { name:"Frozen Ever After · World of Frozen (17:30h)",   coords:[48.8683,2.7855], emoji:"❄️" },
+  { name:"A Celebration in Arendelle (18:30h)",            coords:[48.8681,2.7858], emoji:"⛵" },
+  { name:"Disney Tales of Magic · Castillo (22:00h)",      coords:[48.8703,2.7793], emoji:"🏰" },
+], '#4a90d9');
 
-buildMiniMap('disney-map-day7', [48.8660,2.7790], 13, [
-  { name:"Sequoia Lodge",          coords:[48.8675,2.7784], emoji:"🏨" },
-  { name:"Disneyland Park",        coords:[48.8697,2.7800], emoji:"🎢" },
-  { name:"Walt Disney Studios",    coords:[48.8681,2.7818], emoji:"🎬" },
-  { name:"Moxy Val d'Europe",      coords:[48.8620,2.7793], emoji:"🏨" },
-], '#7eb7ff');
+/* Día 7 mañana — EMH + grandes atracciones Disneyland Park */
+buildMiniMap('disney-map-day7a', [48.8700,2.7797], 15, [
+  { name:"Sequoia Lodge (08:00h — EMH)",                   coords:[48.8653,2.7762], emoji:"🏨" },
+  { name:"Big Thunder Mountain",                           coords:[48.8718,2.7760], emoji:"⛏️" },
+  { name:"Indiana Jones & Temple of Peril",                coords:[48.8695,2.7763], emoji:"🤠" },
+  { name:"Space Mountain: Mission 2",                      coords:[48.8715,2.7830], emoji:"🚀" },
+  { name:"Peter Pan's Flight (09:30h — parque abre)",      coords:[48.8717,2.7800], emoji:"🧚" },
+  { name:"Star Tours · Discoveryland (~10:00h)",           coords:[48.8707,2.7816], emoji:"🌌" },
+], '#f5a623');
+
+/* Día 7 tarde/noche — Studios + Shows + Cascade + Tales of Magic */
+buildMiniMap('disney-map-day7b', [48.8678,2.7817], 15, [
+  { name:"Crush's Coaster — ir primero (13:30h)",          coords:[48.8672,2.7840], emoji:"🦑" },
+  { name:"Ratatouille: The Adventure",                     coords:[48.8680,2.7830], emoji:"🐭" },
+  { name:"Rock 'n' Roller Coaster",                        coords:[48.8670,2.7851], emoji:"🎸" },
+  { name:"Tower of Terror",                                coords:[48.8662,2.7843], emoji:"🗼" },
+  { name:"Spider-Man W.E.B. Adventure (Avengers Campus)",  coords:[48.8676,2.7862], emoji:"🕷️" },
+  { name:"Stars on Parade · Main Street (16:00h)",         coords:[48.8685,2.7800], emoji:"🎉" },
+  { name:"Cascade of Lights · Adventure Bay Lake (21:00h)",coords:[48.8671,2.7838], emoji:"🌊" },
+  { name:"Disney Tales of Magic · Castillo (22:00h)",      coords:[48.8703,2.7793], emoji:"🏰" },
+  { name:"Moxy Val d'Europe (noche)",                      coords:[48.8608,2.7819], emoji:"🏨" },
+], '#e05c5c');
 
 /* ── París ── */
 buildMiniMap('paris-map-day8', [48.8600,2.3100], 13, [
-  { name:"Ibis Styles Gare de Lyon", coords:[48.8527,2.3692], emoji:"🏨" },
+  { name:"Moxy Val d'Europe",        coords:[48.8620,2.7793], emoji:"🏨" },
   { name:"Trocadéro",              coords:[48.8635,2.2887], emoji:"🗼" },
   { name:"Torre Eiffel",           coords:[48.8584,2.2945], emoji:"🗼" },
   { name:"Arco del Triunfo",       coords:[48.8738,2.2950], emoji:"🏛️" },
@@ -2806,7 +3708,7 @@ buildMiniMap('salerno-map-day23', [40.7800,14.5000], 10, [
   { name:"Corso 66 Salerno",       coords:[40.6796,14.7597], emoji:"🏨" },
   { name:"Museo Arqueológico NAP", coords:[40.8529,14.2502], emoji:"🏛️" },
   { name:"Spaccanapoli",           coords:[40.8498,14.2603], emoji:"🕍" },
-  { name:"Aeropuerto NAP",         coords:[40.8843,14.2908], emoji:"✈️" },
+  { name:"Casa Imperatore",        coords:[40.8504,14.2674], emoji:"🏨" },
 ], '#ff6b9d');
 
 buildMiniMap('roma-map-day16', [41.9040,12.4600], 13, [
@@ -2843,6 +3745,323 @@ buildMiniMap('madrid-day-map', [40.4150,-3.6970], 14, [
   { name:"Patio de Leones",      coords:[40.4228,-3.6875], emoji:"🍽️" },
 ], '#f0522e');
 
+buildMiniMap('madrid-final-map-day24', [40.4196,-3.6990], 14, [
+  { name:"MAD T4S · Llegada",       coords:[40.4983,-3.5676], emoji:"✈️" },
+  { name:"Hotel Emperador · Gran Vía", coords:[40.4202,-3.7013], emoji:"🏨" },
+  { name:"Gran Vía",                coords:[40.4196,-3.6988], emoji:"🛍️" },
+  { name:"Puerta del Sol",          coords:[40.4169,-3.7035], emoji:"☀️" },
+], '#f0522e');
+
+buildMiniMap('madrid-final-map-day25', [40.4160,-3.7000], 14, [
+  { name:"Hotel Emperador · Gran Vía", coords:[40.4202,-3.7013], emoji:"🏨" },
+  { name:"Palacio Real",            coords:[40.4178,-3.7144], emoji:"🏰" },
+  { name:"Catedral Almudena · Plaza de Oriente", coords:[40.4153,-3.7144], emoji:"⛪" },
+  { name:"Mercado de San Miguel",   coords:[40.4155,-3.7091], emoji:"🥘" },
+  { name:"Plaza Mayor · Puerta del Sol", coords:[40.4154,-3.7074], emoji:"☀️" },
+  { name:"Gran Vía · El Corte Inglés", coords:[40.4193,-3.7029], emoji:"🛍️" },
+  { name:"Parque del Retiro · Palacio de Cristal", coords:[40.4151,-3.6844], emoji:"🌳" },
+  { name:"Museo del Prado",         coords:[40.4138,-3.6922], emoji:"🎨" },
+  { name:"Barrio de Las Letras",    coords:[40.4131,-3.6981], emoji:"🍷" },
+], '#f0522e');
+
+buildMiniMap('madrid-final-map-day26', [40.4196,-3.6990], 13, [
+  { name:"Hotel Emperador · Gran Vía", coords:[40.4202,-3.7013], emoji:"🏨" },
+  { name:"MAD T4S · Embarque",      coords:[40.4983,-3.5676], emoji:"✈️" },
+], '#f0522e');
+
+
+/* ─────────────────────────────────────────────────
+   CALENDAR EXPORT — ICS Generator
+───────────────────────────────────────────────── */
+function exportCalendar() {
+  const esc = s => s.replace(/,/g,'\\,').replace(/;/g,'\\;').replace(/\n/g,'\\n');
+  const uid = (i) => `viaje-europa-2026-${i}@gaston-yamila`;
+
+  // All events: { type:'allday'|'timed', date, dateEnd?, start, end, summary, description, location }
+  const events = [
+    // ── VUELOS Y TRENES ──────────────────────────────────────
+    { type:'timed', start:'20260430T214500', end:'20260501T143500',
+      summary:'✈️ IB0170 MVD → MAD',
+      description:'Iberia · Montevideo → Madrid T4S · Duración 12h 50m',
+      location:'Aeropuerto Carrasco (MVD)' },
+
+    { type:'timed', start:'20260502T122200', end:'20260502T151400',
+      summary:'🚄 AVE 06121 Madrid → Barcelona',
+      description:'AVE 06121 · Atocha 12:22h → Barcelona-Sants 15:14h · Coche 7 · Asientos 8C y 8D',
+      location:'Madrid Atocha' },
+
+    { type:'timed', start:'20260506T061000', end:'20260506T080500',
+      summary:'✈️ AF1449 BCN → CDG (Air France)',
+      description:'AF1449 · BCN Terminal 1 06:10h → CDG Terminal 2F 08:05h · 1h 55min · ¡Alarma 3:30h!',
+      location:'Barcelona T1' },
+
+    { type:'timed', start:'20260511T063000', end:'20260511T135000',
+      summary:'🚄 Frecciarossa 9281 París → Milán',
+      description:'Frecciarossa 9281 · Gare de Lyon 06:30h → Milano Centrale 13:50h · Carrozza 2 · Asiento 17D',
+      location:'Paris Gare de Lyon' },
+
+    { type:'timed', start:'20260512T204500', end:'20260512T231700',
+      summary:'🚄 Frecciarossa 9763 Milán → Venecia (JU9RW5)',
+      description:'Frecciarossa 9763 · Código: JU9RW5 · Milano 20:45h → Venezia 23:17h',
+      location:'Milano Centrale' },
+
+    { type:'timed', start:'20260514T182600', end:'20260514T203900',
+      summary:'🚄 Frecciarossa 9435 Venecia → Florencia (KEX3EN)',
+      description:'Frecciarossa 9435 · Código: KEX3EN · Venezia 18:26h → Firenze SMN 20:39h',
+      location:'Venezia Santa Lucia' },
+
+    { type:'timed', start:'20260516T083300', end:'20260516T101500',
+      summary:'🚄 Frecciarossa 8505 Florencia → Roma (27EU95)',
+      description:'Frecciarossa 8505 · Código: 27EU95 · Firenze SMN 08:33h → Roma Termini 10:15h · Vagón 4 · 9D (Gaston) / 8D (Yamila)',
+      location:'Firenze Santa Maria Novella' },
+
+    { type:'timed', start:'20260518T171000', end:'20260518T182300',
+      summary:'🚄 Frecciarossa 8343 Roma → Nápoles (2HEZAN)',
+      description:'Frecciarossa 8343 · PNR: 2HEZAN · Roma Termini 17:10h → Napoli Centrale 18:23h · Vagón 6 · 7D (Gaston) / 8D (Yamila)',
+      location:'Roma Termini' },
+
+    { type:'timed', start:'20260524T060500', end:'20260524T085000',
+      summary:'✈️ I21836 NAP → MAD (Iberia Express)',
+      description:'I21836 Iberia Express · Nápoles 06:05h → Madrid 08:50h · ¡Alarma 04:00h!',
+      location:'Aeropuerto de Nápoles (NAP)' },
+
+    { type:'timed', start:'20260526T115000', end:'20260526T194500',
+      summary:'✈️ IB0169 MAD → MVD (vuelta a casa)',
+      description:'Iberia IB0169 · Madrid T4S 11:50h → Montevideo 19:45h · 11h 55m',
+      location:'Madrid Barajas T4S' },
+
+    // ── HOTELES ──────────────────────────────────────────────
+    { type:'allday', date:'20260501', dateEnd:'20260502',
+      summary:'🏨 AC Hotel Atocha · Madrid',
+      description:'Check-in: 1 mayo · Check-out: 2 mayo (tren AVE 12:22h)',
+      location:'AC Hotel Atocha, Madrid' },
+
+    { type:'allday', date:'20260502', dateEnd:'20260505',
+      summary:'🏨 Hotel H10 Marina · Barcelona',
+      description:'Check-in: 2 mayo · Check-out: 5 mayo 12:00h',
+      location:'Hotel H10 Marina, Barcelona' },
+
+    { type:'allday', date:'20260505', dateEnd:'20260506',
+      summary:'🏨 Hostel Airport · Barcelona (vuelo 06:10h)',
+      description:'Noche previa al vuelo BCN→CDG · Alarma 03:30h',
+      location:'Hostel Airport Barcelona' },
+
+    { type:'allday', date:'20260506', dateEnd:'20260507',
+      summary:'🏨 Disney Sequoia Lodge · Disneyland Paris',
+      description:'Check-in 6 mayo · Check-out 7 mayo · 2 parques incluidos · Extra Magic Time 08:00h',
+      location:'Disney Sequoia Lodge, Disneyland Paris' },
+
+    { type:'allday', date:'20260507', dateEnd:'20260508',
+      summary:'🏨 Moxy Paris Val d\'Europe',
+      description:'Check-in 7 mayo · Check-out 8 mayo · 2 Avenue de l\'Europe, 77144 Montévrain · Tel: +33 1 73 08 98 65',
+      location:'Moxy Paris Val d\'Europe, 2 Avenue de l\'Europe, Montévrain' },
+
+    { type:'allday', date:'20260508', dateEnd:'20260511',
+      summary:'🏨 Ibis Styles Paris Gare de Lyon',
+      description:'Check-in 8 mayo · Check-out 11 mayo (tren 06:30h) · Desayuno buffet incluido · Metro Bastille 2 min',
+      location:'Ibis Styles Paris Gare de Lyon, 52 Av. Ledru Rollin, 75012 Paris' },
+
+    { type:'allday', date:'20260511', dateEnd:'20260512',
+      summary:'🏨 Spice Hotel Milano · Conf: 6088.005.510',
+      description:'Check-in 11 mayo · Check-out 12 mayo · Salida a las 07:15h hacia Lago de Como',
+      location:'Spice Hotel Milano' },
+
+    { type:'allday', date:'20260512', dateEnd:'20260514',
+      summary:'🏨 Hotel Carlton On The Grand Canal · Venecia',
+      description:'Check-in 12 mayo (llegada 23:17h) · Check-out 14 mayo (tren 18:26h a Florencia)',
+      location:'Hotel Carlton On The Grand Canal, Venezia' },
+
+    { type:'allday', date:'20260514', dateEnd:'20260516',
+      summary:'🏨 Hotel Mia Cara & Spa · Florencia · Conf: 6725955130',
+      description:'Check-in 14 mayo · Check-out 16 mayo (tren 08:33h a Roma) · Via Faenza 90',
+      location:'Hotel Mia Cara & Spa, Via Faenza 90, Firenze' },
+
+    { type:'allday', date:'20260516', dateEnd:'20260518',
+      summary:'🏨 Hotel Giolli Nazionale · Roma · Res: 2026040647418735',
+      description:'Check-in 16 mayo · Check-out 18 mayo (tren 17:10h a Nápoles)',
+      location:'Hotel Giolli Nazionale, Roma' },
+
+    { type:'allday', date:'20260518', dateEnd:'20260519',
+      summary:'🏨 Four Points Suites · Nápoles · Conf: 6182731207',
+      description:'Check-in 18 mayo · Check-out 19 mayo',
+      location:'Four Points Suites, Napoli' },
+
+    { type:'allday', date:'20260519', dateEnd:'20260520',
+      summary:'🏨 Capri Inn · Capri · Conf: 5009227644',
+      description:'Check-in 19 mayo · Check-out 20 mayo · Ferry Capri→Salerno',
+      location:'Capri Inn, Capri' },
+
+    { type:'allday', date:'20260520', dateEnd:'20260523',
+      summary:'🏨 Corso 66 Luxury Apartment · Salerno · Conf: 6797084556',
+      description:'Check-in 20 mayo · Check-out 23 mayo · 66 Corso Vittorio Emanuele, 84123 Salerno · Base para Amalfi, Positano & Capri',
+      location:'Corso 66 Luxury Apartment, 66 Corso Vittorio Emanuele, Salerno' },
+
+    { type:'allday', date:'20260523', dateEnd:'20260526',
+      summary:'🏨 Hotel Emperador **** · Madrid · Res: 26021953756',
+      description:'Check-in 23 mayo · Check-out 26 mayo (vuelo 11:50h)',
+      location:'Hotel Emperador Gran Vía, Madrid' },
+
+    // ── ACTIVIDADES CONFIRMADAS ───────────────────────────────
+    { type:'timed', start:'20260503T090000', end:'20260503T110000',
+      summary:'🚶 Free Tour Barcelona · Res: A38697680',
+      description:'Res: A38697680 · 2 adultos · Español · 0€ + propina ~10-15€/persona\nPunto: Paseo de Gracia 1 / Plaza Catalunya · Frente metro Plaza Catalunya\nGuía: carpeta azul en columnas puerta Apple · Radioguías €1/persona\nFree Tour Barcelona · +34 609 209 043 · Yamila Altuna',
+      location:'Paseo de Gracia, 1 / Plaza de Catalunya, Barcelona' },
+
+    { type:'timed', start:'20260503T103000', end:'20260503T123000',
+      summary:'🚶 Free Tour Barcelona (Opción B) · Guía Ligto · A37752357',
+      description:'Reserva: A37752357 · 2 personas · 0€ + propina ~10-15€/persona\nPunto: Esquina Calle Bergara con Plaza Catalunya · Guía: Ligto · Radioguías 1,50€/persona',
+      location:'Esquina Calle Bergara con Plaza de Catalunya, Barcelona' },
+
+    { type:'timed', start:'20260504T101500', end:'20260504T123000',
+      summary:'⛪ Sagrada Família · Loc: 96353661',
+      description:'2 entradas generales · €52.00 · Código: 96353661',
+      location:'Sagrada Família, Barcelona' },
+
+    { type:'timed', start:'20260504T170000', end:'20260504T190000',
+      summary:'🦎 Casa Batlló · Loc: 96352983',
+      description:'Gold + Exposición «Beyond the Façade» · Código: 96352983',
+      location:'Casa Batlló, Passeig de Gràcia 43, Barcelona' },
+
+    { type:'timed', start:'20260504T224000', end:'20260505T000000',
+      summary:'🌙 La Pedrera Night Experience · Loc: 96342122',
+      description:'€79.00 · Código: 96342122',
+      location:'La Pedrera, Passeig de Gràcia 92, Barcelona' },
+
+    { type:'timed', start:'20260506T143000', end:'20260506T150000',
+      summary:'🦁 El Rey León · Rhythms of the Pride Lands · Disneyland',
+      description:'Frontierland Theatre · Disneyland Park · Llegar 15 min antes · ~30 min',
+      location:'Frontierland Theatre, Disneyland Park, Marne-la-Vallée' },
+
+    { type:'timed', start:'20260506T160000', end:'20260506T163000',
+      summary:'🎉 Disney Stars on Parade · Disneyland',
+      description:'Main Street U.S.A. · Llegar 30 min antes para lugar en primera fila',
+      location:'Main Street U.S.A., Disneyland Park' },
+
+    { type:'timed', start:'20260506T173000', end:'20260506T183000',
+      summary:'❄️ Frozen Ever After · World of Frozen · Disney Adventure World',
+      description:'Nueva atracción 2026 · Botes por el reino de Arendelle',
+      location:'World of Frozen, Disney Adventure World, Marne-la-Vallée' },
+
+    { type:'timed', start:'20260506T183000', end:'20260506T184500',
+      summary:'⛵ A Celebration in Arendelle · Disney Adventure World',
+      description:'Show ~15 min · Anna, Elsa, Olaf y Kristoff en barcos vikingos · Arendelle Bay · Llegar 15 min antes',
+      location:'Arendelle Bay, World of Frozen, Disney Adventure World' },
+
+    { type:'timed', start:'20260506T220000', end:'20260506T222500',
+      summary:'🏰 Disney Tales of Magic · Castillo Bella Durmiente',
+      description:'Proyecciones y luces en el castillo · ~25 min · Posicionarse antes de las 21:45h',
+      location:'Sleeping Beauty Castle, Disneyland Park' },
+
+    { type:'timed', start:'20260507T080000', end:'20260507T093000',
+      summary:'⭐ Extra Magic Time · Disneyland Park (solo huéspedes hotel)',
+      description:'Parque casi vacío · Ir directo a Big Thunder Mountain → Space Mountain → Indiana Jones',
+      location:'Disneyland Park, Marne-la-Vallée' },
+
+    { type:'timed', start:'20260507T110000', end:'20260507T113000',
+      summary:'🦁 El Rey León 2ª función · Frontierland Theatre',
+      description:'Frontierland Theatre · Disneyland Park · Llegar 15 min antes',
+      location:'Frontierland Theatre, Disneyland Park' },
+
+    { type:'timed', start:'20260507T160000', end:'20260507T163000',
+      summary:'🎉 Disney Stars on Parade · Día 7',
+      description:'Main Street U.S.A. · Posicionarse 30 min antes',
+      location:'Main Street U.S.A., Disneyland Park' },
+
+    { type:'timed', start:'20260507T210000', end:'20260507T211600',
+      summary:'🌊 Disney Cascade of Lights · Adventure Bay Lake',
+      description:'379 drones aéreos + acuáticos · Pantallas de agua · Pirotecnia · 16 min · Zona reservada €24/persona recomendada · Show inaugural 2026',
+      location:'Adventure Bay Lake, Disney Adventure World, Marne-la-Vallée' },
+
+    { type:'timed', start:'20260507T220000', end:'20260507T222500',
+      summary:'🏰 Disney Tales of Magic · Castillo (noche 2)',
+      description:'Segunda noche · Proyecciones en el castillo · ~25 min',
+      location:'Sleeping Beauty Castle, Disneyland Park' },
+
+    { type:'timed', start:'20260509T100000', end:'20260509T123000',
+      summary:'🚶 Free Tour París · Viaterra Tours · Res: A38698147',
+      description:'Res: A38698147 · 2 adultos · Español · 0€ + propina voluntaria\nPunto: Plaza Hôtel de Ville · Salida nº5 Metro Hôtel de Ville\nGuía: paraguas morado/lila con logo Viaterra Tours · Presentarse puntual\nViaterra Tours · +33 6 35 25 33 29',
+      location:'Plaza del Hôtel de Ville, Paris' },
+
+    { type:'timed', start:'20260509T173000', end:'20260509T193000',
+      summary:'🏘️ Montmartre · Place du Tertre · Sacré-Cœur',
+      description:'Visita libre por Montmartre · Sacré-Cœur · vistas panorámicas · cena en el barrio',
+      location:'Sacré-Cœur, Montmartre, Paris' },
+
+    { type:'timed', start:'20260516T103000', end:'20260516T130000',
+      summary:'🏛️ Museos Vaticanos · Cód: 2L2N0RA62JVMU3NZW',
+      description:'Código de reserva: 2L2N0RA62JVMU3NZW',
+      location:'Musei Vaticani, Viale Vaticano, Roma' },
+
+    { type:'timed', start:'20260517T090000', end:'20260517T120000',
+      summary:'🏟️ Colosseo · Foro Romano · Palatino · Cód: SPCOQDKBPX6DZ8LZ',
+      description:'Código de reserva: SPCOQDKBPX6DZ8LZ',
+      location:'Colosseo, Piazza del Colosseo, Roma' },
+
+    // ── DÍAS RESUMEN ─────────────────────────────────────────
+    { type:'allday', date:'20260501', dateEnd:'20260502', summary:'📍 Madrid · Día 1 · Llegada' },
+    { type:'allday', date:'20260502', dateEnd:'20260503', summary:'📍 Madrid → Barcelona · Día 2' },
+    { type:'allday', date:'20260503', dateEnd:'20260504', summary:'📍 Barcelona · Día 3 · Barrio Gótico · Free Tour' },
+    { type:'allday', date:'20260504', dateEnd:'20260505', summary:'📍 Barcelona · Día 4 · Sagrada Família · Gaudí' },
+    { type:'allday', date:'20260505', dateEnd:'20260506', summary:'📍 Barcelona · Día 5 · Ramblas & Eixample' },
+    { type:'allday', date:'20260506', dateEnd:'20260507', summary:'📍 Disneyland Paris · Día 6 · Shows & World of Frozen' },
+    { type:'allday', date:'20260507', dateEnd:'20260508', summary:'📍 Disneyland Paris · Día 7 · Día completo · Cascade of Lights' },
+    { type:'allday', date:'20260508', dateEnd:'20260509', summary:'📍 París · Día 8 · Torre Eiffel & Campos Elíseos' },
+    { type:'allday', date:'20260509', dateEnd:'20260510', summary:'📍 París · Día 9 · Louvre & Montmartre' },
+    { type:'allday', date:'20260510', dateEnd:'20260511', summary:'📍 París · Día 10 · Versalles' },
+    { type:'allday', date:'20260511', dateEnd:'20260512', summary:'📍 Milán · Día 11 · Llegada' },
+    { type:'allday', date:'20260512', dateEnd:'20260513', summary:'📍 Lago de Como · Día 12 · Varenna & Bellagio' },
+    { type:'allday', date:'20260513', dateEnd:'20260514', summary:'📍 Venecia · Día 13' },
+    { type:'allday', date:'20260514', dateEnd:'20260515', summary:'📍 Venecia → Florencia · Día 14' },
+    { type:'allday', date:'20260515', dateEnd:'20260516', summary:'📍 Florencia · Día 15 · Duomo & Uffizi' },
+    { type:'allday', date:'20260516', dateEnd:'20260517', summary:'📍 Florencia → Roma · Día 16 · Vaticano' },
+    { type:'allday', date:'20260517', dateEnd:'20260518', summary:'📍 Roma · Día 17 · Coliseo & Roma Clásica' },
+    { type:'allday', date:'20260518', dateEnd:'20260519', summary:'📍 Roma → Nápoles · Día 18 · Panteón & Trastevere' },
+    { type:'allday', date:'20260519', dateEnd:'20260520', summary:'📍 Nápoles → Capri · Día 19' },
+    { type:'allday', date:'20260520', dateEnd:'20260521', summary:'📍 Salerno · Día 20 · Amalfi & Ravello' },
+    { type:'allday', date:'20260521', dateEnd:'20260522', summary:'📍 Capri · Día 21' },
+    { type:'allday', date:'20260522', dateEnd:'20260523', summary:'📍 Positano · Día 22' },
+    { type:'allday', date:'20260523', dateEnd:'20260524', summary:'📍 Salerno → Madrid · Día 23' },
+    { type:'allday', date:'20260524', dateEnd:'20260525', summary:'📍 Madrid · Día 24 · Llegada' },
+    { type:'allday', date:'20260525', dateEnd:'20260526', summary:'📍 Madrid · Día 25 · Compras & Museos' },
+    { type:'allday', date:'20260526', dateEnd:'20260527', summary:'📍 Madrid → Montevideo · Día 26 · Vuelo a casa' },
+  ];
+
+  let ics = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//Gaston & Yamila · Viaje Europa 2026//ES',
+    'CALSCALE:GREGORIAN',
+    'X-WR-CALNAME:Viaje Europa 2026 ✈️',
+    'X-WR-CALDESC:Itinerario completo - Gaston & Yamila',
+    'X-APPLE-CALENDAR-COLOR:#C8961A',
+  ].join('\r\n') + '\r\n';
+
+  events.forEach((e, i) => {
+    const lines = ['BEGIN:VEVENT'];
+    lines.push(`UID:${uid(i)}`);
+    lines.push(`DTSTAMP:${new Date().toISOString().replace(/[-:]/g,'').split('.')[0]}Z`);
+    if (e.type === 'allday') {
+      lines.push(`DTSTART;VALUE=DATE:${e.date}`);
+      lines.push(`DTEND;VALUE=DATE:${e.dateEnd}`);
+    } else {
+      lines.push(`DTSTART:${e.start}`);
+      lines.push(`DTEND:${e.end}`);
+    }
+    lines.push(`SUMMARY:${esc(e.summary)}`);
+    if (e.description) lines.push(`DESCRIPTION:${esc(e.description)}`);
+    if (e.location)    lines.push(`LOCATION:${esc(e.location)}`);
+    lines.push('END:VEVENT');
+    ics += lines.join('\r\n') + '\r\n';
+  });
+
+  ics += 'END:VCALENDAR';
+
+  const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url; a.download = 'viaje-europa-2026.ics'; a.click();
+  URL.revokeObjectURL(url);
+}
 </script>
 </body>
 </html>
